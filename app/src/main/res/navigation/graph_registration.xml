@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/graph_registration"
+    app:startDestination="@id/registrationNumberFragment">
+
+    <fragment
+        android:id="@+id/registrationNumberFragment"
+        android:name="com.example.cinematicapp.presentation.ui.registration.number.RegistrationNumberFragment"
+        android:label="fragment_registration_number"
+        tools:layout="@layout/fragment_registration_number" >
+        <action
+            android:id="@+id/action_registrationNumberFragment_to_registrationCodeFragment"
+            app:destination="@id/registrationCodeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationCodeFragment"
+        android:name="com.example.cinematicapp.presentation.ui.registration.code.RegistrationCodeFragment"
+        android:label="RegistrationCodeFragment"
+        tools:layout="@layout/fragment_registration_code"/>
+</navigation>

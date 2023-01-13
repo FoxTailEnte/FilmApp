@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">CinematicApp</string>
+    <!--Log In Fragment-->
+    <string name="logIn_title">Войти</string>
+    <string name="logIn_info">Чтобы использовать весь функционал приложения необходимо авторизоваться</string>
+    <string name="number">Номер телефона</string>
+    <string name="password">Пароль</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="havent_account">Ещё нет аккаунта?</string>
+    <string name="registration">Регистрируйся!</string>
+    <!--Forgot password-->
+    <string name="title">Сброс пароля</string>
+    <string name="info">Для сброса пароля необходимо ввести номер телефона, указанный при регистрации</string>
+    <string name="semi_info">После проверки номера мы вышлем вам проверочный код</string>
+    <string name="send_code">Выслать код</string>
+    <!-- Registration -->
+    <string name="registration_title">Регистрация</string>
+    <string name="registration_hint">Смс код</string>
+    <string name="registration_button_text">Продолжить</string>
+    <string name="registration_repeat_code">Выслать код повторно</string>
+    <string name="registration_info">Для продолжения регистрации необходимо указать номер телефона и подтвердить его</string>
+    <string name="registration_semi_info">Данный номер будет использоваться вами в дальнейшем для входа в приложение</string>
+    <string name="registration_code_title">Код подтверждения</string>
+    <string name="registration_code_info">Для подтверждения номера необходимо ввести проверочный код из SMS сообщения</string>
+    <!-- Profile -->
+    <string name="profile_information">Общая информация</string>
+    <string name="profile_restore_pass">Сменить пароль</string>
+    <string name="profile_notification">Уведомления</string>
+    <string name="profile_report">Сообщить о проблеме</string>
+    <string name="profile_donation">Поддержать разработчика</string>
+    <string name="profile_logout">Выйти из аккаунта</string>
+    <string name="profile_version">Версия приложения: 2.0.9</string>
+    <!-- Errors -->
+    <string name="error_unknown">Неизвестная ошибка</string>
+    <string name="title_activity_test">TestActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+</resources>

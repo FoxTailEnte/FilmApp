@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/nav_home"
+        android:orderInCategory="1"
+        android:title="Главная" />
+    <item
+        android:id="@+id/library"
+        android:icon="@drawable/nav_favorite"
+        android:orderInCategory="2"
+        android:title="Избранное" />
+    <item
+        android:id="@+id/watchLater"
+        android:icon="@drawable/nav_late"
+        android:orderInCategory="3"
+        android:title="Желаемое" />
+    <item
+        android:id="@+id/profile"
+        android:icon="@drawable/nav_profile"
+        android:orderInCategory="4"
+        android:title="Профиль" />
+</menu>
