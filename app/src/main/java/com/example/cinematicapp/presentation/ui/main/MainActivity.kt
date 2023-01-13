@@ -21,8 +21,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationSource {
         bottomNavigationController()
     }
 
-    override fun hideBottomNavigation(showNavigation: Boolean) {
-        if (showNavigation) binding.bottomNavigationView.visibility = View.VISIBLE
+    override fun hideBottomNavigation(isvisible: Boolean) {
+        if (isvisible) binding.bottomNavigationView.visibility = View.VISIBLE
         else binding.bottomNavigationView.visibility = View.GONE
     }
 
