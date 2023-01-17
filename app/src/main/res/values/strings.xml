@@ -22,6 +22,14 @@
     <string name="registration_semi_info">Данный номер будет использоваться вами в дальнейшем для входа в приложение</string>
     <string name="registration_code_title">Код подтверждения</string>
     <string name="registration_code_info">Для подтверждения номера необходимо ввести проверочный код из SMS сообщения</string>
+    <!-- Registration -->
+    <string name="registration_peron_name">Имя</string>
+    <string name="registration_person_second_name">Фамилия</string>
+    <string name="registration_person_pass">Пароль</string>
+    <string name="registration_person_repeat_pass">Повторите пароль</string>
+    <string name="registration_person_complete">Готово</string>
+    <string name="registration_person_info">Для завершения регистрации необходимо ввести персональные данные.</string>
+    <string name="registration_person_semi_info">Пароль должен содержать заглавные и строчные буквы, а так же одну или несколько цифр.</string>
     <!-- Profile -->
     <string name="profile_information">Общая информация</string>
     <string name="profile_restore_pass">Сменить пароль</string>

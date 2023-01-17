@@ -26,7 +26,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
-        android:text="@string/registration_info"
+        android:text="@string/registration_person_info"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,14 +39,14 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="54dp"
         android:layout_marginEnd="24dp"
-        android:text="@string/registration_code_info"
+        android:text="@string/registration_person_semi_info"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edConfirmCode"
+        android:id="@+id/edName"
         android:layout_width="0dp"
         android:layout_height="52dp"
         android:layout_marginStart="24dp"
@@ -54,25 +54,80 @@
         android:layout_marginEnd="24dp"
         android:background="@drawable/edit_text"
         android:ems="10"
-        android:hint="@string/registration_hint"
+        android:hint="@string/registration_peron_name"
+        android:inputType="textPersonName"
+        android:paddingStart="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView10"
+        tools:ignore="RtlSymmetry" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edSecondName"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/edit_text"
+        android:ems="10"
+        android:hint="@string/registration_person_second_name"
         android:inputType="textPersonName"
         android:paddingStart="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10"
+        app:layout_constraintTop_toBottomOf="@+id/edName"
+        tools:ignore="RtlSymmetry" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edPass"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/edit_text"
+        android:ems="10"
+        android:hint="@string/registration_person_pass"
+        android:inputType="textPersonName"
+        android:paddingStart="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edSecondName"
+        tools:ignore="RtlSymmetry" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edRepeatPass"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/edit_text"
+        android:ems="10"
+        android:hint="@string/registration_person_repeat_pass"
+        android:inputType="textPersonName"
+        android:paddingStart="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edPass"
         tools:ignore="RtlSymmetry" />
 
     <Button
-        android:id="@+id/btConfirmCode"
+        android:id="@+id/btFinish"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:backgroundTint="@color/main_editText"
-        android:text="@string/registration_button_text"
-        app:layout_constraintEnd_toEndOf="@+id/edConfirmCode"
-        app:layout_constraintStart_toStartOf="@+id/edConfirmCode"
-        app:layout_constraintTop_toBottomOf="@+id/edConfirmCode" />
+        android:text="@string/registration_person_complete"
+        app:layout_constraintEnd_toEndOf="@+id/edRepeatPass"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/edRepeatPass"
+        app:layout_constraintTop_toBottomOf="@+id/edRepeatPass" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btBackPress"
@@ -82,20 +137,11 @@
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/main_editText"
         android:clickable="true"
+        android:contentDescription="Back"
         app:borderWidth="0dp"
         app:fabCustomSize="38dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/backpress"
-        android:contentDescription="Back"
         tools:ignore="HardcodedText,KeyboardInaccessibleWidget" />
-
-    <TextView
-        android:id="@+id/btReSantCode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/registration_repeat_code"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="@+id/edConfirmCode"
-        app:layout_constraintTop_toBottomOf="@+id/edConfirmCode" />
 </androidx.constraintlayout.widget.ConstraintLayout>

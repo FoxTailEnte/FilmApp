@@ -17,7 +17,7 @@ class RegistrationNumberPresenter @Inject constructor() : MvpPresenter<Registrat
     private lateinit var mCallBack: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     private lateinit var mAuth: FirebaseAuth
 
-    fun authUser() {
+    fun authUser(phone: String) {
         mCallBack = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(p0: PhoneAuthCredential) {
                 mAuth.signInWithCredential(p0).addOnCompleteListener {
@@ -28,16 +28,15 @@ class RegistrationNumberPresenter @Inject constructor() : MvpPresenter<Registrat
                 viewState.sendCodeFailToast()
             }
 
-            override fun onCodeSent(p0: String, p1: PhoneAuthProvider.ForceResendingToken) {
-                super.onCodeSent(p0, p1)
-                viewState.sendCodeSuccess()
+            override fun onCodeSent(id: String, token: PhoneAuthProvider.ForceResendingToken) {
+                super.onCodeSent(id, token)
+                viewState.sendCodeSuccess(phone, id)
             }
         }
         mAuth = FirebaseAuth.getInstance()
-        val number = "+79094310995"
         val option = PhoneAuthOptions.newBuilder(mAuth)
-            .setPhoneNumber(number)
-            .setTimeout(60, TimeUnit.SECONDS)
+            .setPhoneNumber(phone)
+            .setTimeout(5, TimeUnit.SECONDS)
             .setCallbacks(mCallBack)
         viewState.sendCode(option)
     }

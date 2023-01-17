@@ -18,5 +18,25 @@
         android:id="@+id/registrationCodeFragment"
         android:name="com.example.cinematicapp.presentation.ui.registration.code.RegistrationCodeFragment"
         android:label="RegistrationCodeFragment"
-        tools:layout="@layout/fragment_registration_code"/>
+        tools:layout="@layout/fragment_registration_code">
+        <argument
+            android:name="phone"
+            app:argType="string" />
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_registrationCodeFragment_to_registrationPersoneInfoFragment"
+            app:destination="@id/registrationPersoneInfoFragment" />
+    </fragment>
+    <include app:graph="@navigation/bottom_navigation_graph" />
+    <fragment
+        android:id="@+id/registrationPersoneInfoFragment"
+        android:name="com.example.cinematicapp.presentation.ui.registration.persone.RegistrationPersonInfoFragment"
+        android:label="RegistrationPersoneInfoFragment"
+        tools:layout="@layout/fragment_registration_person_info">
+        <action
+            android:id="@+id/action_registrationPersoneInfoFragment_to_bottom_navigation_graph"
+            app:destination="@id/bottom_navigation_graph" />
+    </fragment>
 </navigation>

@@ -8,6 +8,6 @@ import moxy.viewstate.strategy.StateStrategyType
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface RegistrationNumberView: MvpView {
     fun sendCode(option: PhoneAuthOptions.Builder)
-    fun sendCodeSuccess()
+    fun sendCodeSuccess(phone: String, id: String)
     fun sendCodeFailToast()
 }

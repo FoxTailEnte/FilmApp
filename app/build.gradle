@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
     id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs'
 }
 
 android {
@@ -61,11 +62,6 @@ dependencies {
     /*Dagger*/
     implementation "com.google.dagger:dagger:2.44"
     kapt "com.google.dagger:dagger-compiler:2.44"
-
-    /*Moxy*/
-/*    implementation 'tech.schoolhelper:moxy-x-androidx:1.7.0'
-    implementation "com.github.moxy-community:moxy:2.2.2"
-    kapt "com.github.moxy-community:moxy-compiler:2.2.2"*/
 
     implementation "com.github.moxy-community:moxy:2.2.2"
     implementation "com.github.moxy-community:moxy-androidx:2.2.2"

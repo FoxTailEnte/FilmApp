@@ -9,7 +9,6 @@ import android.widget.Toast
 import com.example.cinematicapp.CinematicApplication.Companion.appComponent
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentRegistrationNumberBinding
-import com.example.cinematicapp.repository.utils.Extensions.navigateBack
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
@@ -25,8 +24,8 @@ class RegistrationNumberFragment : MvpAppCompatFragment(), RegistrationNumberVie
     private lateinit var binding: FragmentRegistrationNumberBinding
 
     private fun setupUi() = with(binding) {
-        btSendCode.setOnClickListener { presenter.authUser() }
-        btBackPress.setOnClickListener { navigateBack() }
+        btSendCode.setOnClickListener { presenter.authUser(edPhone.text.toString()) }
+        btBackPress.setOnClickListener { /*navigateBack()*/ }
     }
 
     @ProvidePresenter
@@ -49,8 +48,8 @@ class RegistrationNumberFragment : MvpAppCompatFragment(), RegistrationNumberVie
         PhoneAuthProvider.verifyPhoneNumber(option.setActivity(requireActivity()).build())
     }
 
-    override fun sendCodeSuccess() {
-       navigateTo(R.id.registrationCodeFragment)
+    override fun sendCodeSuccess(phone: String, id: String) {
+       navigateTo(RegistrationNumberFragmentDirections.actionRegistrationNumberFragmentToRegistrationCodeFragment(phone,id))
     }
 
     override fun sendCodeFailToast() {
