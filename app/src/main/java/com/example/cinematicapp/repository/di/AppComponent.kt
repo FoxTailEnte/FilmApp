@@ -7,7 +7,9 @@ import com.example.cinematicapp.presentation.ui.registration.number.Registration
 import com.example.cinematicapp.repository.di.modules.FireBaseModule
 import dagger.BindsInstance
 import dagger.Component
+import javax.inject.Singleton
 
+@Singleton
 @Component(modules = [FireBaseModule::class])
 interface AppComponent {
 
@@ -22,5 +24,4 @@ interface AppComponent {
     fun provideLoginPresenter(): LogInPresenter
     fun provideRegistrationNumberPresenter(): RegistrationNumberPresenter
     fun provideRegistrationCodePresenter(): RegistrationCodePresenter
-
 }

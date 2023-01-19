@@ -6,5 +6,4 @@ import javax.inject.Inject
 
 @InjectViewState
 class LogInPresenter @Inject constructor(): MvpPresenter<LogInView>() {
-
 }

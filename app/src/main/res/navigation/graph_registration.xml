@@ -32,7 +32,7 @@
     <include app:graph="@navigation/bottom_navigation_graph" />
     <fragment
         android:id="@+id/registrationPersoneInfoFragment"
-        android:name="com.example.cinematicapp.presentation.ui.registration.persone.RegistrationPersonInfoFragment"
+        android:name="com.example.cinematicapp.presentation.ui.registration.person.RegistrationPersonInfoFragment"
         android:label="RegistrationPersoneInfoFragment"
         tools:layout="@layout/fragment_registration_person_info">
         <action

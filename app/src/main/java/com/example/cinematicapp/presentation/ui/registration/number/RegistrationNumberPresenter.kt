@@ -36,7 +36,7 @@ class RegistrationNumberPresenter @Inject constructor() : MvpPresenter<Registrat
         mAuth = FirebaseAuth.getInstance()
         val option = PhoneAuthOptions.newBuilder(mAuth)
             .setPhoneNumber(phone)
-            .setTimeout(5, TimeUnit.SECONDS)
+            .setTimeout(60, TimeUnit.SECONDS)
             .setCallbacks(mCallBack)
         viewState.sendCode(option)
     }

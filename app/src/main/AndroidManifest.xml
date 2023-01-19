@@ -14,15 +14,6 @@
         android:theme="@style/Theme.CinematicApp"
         tools:targetApi="31">
         <activity
-            android:name=".TestActivity"
-            android:exported="false"
-            android:label="@string/title_activity_test"
-            android:theme="@style/Theme.CinematicApp.NoActionBar">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".presentation.ui.main.MainActivity"
             android:exported="false"
             android:screenOrientation="locked">

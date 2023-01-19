@@ -1,4 +1,4 @@
-package com.example.cinematicapp.presentation.ui.registration.persone
+package com.example.cinematicapp.presentation.ui.registration.person
 
 import android.os.Bundle
 

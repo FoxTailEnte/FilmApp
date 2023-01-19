@@ -11,4 +11,5 @@
     <color name="bottom_text">#7D838E</color>
     <color name="base_text">#B4B4B4</color>
     <color name="profile_background">#373131</color>
+    <color name="error_edText">#980000</color>
 </resources>
