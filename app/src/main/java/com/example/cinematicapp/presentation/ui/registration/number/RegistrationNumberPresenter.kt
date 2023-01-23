@@ -25,12 +25,12 @@ class RegistrationNumberPresenter @Inject constructor() : MvpPresenter<Registrat
             }
 
             override fun onVerificationFailed(p0: FirebaseException) {
-                viewState.sendCodeFailToast()
+                viewState.verificationFailed()
             }
 
             override fun onCodeSent(id: String, token: PhoneAuthProvider.ForceResendingToken) {
                 super.onCodeSent(id, token)
-                viewState.sendCodeSuccess(phone, id)
+                viewState.sentCodeSuccess(phone, id)
             }
         }
         mAuth = FirebaseAuth.getInstance()
@@ -38,6 +38,6 @@ class RegistrationNumberPresenter @Inject constructor() : MvpPresenter<Registrat
             .setPhoneNumber(phone)
             .setTimeout(60, TimeUnit.SECONDS)
             .setCallbacks(mCallBack)
-        viewState.sendCode(option)
+        viewState.sentCode(option)
     }
 }

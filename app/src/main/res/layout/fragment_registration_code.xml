@@ -45,31 +45,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-    <androidx.appcompat.widget.AppCompatEditText
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/edConfirmCode"
+        style="@style/base_text_input_layout"
         android:layout_width="0dp"
-        android:layout_height="52dp"
-        android:layout_marginStart="24dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/edit_text"
-        android:ems="10"
-        android:hint="@string/registration_hint"
-        android:inputType="textPersonName"
-        android:paddingStart="15dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10"
-        tools:ignore="RtlSymmetry" />
+        app:layout_constraintTop_toBottomOf="@+id/textView10">
 
-    <Button
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edConfirmCodeText"
+            style="@style/base_text_input_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/registration_hint"
+            android:maxLength="12" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <include
         android:id="@+id/btConfirmCode"
+        layout="@layout/button_base"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@color/main_editText"
-        android:text="@string/registration_button_text"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="@+id/edConfirmCode"
         app:layout_constraintStart_toStartOf="@+id/edConfirmCode"
         app:layout_constraintTop_toBottomOf="@+id/edConfirmCode" />
@@ -91,9 +94,10 @@
         tools:ignore="HardcodedText,KeyboardInaccessibleWidget" />
 
     <TextView
-        android:id="@+id/btReSantCode"
+        android:id="@+id/tvReSentCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="@string/registration_repeat_code"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/edConfirmCode"

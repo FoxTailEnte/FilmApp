@@ -8,6 +8,7 @@
     <string name="forgot_password">Забыли пароль?</string>
     <string name="havent_account">Ещё нет аккаунта?</string>
     <string name="registration">Регистрируйся!</string>
+    <string name="validate_number_start">+7</string>
     <!--Forgot password-->
     <string name="title">Сброс пароля</string>
     <string name="info">Для сброса пароля необходимо ввести номер телефона, указанный при регистрации</string>
@@ -16,13 +17,15 @@
     <!-- Registration -->
     <string name="registration_title">Регистрация</string>
     <string name="registration_hint">Смс код</string>
+    <string name="registration_restore_sms_code">Отправить ещё СМС (%d)</string>
     <string name="registration_button_text">Продолжить</string>
     <string name="registration_repeat_code">Выслать код повторно</string>
+    <string name="registration_send_repeat_code">Код отправлен повторно</string>
     <string name="registration_info">Для продолжения регистрации необходимо указать номер телефона и подтвердить его</string>
     <string name="registration_semi_info">Данный номер будет использоваться вами в дальнейшем для входа в приложение</string>
     <string name="registration_code_title">Код подтверждения</string>
     <string name="registration_code_info">Для подтверждения номера необходимо ввести проверочный код из SMS сообщения</string>
-    <!-- Registration -->
+    <!-- Registration Person -->
     <string name="registration_peron_name">Имя</string>
     <string name="registration_person_second_name">Фамилия</string>
     <string name="registration_person_pass">Пароль</string>
@@ -40,11 +43,15 @@
     <string name="profile_version">Версия приложения: 2.0.9</string>
     <!-- Person info -->
     <string name="person_info">Если вы хотите изменить данные профиля, то внесите изменения в полях ниже</string>
-    <string name="wwww">+7</string>
     <!-- Errors -->
     <string name="error_unknown">Неизвестная ошибка</string>
+    <string name="error_confirm_code_fail">Не верный код подтверждения</string>
     <string name="error_validate_number">Поле должно быть заполнено</string>
+    <string name="error_verify">Ошибка верификации</string>
+    <string name="error_pass_coincidence">Пароли не совпадают</string>
     <string name="error_validate_size_number">Не верный формат номера</string>
+    <string name="error_unknown_user_data">Номер телефона не зарегистрирован</string>
+    <string name="error_unknown_user_pass">Не верный логин или пароль</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
