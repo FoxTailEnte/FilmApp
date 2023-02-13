@@ -6,4 +6,7 @@ import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface LogInView: MvpView {
+    fun userNotFound()
+    fun userDataError()
+    fun userAuthComplete()
 }

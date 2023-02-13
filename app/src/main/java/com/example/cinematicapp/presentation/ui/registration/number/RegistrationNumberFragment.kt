@@ -8,9 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.navigation.fragment.findNavController
 import com.example.cinematicapp.CinematicApplication.Companion.appComponent
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentRegistrationNumberBinding
+import com.example.cinematicapp.repository.utils.Constants
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
 import com.google.firebase.auth.PhoneAuthOptions
@@ -27,24 +30,21 @@ class RegistrationNumberFragment : MvpAppCompatFragment(), RegistrationNumberVie
     private lateinit var binding: FragmentRegistrationNumberBinding
 
     private fun setupUi() = with(binding) {
-        btSendCode.root.setOnClickListener {
+        btSendCode.setOnClickListener {
             validateNumber()
         }
         btBackPress.setOnClickListener { navigateTo(R.id.logInFragment) }
     }
 
-    private fun setupView() = with(binding) {
-        btSendCode.textView16.text = getString(R.string.send_code)
-    }
-
     private fun setLoadingState(loading: Boolean) = with(binding) {
-        if(loading){
-            btSendCode.root.isEnabled = false
-            btSendCode.textView16.visibility = View.GONE
-            btSendCode.progressBar.visibility = View.VISIBLE
+        if (loading) {
+            btSendCode.isEnabled = false
+            tvSendCode.visibility = View.GONE
+            pbSendCode.visibility = View.VISIBLE
         } else {
-            btSendCode.textView16.visibility = View.VISIBLE
-            btSendCode.progressBar.visibility = View.GONE
+            btSendCode.isEnabled = true
+            tvSendCode.visibility = View.VISIBLE
+            pbSendCode.visibility = View.GONE
         }
     }
 
@@ -72,19 +72,27 @@ class RegistrationNumberFragment : MvpAppCompatFragment(), RegistrationNumberVie
         if (edPhoneText.text.toString().trim().isEmpty()) {
             edPhone.error = getString(R.string.error_validate_number)
         } else {
-            if (edPhoneText.text.toString().length != 12 || !edPhoneText.text!!.startsWith("+7")) {
+            if (edPhoneText.text.toString().length != 12 || !edPhoneText.text!!.startsWith(Constants.VALIDATE_NUMBER)) {
                 edPhone.error = getString(R.string.error_validate_size_number)
             } else {
                 edPhone.isErrorEnabled = false
                 setLoadingState(true)
                 hideKeyBoard()
-                presenter.authUser(edPhoneText.text.toString())
+                presenter.checkUserPhone(edPhoneText.text.toString())
             }
         }
     }
 
     private fun hideKeyBoard() {
         requireActivity().setKeyboardVisibility(false)
+    }
+
+    private fun onBackPress() {
+        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigateUp()
+            }
+        })
     }
 
     @ProvidePresenter
@@ -94,15 +102,15 @@ class RegistrationNumberFragment : MvpAppCompatFragment(), RegistrationNumberVie
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-     binding = FragmentRegistrationNumberBinding.inflate(inflater, container, false)
+        binding = FragmentRegistrationNumberBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUi()
-        setupView()
         checkInputNumber()
+        onBackPress()
     }
 
     override fun sentCode(option: PhoneAuthOptions.Builder) {
@@ -110,12 +118,22 @@ class RegistrationNumberFragment : MvpAppCompatFragment(), RegistrationNumberVie
     }
 
     override fun sentCodeSuccess(phone: String, id: String) {
-        navigateTo(RegistrationNumberFragmentDirections.actionRegistrationNumberFragmentToRegistrationCodeFragment(phone,id))
+        navigateTo(
+            RegistrationNumberFragmentDirections.actionRegistrationNumberFragmentToRegistrationCodeFragment(
+                phone,
+                id
+            )
+        )
         setLoadingState(false)
     }
 
     override fun verificationFailed() {
         Toast.makeText(requireContext(), getString(R.string.error_verify), Toast.LENGTH_SHORT).show()
+        setLoadingState(false)
+    }
+
+    override fun userBeRegister() {
+        Toast.makeText(requireContext(), getString(R.string.error_user_be_register), Toast.LENGTH_SHORT).show()
         setLoadingState(false)
     }
 

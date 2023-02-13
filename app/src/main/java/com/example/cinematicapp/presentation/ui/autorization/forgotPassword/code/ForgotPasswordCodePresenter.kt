@@ -1,4 +1,4 @@
-package com.example.cinematicapp.presentation.ui.registration.code
+package com.example.cinematicapp.presentation.ui.autorization.forgotPassword.code
 
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
@@ -10,10 +10,8 @@ import moxy.MvpPresenter
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-
 @InjectViewState
-class RegistrationCodePresenter @Inject constructor() : MvpPresenter<RegistrationCodeView>() {
-
+class ForgotPasswordCodePresenter @Inject constructor() : MvpPresenter<ForgotPasswordCodeView>() {
     private lateinit var mCallBack: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     private lateinit var mAuth: FirebaseAuth
 

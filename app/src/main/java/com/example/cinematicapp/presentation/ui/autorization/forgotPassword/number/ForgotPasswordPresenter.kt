@@ -1,23 +1,37 @@
-package com.example.cinematicapp.presentation.ui.registration.code
+package com.example.cinematicapp.presentation.ui.autorization.forgotPassword.number
 
+import com.example.cinematicapp.repository.utils.Constants
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-
 @InjectViewState
-class RegistrationCodePresenter @Inject constructor() : MvpPresenter<RegistrationCodeView>() {
-
+class ForgotPasswordPresenter @Inject constructor() : MvpPresenter<ForgotPasswordView>() {
     private lateinit var mCallBack: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var mDataBase: DatabaseReference
 
-    fun authUser(phone: String) {
+
+    fun checkUserPhone(phone: String) {
+        mDataBase = FirebaseDatabase.getInstance().getReference(Constants.USERS)
+        mDataBase.child(phone).get().addOnSuccessListener {
+            if (it.value == null) {
+                viewState.userNotRegister()
+            } else {
+                authUser(phone)
+            }
+        }
+    }
+
+    private fun authUser(phone: String) {
         mCallBack = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(p0: PhoneAuthCredential) {
                 mAuth.signInWithCredential(p0).addOnCompleteListener {
@@ -40,17 +54,5 @@ class RegistrationCodePresenter @Inject constructor() : MvpPresenter<Registratio
             .setTimeout(60, TimeUnit.SECONDS)
             .setCallbacks(mCallBack)
         viewState.sentCode(option)
-    }
-
-    fun enterCode(id: String, code: String) {
-        mAuth = FirebaseAuth.getInstance()
-        val credential = PhoneAuthProvider.getCredential(id, code)
-        mAuth.signInWithCredential(credential).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                viewState.confirmCodeSuccessToast()
-            } else {
-                viewState.confirmCodeFailToast()
-            }
-        }
     }
 }

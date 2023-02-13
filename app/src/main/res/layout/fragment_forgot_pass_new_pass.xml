@@ -4,49 +4,70 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_background"
-    tools:context=".presentation.ui.registration.number.RegistrationNumberFragment">
+    android:background="@color/main_background">
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="124dp"
-        android:text="@string/registration_title"
+        android:text="@string/forgot_password_new_pass_title"
         android:textColor="@color/white"
         android:textSize="34sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/textView7"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:text="@string/registration_info"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/forgot_password_new_pass_info"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/textView8"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:text="@string/registration_semi_info"
+        android:layout_marginEnd="16dp"
+        android:text="@string/registration_person_semi_info"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/edPhone"
+        android:id="@+id/edPass"
+        style="@style/base_text_input_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edPassText"
+            style="@style/base_text_input_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/forgot_password_pass_hit"
+            android:maxLength="12" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edRepeatPass"
         style="@style/base_text_input_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -55,43 +76,43 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10">
+        app:layout_constraintTop_toBottomOf="@+id/edPass">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edPhoneText"
+            android:id="@+id/edRepeatPassText"
             style="@style/base_text_input_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/number"
+            android:hint="@string/forgot_password_repeat_pass_hint"
             android:maxLength="12" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/btSendCode"
+        android:id="@+id/btFinish"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/main_editText"
         app:cardCornerRadius="20dp"
-        app:layout_constraintEnd_toEndOf="@+id/edPhone"
-        app:layout_constraintStart_toStartOf="@+id/edPhone"
-        app:layout_constraintTop_toBottomOf="@+id/edPhone">
+        app:layout_constraintEnd_toEndOf="@+id/edRepeatPass"
+        app:layout_constraintStart_toStartOf="@+id/edRepeatPass"
+        app:layout_constraintTop_toBottomOf="@+id/edRepeatPass">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/tvSendCode"
+                android:id="@+id/tvFinish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/send_code"
+                android:text="@string/registration_person_complete"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
 
             <ProgressBar
-                android:id="@+id/pbSendCode"
+                android:id="@+id/pbFinish"
                 style="?android:attr/progressBarStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -109,11 +130,10 @@
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/main_editText"
         android:clickable="true"
-        android:contentDescription="Back"
         app:borderWidth="0dp"
         app:fabCustomSize="38dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/backpress"
-        tools:ignore="HardcodedText,KeyboardInaccessibleWidget" />
+        app:srcCompat="@drawable/backpress" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

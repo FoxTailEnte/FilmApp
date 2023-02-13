@@ -1,4 +1,4 @@
-package com.example.cinematicapp.presentation.ui.registration.number
+package com.example.cinematicapp.presentation.ui.autorization.forgotPassword.number
 
 import com.google.firebase.auth.PhoneAuthOptions
 import moxy.MvpView
@@ -6,9 +6,9 @@ import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface RegistrationNumberView: MvpView {
-    fun sentCode(option: PhoneAuthOptions.Builder)
-    fun sentCodeSuccess(phone: String, id: String)
+interface ForgotPasswordView : MvpView {
+    fun userNotRegister()
     fun verificationFailed()
-    fun userBeRegister()
+    fun sentCodeSuccess(phone: String, id: String)
+    fun sentCode(option: PhoneAuthOptions.Builder)
 }

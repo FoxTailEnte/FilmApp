@@ -67,15 +67,40 @@
             android:maxLength="12" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <include
+    <androidx.cardview.widget.CardView
         android:id="@+id/btConfirmCode"
-        layout="@layout/button_base"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="32dp"
+        android:backgroundTint="@color/main_editText"
+        app:cardCornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="@+id/edConfirmCode"
         app:layout_constraintStart_toStartOf="@+id/edConfirmCode"
-        app:layout_constraintTop_toBottomOf="@+id/edConfirmCode" />
+        app:layout_constraintTop_toBottomOf="@+id/edConfirmCode">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvConfirmCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/registration_button_text"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <ProgressBar
+                android:id="@+id/pbConfirmCode"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+        </FrameLayout>
+
+    </androidx.cardview.widget.CardView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btBackPress"
@@ -85,12 +110,12 @@
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/main_editText"
         android:clickable="true"
+        android:contentDescription="Back"
         app:borderWidth="0dp"
         app:fabCustomSize="38dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/backpress"
-        android:contentDescription="Back"
         tools:ignore="HardcodedText,KeyboardInaccessibleWidget" />
 
     <TextView

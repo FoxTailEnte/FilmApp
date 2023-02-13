@@ -136,17 +136,43 @@
                 android:maxLength="12" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <include
+        <androidx.cardview.widget.CardView
             android:id="@+id/btFinish"
-            layout="@layout/button_base"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="86dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/main_editText"
+            app:cardCornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/edRepeatPass"
             app:layout_constraintStart_toStartOf="@+id/edRepeatPass"
-            app:layout_constraintTop_toBottomOf="@+id/edRepeatPass" />
+            app:layout_constraintTop_toBottomOf="@+id/edRepeatPass"
+            app:layout_constraintVertical_bias="0.0">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tvFinish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/registration_person_complete"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+                <ProgressBar
+                    android:id="@+id/pbFinish"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+        </androidx.cardview.widget.CardView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btBackPress"

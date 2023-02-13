@@ -22,6 +22,7 @@ object Extensions {
     fun Fragment.navigateTo(direction: NavDirections) = findNavController().navigate(direction)
     fun Fragment.navigateTo(id: Int) = findNavController().navigate(id)
     fun Fragment.navigateBack() = findNavController().popBackStack()
+    fun Fragment.clearBackStack() = findNavController().backQueue.clear()
 
     fun Activity.setKeyboardVisibility(visibility: Boolean) {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

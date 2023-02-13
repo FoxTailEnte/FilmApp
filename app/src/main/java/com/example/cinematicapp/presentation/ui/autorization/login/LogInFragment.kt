@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import com.example.cinematicapp.CinematicApplication.Companion.appComponent
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentLogInBinding
+import com.example.cinematicapp.repository.utils.Constants
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
 import moxy.MvpAppCompatFragment
@@ -18,8 +20,6 @@ import moxy.presenter.ProvidePresenter
 
 
 class LogInFragment : MvpAppCompatFragment(), LogInView {
-    private var testNumber = "+79885199537"
-    private var testPass = "222110"
 
     @InjectPresenter
     lateinit var presenter: LogInPresenter
@@ -28,14 +28,19 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
 
 
     private fun setupUi() = with(binding) {
-        forgotPassword.setOnClickListener { navigateTo(R.id.forgotPasswordFragment) }
-        btSignIn.root.setOnClickListener {
+        forgotPassword.setOnClickListener { navigateTo(LogInFragmentDirections.actionLogInFragmentToGraphForgotPass()) }
+        btSignIn.setOnClickListener {
             hideKeyBoard()
             validateNumber()
             validatePass()
             finalValidate()
         }
-        tvRegistration.setOnClickListener { navigateTo(R.id.graph_registration) }
+        tvRegistration.setOnClickListener {
+            navigateTo(
+                LogInFragmentDirections
+                    .actionLogInFragmentToRegistrationNavigation()
+            )
+        }
     }
 
     private fun validatePass(): Boolean = with(binding) {
@@ -53,7 +58,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
             edNumber.error = getString(R.string.error_validate_number)
             false
         } else {
-            if (edNumberText.text.toString().length != 12 || !edNumberText.text!!.startsWith("+7")) {
+            if (edNumberText.text.toString().length != 12 || !edNumberText.text!!.startsWith(Constants.VALIDATE_NUMBER)) {
                 edNumber.error = getString(R.string.error_validate_size_number)
                 false
             } else {
@@ -63,22 +68,16 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         }
     }
 
-    private fun checkPersonUserData() = with(binding) {
-        if (edNumberText.text.toString() == testNumber && edPassText.text.toString() == testPass) {
-            navigateTo(R.id.bottom_navigation_graph)
-        } else if (edNumberText.text.toString() == testNumber) {
-            Toast.makeText(requireContext(), getString(R.string.error_unknown_user_pass), Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(requireContext(), getString(R.string.error_unknown_user_data), Toast.LENGTH_LONG).show()
+    private fun finalValidate() = with(binding) {
+        val phone = edNumberText.text.toString()
+        val pass = edPassText.text.toString()
+        if (validateNumber() && validatePass()) {
+            presenter.authUser(phone, pass)
         }
     }
 
-    private fun finalValidate() {
-        if (validateNumber() && validatePass()) checkPersonUserData()
-    }
-
     private fun checkUserAuth() {
-        if (checkUserSingIn) navigateTo(R.id.bottom_navigation_graph)
+        if (checkUserSingIn) navigateTo(LogInFragmentDirections.actionLogInFragmentToBottomNavigationGraph())
         else setupUi()
     }
 
@@ -88,7 +87,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (edNumberText.text.toString().length == 1 && !edNumberText.text!!.startsWith("+")) {
+                if (edNumberText.text.toString().length == 1 && !edNumberText.text!!.startsWith(Constants.PLUS)) {
                     edNumberText.removeTextChangedListener(this)
                     edNumberText.setText(getString(R.string.validate_number_start))
                     edNumberText.setSelection(edNumberText.text!!.lastIndex + 1)
@@ -106,6 +105,14 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         requireActivity().setKeyboardVisibility(false)
     }
 
+    private fun onBackPress() {
+        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        })
+    }
+
     @ProvidePresenter
     fun provideLoginPresenter() = appComponent.provideLoginPresenter()
 
@@ -121,6 +128,19 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         super.onViewCreated(view, savedInstanceState)
         checkUserAuth()
         checkInputNumber()
+        onBackPress()
+    }
+
+    override fun userNotFound() {
+        Toast.makeText(requireContext(), getString(R.string.error_unknown_user_data), Toast.LENGTH_LONG).show()
+    }
+
+    override fun userDataError() {
+        Toast.makeText(requireContext(), getString(R.string.error_unknown_user_pass), Toast.LENGTH_LONG).show()
+    }
+
+    override fun userAuthComplete() {
+        navigateTo(LogInFragmentDirections.actionLogInFragmentToBottomNavigationGraph())
     }
 
     companion object {

@@ -1,4 +1,4 @@
-package com.example.cinematicapp.presentation.ui.registration.person
+package com.example.cinematicapp.presentation.ui.autorization.forgotPassword.pass
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,52 +7,27 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.navArgs
-import com.example.cinematicapp.CinematicApplication.Companion.appComponent
+import com.example.cinematicapp.CinematicApplication
 import com.example.cinematicapp.R
-import com.example.cinematicapp.databinding.FragmentRegistrationPersonInfoBinding
-import com.example.cinematicapp.repository.network.firebase.models.UserModel
+import com.example.cinematicapp.databinding.FragmentForgotPassNewPassBinding
 import com.example.cinematicapp.repository.utils.Extensions.clearBackStack
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
-
-class RegistrationPersonInfoFragment : MvpAppCompatFragment(), RegistrationPersonInfoView {
-    private val args: RegistrationPersonInfoFragmentArgs by navArgs()
+class ForgotPasswordNewPassFragment : MvpAppCompatFragment(), ForgotPasswordNewPassView {
+    private lateinit var binding: FragmentForgotPassNewPassBinding
+    private val args: ForgotPasswordNewPassFragmentArgs by navArgs()
 
     @InjectPresenter
-    lateinit var presenter: RegistrationPersonInfoPresenter
-    private lateinit var binding: FragmentRegistrationPersonInfoBinding
+    lateinit var presenter: ForgotPasswordNewPassPresenter
 
     private fun setupUi() = with(binding) {
-        btBackPress.setOnClickListener { navigateTo(R.id.logInFragment) }
         btFinish.setOnClickListener {
-            validateName()
-            validateSecondName()
             validatePass()
-            validatePassRepeat()
+            validateRepeatPass()
             finalValidate()
-        }
-    }
-
-    private fun validateName(): Boolean = with(binding) {
-        if (edNameText.text.toString().trim().isEmpty()) {
-            edName.error = getString(R.string.error_validate_number)
-            false
-        } else {
-            edName.isErrorEnabled = false
-            true
-        }
-    }
-
-    private fun validateSecondName(): Boolean = with(binding) {
-        if (edSecondNameText.text.toString().trim().isEmpty()) {
-            edSecondName.error = getString(R.string.error_validate_number)
-            false
-        } else {
-            edSecondName.isErrorEnabled = false
-            true
         }
     }
 
@@ -66,7 +41,7 @@ class RegistrationPersonInfoFragment : MvpAppCompatFragment(), RegistrationPerso
         }
     }
 
-    private fun validatePassRepeat(): Boolean = with(binding) {
+    private fun validateRepeatPass(): Boolean = with(binding) {
         if (edRepeatPassText.text.toString().trim().isEmpty()) {
             edRepeatPass.error = getString(R.string.error_validate_number)
             false
@@ -77,16 +52,13 @@ class RegistrationPersonInfoFragment : MvpAppCompatFragment(), RegistrationPerso
     }
 
     private fun finalValidate() = with(binding) {
-        val name = edNameText.text.toString()
-        val secondName = edSecondNameText.text.toString()
         val pass = edPassText.text.toString()
-        val userModel = UserModel(name, secondName, pass)
         if (edPassText.text?.trim()!!.isNotEmpty() && edRepeatPassText.text?.trim()!!.isNotEmpty()) {
             if (edPassText.text.toString() != edRepeatPassText.text.toString()) {
                 showPassErrorToast()
             } else {
-                if (validateName() && validateSecondName() && validatePass() && validatePassRepeat()) {
-                    presenter.addNewUser(userModel, args.phone)
+                if (validatePass() && validatePass()) {
+                    presenter.addNewPass(args.phone, pass)
                 }
             }
         }
@@ -106,30 +78,31 @@ class RegistrationPersonInfoFragment : MvpAppCompatFragment(), RegistrationPerso
     }
 
     @ProvidePresenter
-    fun provideRegistrationNumberPresenter() = appComponent.provideRegistrationNumberPresenter()
+    fun provideForgotPasswordNewPassPresenter() =
+        CinematicApplication.appComponent.provideForgotPasswordNewPassPresenter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentRegistrationPersonInfoBinding.inflate(inflater, container, false)
+        binding = FragmentForgotPassNewPassBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupUi()
         onBackPress()
+        setupUi()
     }
 
-    override fun completeRegistration() {
+    override fun setUserPass() {
         navigateTo(R.id.logInFragment)
-        Toast.makeText(requireContext(), getString(R.string.registration_person_complete_toast), Toast.LENGTH_SHORT)
+        Toast.makeText(requireContext(), getString(R.string.forgot_password_finish_add_new_pass), Toast.LENGTH_SHORT)
             .show()
     }
 
     companion object {
         @JvmStatic
-        fun newInstance() = RegistrationPersonInfoFragment()
+        fun newInstance() = ForgotPasswordNewPassFragment()
     }
 }
