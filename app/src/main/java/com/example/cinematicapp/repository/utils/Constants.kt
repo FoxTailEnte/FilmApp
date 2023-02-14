@@ -5,4 +5,6 @@ object Constants {
     const val PASS = "pass"
     const val VALIDATE_NUMBER = "+7"
     const val PLUS = "+"
+    const val SHARED_PREF = "shared_preferences"
+    const val FAIL = "fail"
 }

@@ -1,5 +1,6 @@
 package com.example.cinematicapp.presentation.ui.autorization.forgotPassword.number
 
+import android.app.Activity
 import com.example.cinematicapp.repository.utils.Constants
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
@@ -20,22 +21,21 @@ class ForgotPasswordPresenter @Inject constructor() : MvpPresenter<ForgotPasswor
     private lateinit var mDataBase: DatabaseReference
 
 
-    fun checkUserPhone(phone: String) {
+    fun checkUserPhone(phone: String, activity: Activity) {
         mDataBase = FirebaseDatabase.getInstance().getReference(Constants.USERS)
         mDataBase.child(phone).get().addOnSuccessListener {
             if (it.value == null) {
                 viewState.userNotRegister()
             } else {
-                authUser(phone)
+                authUser(phone,activity)
             }
         }
     }
 
-    private fun authUser(phone: String) {
+    private fun authUser(phone: String,activity: Activity) {
         mCallBack = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(p0: PhoneAuthCredential) {
                 mAuth.signInWithCredential(p0).addOnCompleteListener {
-                    Unit
                 }
             }
 
@@ -53,6 +53,8 @@ class ForgotPasswordPresenter @Inject constructor() : MvpPresenter<ForgotPasswor
             .setPhoneNumber(phone)
             .setTimeout(60, TimeUnit.SECONDS)
             .setCallbacks(mCallBack)
-        viewState.sentCode(option)
+            .setActivity(activity)
+            .build()
+            PhoneAuthProvider.verifyPhoneNumber(option)
     }
 }

@@ -5,15 +5,17 @@ import com.example.cinematicapp.presentation.ui.autorization.forgotPassword.code
 import com.example.cinematicapp.presentation.ui.autorization.forgotPassword.number.ForgotPasswordPresenter
 import com.example.cinematicapp.presentation.ui.autorization.forgotPassword.pass.ForgotPasswordNewPassPresenter
 import com.example.cinematicapp.presentation.ui.autorization.login.LogInPresenter
+import com.example.cinematicapp.presentation.ui.profile.ProfilePresenter
 import com.example.cinematicapp.presentation.ui.registration.code.RegistrationCodePresenter
 import com.example.cinematicapp.presentation.ui.registration.number.RegistrationNumberPresenter
 import com.example.cinematicapp.repository.di.modules.FireBaseModule
+import com.example.cinematicapp.repository.di.modules.SharedPrefModule
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [FireBaseModule::class])
+@Component(modules = [FireBaseModule::class, SharedPrefModule::class])
 interface AppComponent {
 
     @Component.Builder
@@ -30,4 +32,5 @@ interface AppComponent {
     fun provideLoginPresenter(): LogInPresenter
     fun provideRegistrationNumberPresenter(): RegistrationNumberPresenter
     fun provideRegistrationCodePresenter(): RegistrationCodePresenter
+    fun provideProfilePresenter(): ProfilePresenter
 }

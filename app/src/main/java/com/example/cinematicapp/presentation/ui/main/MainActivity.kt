@@ -2,7 +2,7 @@ package com.example.cinematicapp.presentation.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -21,9 +21,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationSource {
         bottomNavigationController()
     }
 
-    override fun hideBottomNavigation(isvisible: Boolean) {
-        if (isvisible) binding.bottomNavigationView.visibility = View.VISIBLE
-        else binding.bottomNavigationView.visibility = View.GONE
+    override fun hideBottomNavigation(visibility: Boolean) {
+        binding.bottomNavigationView.isVisible = visibility
     }
 
     private fun bottomNavigationController() = with(binding) {

@@ -3,55 +3,26 @@ package com.example.cinematicapp.presentation.ui.autorization.login
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.isVisible
 import com.example.cinematicapp.CinematicApplication.Companion.appComponent
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentLogInBinding
+import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.repository.utils.Constants
+import com.example.cinematicapp.repository.utils.Extensions.getBottomNavigation
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
-import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
-class LogInFragment : MvpAppCompatFragment(), LogInView {
+class LogInFragment : BaseFragment<FragmentLogInBinding>(), LogInView {
 
     @InjectPresenter
     lateinit var presenter: LogInPresenter
-    private lateinit var binding: FragmentLogInBinding
-    private var checkUserSingIn: Boolean = false
-
-
-    private fun setupUi() = with(binding) {
-        forgotPassword.setOnClickListener { navigateTo(LogInFragmentDirections.actionLogInFragmentToGraphForgotPass()) }
-        btSignIn.setOnClickListener {
-            hideKeyBoard()
-            validateNumber()
-            validatePass()
-            finalValidate()
-        }
-        tvRegistration.setOnClickListener {
-            navigateTo(
-                LogInFragmentDirections
-                    .actionLogInFragmentToRegistrationNavigation()
-            )
-        }
-    }
-
-    private fun validatePass(): Boolean = with(binding) {
-        if (edPassText.text.toString().trim().isEmpty()) {
-            edPass.error = getString(R.string.error_validate_number)
-            false
-        } else {
-            edPass.isErrorEnabled = false
-            true
-        }
-    }
 
     private fun validateNumber(): Boolean = with(binding) {
         if (edNumberText.text.toString().trim().isEmpty()) {
@@ -68,20 +39,80 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         }
     }
 
+    private fun validatePass(): Boolean = with(binding) {
+        if (edPassText.text.toString().trim().isEmpty()) {
+            edPass.error = getString(R.string.error_validate_number)
+            false
+        } else {
+            edPass.isErrorEnabled = false
+            true
+        }
+    }
+
     private fun finalValidate() = with(binding) {
         val phone = edNumberText.text.toString()
         val pass = edPassText.text.toString()
         if (validateNumber() && validatePass()) {
+            setLoadingState(true)
             presenter.authUser(phone, pass)
         }
     }
 
-    private fun checkUserAuth() {
-        if (checkUserSingIn) navigateTo(LogInFragmentDirections.actionLogInFragmentToBottomNavigationGraph())
-        else setupUi()
+    private fun setLoadingState(loading: Boolean) = with(binding) {
+        if (loading) {
+            btSignIn.isEnabled = false
+            tvSignIn.isVisible = false
+            pbSignIn.isVisible = true
+        } else {
+            btSignIn.isEnabled = true
+            tvSignIn.isVisible = true
+            pbSignIn.isVisible = false
+        }
     }
 
-    private fun checkInputNumber() = with(binding) {
+    private fun hideKeyBoard() {
+        requireActivity().setKeyboardVisibility(false)
+    }
+
+    @ProvidePresenter
+    fun provideLoginPresenter() = appComponent.provideLoginPresenter()
+
+    override fun initializeBinding() = FragmentLogInBinding.inflate(layoutInflater)
+
+    override fun setupUi() {
+        getBottomNavigation()?.hideBottomNavigation(false)
+    }
+
+    override fun setupListener() {
+        with (binding) {
+            forgotPassword.setOnClickListener { navigateTo(LogInFragmentDirections.actionLogInFragmentToGraphForgotPass()) }
+            btSignIn.setOnClickListener {
+                hideKeyBoard()
+                validateNumber()
+                validatePass()
+                finalValidate()
+            }
+            tvRegistration.setOnClickListener {
+                navigateTo(
+                    LogInFragmentDirections
+                        .actionLogInFragmentToRegistrationNavigation()
+                )
+            }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        checkUserAuth()
+        checkInputNumber()
+    }
+
+    override fun checkUserAuth() {
+        if (presenter.checkUserAuthStatus()) navigateTo(LogInFragmentDirections
+                .actionLogInFragmentToBottomNavigationGraph())
+    }
+
+    override fun checkInputNumber() = with(binding) {
         edNumberText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -97,15 +128,15 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
 
             override fun afterTextChanged(s: Editable?) {
             }
-
         })
     }
 
-    private fun hideKeyBoard() {
-        requireActivity().setKeyboardVisibility(false)
+    override fun userAuthComplete() {
+        navigateTo(LogInFragmentDirections.actionLogInFragmentToBottomNavigationGraph())
+        setLoadingState(false)
     }
 
-    private fun onBackPress() {
+    override fun onBackPress() {
         requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 requireActivity().finish()
@@ -113,38 +144,13 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         })
     }
 
-    @ProvidePresenter
-    fun provideLoginPresenter() = appComponent.provideLoginPresenter()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentLogInBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        checkUserAuth()
-        checkInputNumber()
-        onBackPress()
-    }
-
     override fun userNotFound() {
         Toast.makeText(requireContext(), getString(R.string.error_unknown_user_data), Toast.LENGTH_LONG).show()
+        setLoadingState(false)
     }
 
     override fun userDataError() {
         Toast.makeText(requireContext(), getString(R.string.error_unknown_user_pass), Toast.LENGTH_LONG).show()
-    }
-
-    override fun userAuthComplete() {
-        navigateTo(LogInFragmentDirections.actionLogInFragmentToBottomNavigationGraph())
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = LogInFragment()
+        setLoadingState(false)
     }
 }

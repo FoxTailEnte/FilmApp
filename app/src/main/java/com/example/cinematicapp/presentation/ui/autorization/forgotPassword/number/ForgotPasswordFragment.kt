@@ -1,6 +1,8 @@
 package com.example.cinematicapp.presentation.ui.autorization.forgotPassword.number
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +14,6 @@ import com.example.cinematicapp.repository.utils.Constants
 import com.example.cinematicapp.repository.utils.Extensions.navigateBack
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -41,7 +41,7 @@ class ForgotPasswordFragment : MvpAppCompatFragment(), ForgotPasswordView {
                 edPhone.isErrorEnabled = false
                 setLoadingState(true)
                 hideKeyBoard()
-                presenter.checkUserPhone(edPhoneText.text.toString())
+                presenter.checkUserPhone(edPhoneText.text.toString(),requireActivity())
             }
         }
     }
@@ -62,6 +62,26 @@ class ForgotPasswordFragment : MvpAppCompatFragment(), ForgotPasswordView {
         requireActivity().setKeyboardVisibility(false)
     }
 
+    private fun checkInputNumber() = with(binding.edPhoneText) {
+        addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (text.toString().length == 1 && !text!!.startsWith("+")) {
+                    removeTextChangedListener(this)
+                    setText(getString(R.string.validate_number_start))
+                    setSelection(text!!.lastIndex + 1)
+                    addTextChangedListener(this)
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+        })
+    }
+
     @ProvidePresenter
     fun provideRegistrationNumberPresenter() = CinematicApplication.appComponent.provideForgotPasswordPresenter()
 
@@ -76,6 +96,7 @@ class ForgotPasswordFragment : MvpAppCompatFragment(), ForgotPasswordView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUi()
+        checkInputNumber()
     }
 
     override fun userNotRegister() {
@@ -91,14 +112,5 @@ class ForgotPasswordFragment : MvpAppCompatFragment(), ForgotPasswordView {
     override fun sentCodeSuccess(phone: String, id: String) {
         navigateTo(ForgotPasswordFragmentDirections.actionForgotPasswordFragmentToForgotPasswordCodeFragment(phone, id))
         setLoadingState(false)
-    }
-
-    override fun sentCode(option: PhoneAuthOptions.Builder) {
-        PhoneAuthProvider.verifyPhoneNumber(option.setActivity(requireActivity()).build())
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = ForgotPasswordFragment()
     }
 }

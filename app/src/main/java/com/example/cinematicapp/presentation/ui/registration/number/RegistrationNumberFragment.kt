@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.findNavController
 import com.example.cinematicapp.CinematicApplication.Companion.appComponent
 import com.example.cinematicapp.R
@@ -16,8 +17,6 @@ import com.example.cinematicapp.databinding.FragmentRegistrationNumberBinding
 import com.example.cinematicapp.repository.utils.Constants
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -64,7 +63,6 @@ class RegistrationNumberFragment : MvpAppCompatFragment(), RegistrationNumberVie
 
             override fun afterTextChanged(s: Editable?) {
             }
-
         })
     }
 
@@ -78,9 +76,17 @@ class RegistrationNumberFragment : MvpAppCompatFragment(), RegistrationNumberVie
                 edPhone.isErrorEnabled = false
                 setLoadingState(true)
                 hideKeyBoard()
-                presenter.checkUserPhone(edPhoneText.text.toString())
+                checkPhone(edPhoneText.text.toString())
             }
         }
+    }
+
+    private fun checkPhone(phone:String) {
+        presenter.checkUserPhone(phone)
+    }
+
+    override fun sentSms(phone: String) {
+        presenter.sendSms(phone,requireActivity())
     }
 
     private fun hideKeyBoard() {
@@ -88,7 +94,7 @@ class RegistrationNumberFragment : MvpAppCompatFragment(), RegistrationNumberVie
     }
 
     private fun onBackPress() {
-        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+        requireActivity().onBackPressedDispatcher.addCallback(this as LifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 findNavController().navigateUp()
             }
@@ -113,17 +119,9 @@ class RegistrationNumberFragment : MvpAppCompatFragment(), RegistrationNumberVie
         onBackPress()
     }
 
-    override fun sentCode(option: PhoneAuthOptions.Builder) {
-        PhoneAuthProvider.verifyPhoneNumber(option.setActivity(requireActivity()).build())
-    }
-
     override fun sentCodeSuccess(phone: String, id: String) {
-        navigateTo(
-            RegistrationNumberFragmentDirections.actionRegistrationNumberFragmentToRegistrationCodeFragment(
-                phone,
-                id
-            )
-        )
+        navigateTo(RegistrationNumberFragmentDirections
+            .actionRegistrationNumberFragmentToRegistrationCodeFragment(phone, id))
         setLoadingState(false)
     }
 
@@ -135,10 +133,5 @@ class RegistrationNumberFragment : MvpAppCompatFragment(), RegistrationNumberVie
     override fun userBeRegister() {
         Toast.makeText(requireContext(), getString(R.string.error_user_be_register), Toast.LENGTH_SHORT).show()
         setLoadingState(false)
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = RegistrationNumberFragment()
     }
 }
