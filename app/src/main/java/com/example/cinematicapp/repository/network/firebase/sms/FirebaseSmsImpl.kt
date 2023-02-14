@@ -1,4 +1,4 @@
-package com.example.cinematicapp.repository.network.firebase
+package com.example.cinematicapp.repository.network.firebase.sms
 
 import android.app.Activity
 import com.example.cinematicapp.repository.utils.Constants
@@ -12,7 +12,7 @@ import com.google.firebase.database.FirebaseDatabase
 import java.util.concurrent.TimeUnit
 
 
-class FirebaseImpl : FireBase {
+class FirebaseSmsImpl : FireBaseSms {
     private lateinit var mDataBase: DatabaseReference
     private lateinit var mCallBack: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     private lateinit var mAuth: FirebaseAuth
@@ -40,14 +40,6 @@ class FirebaseImpl : FireBase {
 
     override fun sentSms(phone: String, activity: Activity, action: (String) -> Unit) {
         var currentString: String
-        mAuth = FirebaseAuth.getInstance()
-        val option = PhoneAuthOptions.newBuilder(mAuth)
-            .setPhoneNumber(phone)
-            .setTimeout(60, TimeUnit.SECONDS)
-            .setCallbacks(mCallBack)
-            .setActivity(activity)
-            .build()
-        PhoneAuthProvider.verifyPhoneNumber(option)
         mCallBack = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(p0: PhoneAuthCredential) {
                 mAuth.signInWithCredential(p0).addOnCompleteListener {
@@ -64,6 +56,24 @@ class FirebaseImpl : FireBase {
                 currentString = id
                 action.invoke(currentString)
             }
+        }
+        mAuth = FirebaseAuth.getInstance()
+        val option = PhoneAuthOptions.newBuilder(mAuth)
+            .setPhoneNumber(phone)
+            .setTimeout(60, TimeUnit.SECONDS)
+            .setCallbacks(mCallBack)
+            .setActivity(activity)
+            .build()
+        PhoneAuthProvider.verifyPhoneNumber(option)
+    }
+
+    override fun enterCode(id: String, code:String, action: (Boolean) -> Unit) {
+        var currentString: Boolean
+        mAuth = FirebaseAuth.getInstance()
+        val credential = PhoneAuthProvider.getCredential(id, code)
+        mAuth.signInWithCredential(credential).addOnCompleteListener { task ->
+            currentString = task.isSuccessful
+            action.invoke(currentString)
         }
     }
 }

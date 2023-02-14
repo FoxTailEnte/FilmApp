@@ -1,7 +1,7 @@
 package com.example.cinematicapp.presentation.ui.registration.number
 
 import android.app.Activity
-import com.example.cinematicapp.repository.network.firebase.FireBase
+import com.example.cinematicapp.repository.network.firebase.sms.FireBaseSms
 import com.example.cinematicapp.repository.utils.Constants
 import moxy.InjectViewState
 import moxy.MvpPresenter
@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 @InjectViewState
 class RegistrationNumberPresenter @Inject constructor(
-    private val firebase: FireBase
+    private val firebase: FireBaseSms
 ) : MvpPresenter<RegistrationNumberView>() {
 
     fun checkUserPhone(phone: String) {

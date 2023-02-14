@@ -8,6 +8,7 @@ import com.example.cinematicapp.presentation.ui.autorization.login.LogInPresente
 import com.example.cinematicapp.presentation.ui.profile.ProfilePresenter
 import com.example.cinematicapp.presentation.ui.registration.code.RegistrationCodePresenter
 import com.example.cinematicapp.presentation.ui.registration.number.RegistrationNumberPresenter
+import com.example.cinematicapp.presentation.ui.registration.person.RegistrationPersonInfoPresenter
 import com.example.cinematicapp.repository.di.modules.FireBaseModule
 import com.example.cinematicapp.repository.di.modules.SharedPrefModule
 import dagger.BindsInstance
@@ -26,11 +27,12 @@ interface AppComponent {
         fun application(application: Application): Builder
     }
 
-    fun provideForgotPasswordNewPassPresenter(): ForgotPasswordNewPassPresenter
-    fun provideForgotPasswordCodePresenter(): ForgotPasswordCodePresenter
-    fun provideForgotPasswordPresenter(): ForgotPasswordPresenter
     fun provideLoginPresenter(): LogInPresenter
     fun provideRegistrationNumberPresenter(): RegistrationNumberPresenter
     fun provideRegistrationCodePresenter(): RegistrationCodePresenter
+    fun provideRegistrationPersonInfoPresenter(): RegistrationPersonInfoPresenter
+    fun provideForgotPasswordNewPassPresenter(): ForgotPasswordNewPassPresenter
+    fun provideForgotPasswordCodePresenter(): ForgotPasswordCodePresenter
+    fun provideForgotPasswordPresenter(): ForgotPasswordPresenter
     fun provideProfilePresenter(): ProfilePresenter
 }

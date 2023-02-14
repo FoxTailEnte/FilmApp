@@ -1,7 +1,7 @@
 package com.example.cinematicapp.presentation.ui.autorization.login
 
 import com.example.cinematicapp.repository.data.sharedpref.SaveUserAuthStatus
-import com.example.cinematicapp.repository.network.firebase.FireBase
+import com.example.cinematicapp.repository.network.firebase.sms.FireBaseSms
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import javax.inject.Inject
@@ -9,7 +9,7 @@ import javax.inject.Inject
 @InjectViewState
 class LogInPresenter @Inject constructor(
     private val pref: SaveUserAuthStatus,
-    private val firebase: FireBase
+    private val firebase: FireBaseSms
 ) : MvpPresenter<LogInView>() {
 
     fun authUser(phone: String, pass: String) {

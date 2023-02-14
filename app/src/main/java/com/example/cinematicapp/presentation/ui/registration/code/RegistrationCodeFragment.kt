@@ -3,37 +3,28 @@ package com.example.cinematicapp.presentation.ui.registration.code
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.isVisible
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.navArgs
 import com.example.cinematicapp.CinematicApplication.Companion.appComponent
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentRegistrationCodeBinding
+import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.repository.utils.Extensions.clearBackStack
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
-import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
-class RegistrationCodeFragment : MvpAppCompatFragment(), RegistrationCodeView {
+class RegistrationCodeFragment : BaseFragment<FragmentRegistrationCodeBinding>(), RegistrationCodeView {
     private val args: RegistrationCodeFragmentArgs by navArgs()
 
     @InjectPresenter
     lateinit var presenter: RegistrationCodePresenter
-    private lateinit var binding: FragmentRegistrationCodeBinding
     private lateinit var timer: CountDownTimer
-
-    private fun setupUi() = with(binding) {
-        tvReSentCode.setOnClickListener { presenter.authUser(args.phone) }
-        btConfirmCode.setOnClickListener { validateCode() }
-        btBackPress.setOnClickListener { navigateTo(R.id.registrationNumberFragment) }
-    }
 
     private fun validateCode() = with(binding) {
         if (edConfirmCodeText.text.toString().trim().isEmpty()) {
@@ -45,8 +36,8 @@ class RegistrationCodeFragment : MvpAppCompatFragment(), RegistrationCodeView {
         }
     }
 
-    private fun onBackPress() {
-        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+    override fun onBackPress() {
+        requireActivity().onBackPressedDispatcher.addCallback(this as LifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 navigateTo(R.id.logInFragment)
                 clearBackStack()
@@ -81,31 +72,29 @@ class RegistrationCodeFragment : MvpAppCompatFragment(), RegistrationCodeView {
     private fun setLoadingState(loading: Boolean) = with(binding) {
         if (loading) {
             btConfirmCode.isEnabled = false
-            tvConfirmCode.visibility = View.GONE
-            pbConfirmCode.visibility = View.VISIBLE
+            tvConfirmCode.isVisible = false
+            pbConfirmCode.isVisible = true
         } else {
             btConfirmCode.isEnabled = true
-            tvConfirmCode.visibility = View.VISIBLE
-            pbConfirmCode.visibility = View.GONE
+            tvConfirmCode.isVisible = true
+            pbConfirmCode.isVisible = false
         }
     }
 
     @ProvidePresenter
     fun provideRegistrationCodePresenter() = appComponent.provideRegistrationCodePresenter()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentRegistrationCodeBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun initializeBinding() = FragmentRegistrationCodeBinding.inflate(layoutInflater)
+
+    override fun setupListener() = with(binding) {
+        tvReSentCode.setOnClickListener { presenter.authUser(args.phone, requireActivity()) }
+        btConfirmCode.setOnClickListener { validateCode() }
+        btBackPress.setOnClickListener { navigateTo(R.id.registrationNumberFragment) }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         startCountDownTimer()
-        setupUi()
-        onBackPress()
     }
 
     override fun onDetach() {
@@ -113,15 +102,9 @@ class RegistrationCodeFragment : MvpAppCompatFragment(), RegistrationCodeView {
         super.onDetach()
     }
 
-    override fun sentCode(option: PhoneAuthOptions.Builder) {
-        PhoneAuthProvider.verifyPhoneNumber(option.setActivity(requireActivity()).build())
-    }
-
-    override fun confirmCodeSuccessToast() {
-        navigateTo(
-            RegistrationCodeFragmentDirections
-                .actionRegistrationCodeFragmentToRegistrationPersoneInfoFragment(args.phone)
-        )
+    override fun confirmCodeSuccess() {
+        navigateTo(RegistrationCodeFragmentDirections
+                .actionRegistrationCodeFragmentToRegistrationPersoneInfoFragment(args.phone))
         setLoadingState(false)
     }
 
@@ -141,8 +124,5 @@ class RegistrationCodeFragment : MvpAppCompatFragment(), RegistrationCodeView {
     companion object {
         const val MILLISECONDS_PER_SECOND: Long = 1000
         const val MILLISECONDS_PER_MINUTE: Long = 300000
-
-        @JvmStatic
-        fun newInstance() = RegistrationCodeFragment()
     }
 }

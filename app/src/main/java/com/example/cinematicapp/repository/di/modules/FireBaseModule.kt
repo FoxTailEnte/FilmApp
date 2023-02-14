@@ -1,16 +1,18 @@
 package com.example.cinematicapp.repository.di.modules
 
-import com.example.cinematicapp.repository.network.firebase.FireBase
-import com.example.cinematicapp.repository.network.firebase.FirebaseImpl
-import com.google.firebase.ktx.Firebase
-import dagger.Binds
+import com.example.cinematicapp.repository.network.firebase.bd.FireBaseUserInfo
+import com.example.cinematicapp.repository.network.firebase.bd.FireBaseUserInfoImpl
+import com.example.cinematicapp.repository.network.firebase.sms.FireBaseSms
+import com.example.cinematicapp.repository.network.firebase.sms.FirebaseSmsImpl
 import dagger.Module
 import dagger.Provides
-import dagger.Reusable
 
 @Module
 class FireBaseModule {
 
     @Provides
-    fun provideFireBase(): FireBase = FirebaseImpl()
+    fun provideFireBase(): FireBaseSms = FirebaseSmsImpl()
+
+    @Provides
+    fun provideFireBaseUserInfo(): FireBaseUserInfo = FireBaseUserInfoImpl()
 }
