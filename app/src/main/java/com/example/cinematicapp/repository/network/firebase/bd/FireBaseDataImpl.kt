@@ -18,4 +18,23 @@ class FireBaseDataImpl : FireBaseData {
         mDataBase = Firebase.database.reference
         mDataBase.child(Constants.USERS).child(phone).child(Constants.PASS).setValue(pass)
     }
+
+    override fun addNewUserName(phone: String, name: String, secondName: String) {
+        mDataBase = Firebase.database.reference
+        mDataBase.child(Constants.USERS).child(phone).child(Constants.NAME).setValue(name)
+        mDataBase.child(Constants.USERS).child(phone).child(Constants.SECOND_NAME).setValue(secondName)
+    }
+
+    override fun getUserName(phone: String, action: (String?) -> Unit) {
+        var name = ""
+        var secondName: String
+        mDataBase = Firebase.database.reference
+        mDataBase.child(Constants.USERS).child(phone).child(Constants.NAME).get().addOnSuccessListener {
+            name = it.value.toString()
+        }
+        mDataBase.child(Constants.USERS).child(phone).child(Constants.SECOND_NAME).get().addOnSuccessListener {
+            secondName = it.value.toString()
+            action.invoke("$name $secondName")
+        }
+    }
 }

@@ -1,44 +1,67 @@
 package com.example.cinematicapp.presentation.ui.profile.person
 
-import android.os.Bundle
-
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.widget.Toast
 import com.example.cinematicapp.CinematicApplication.Companion.appComponent
+import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentPersonInfoBinding
-import moxy.MvpAppCompatFragment
+import com.example.cinematicapp.presentation.base.BaseFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
-class ProfilePersonFragment : MvpAppCompatFragment(), ProfilePersonView {
+class ProfilePersonFragment : BaseFragment<FragmentPersonInfoBinding>(), ProfilePersonView {
 
     @InjectPresenter
     lateinit var presenter: ProfilePersonPresenter
-    private lateinit var binding: FragmentPersonInfoBinding
 
-    private fun setupUi() = with(binding) {
+    private fun validateName(): Boolean = with(binding) {
+        if (edNameText.text.toString().trim().isEmpty()) {
+            edName.error = getString(R.string.error_validate_number)
+            false
+        } else {
+            edName.isErrorEnabled = false
+            true
+        }
+    }
+
+    private fun validateSecondName(): Boolean = with(binding) {
+        if (edSecondNameText.text.toString().trim().isEmpty()) {
+            edSecondName.error = getString(R.string.error_validate_number)
+            false
+        } else {
+            edSecondName.isErrorEnabled = false
+            true
+        }
+    }
+
+    private fun finalValidate() = with(binding) {
+        if (edSecondNameText.text?.trim()!!.isNotEmpty() && edSecondNameText.text?.trim()!!.isNotEmpty()) {
+                if (validateName() && validateSecondName()) {
+                    presenter.getUserPhone()
+            }
+        }
     }
 
     @ProvidePresenter
-    fun provideRegistrationNumberPresenter() = appComponent.provideRegistrationNumberPresenter()
+    fun provideProfilePersonPresenter() = appComponent.provideProfilePersonPresenter()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-     binding = FragmentPersonInfoBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun initializeBinding() = FragmentPersonInfoBinding.inflate(layoutInflater)
+
+    override fun setupListener() = with(binding) {
+        btFinish.setOnClickListener {
+            validateName()
+            validateSecondName()
+            finalValidate()
+        }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupUi()
+    override fun addNewUser(phone: String) = with(binding) {
+        val name = edNameText.text.toString()
+        val secondName = edSecondNameText.text.toString()
+        presenter.addNewUserName(phone, name, secondName)
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance() = ProfilePersonFragment()
+    override fun addNewUserSuccess() {
+        Toast.makeText(requireContext(), getString(R.string.profile_add_new_name_success), Toast.LENGTH_LONG).show()
     }
 }

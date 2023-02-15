@@ -22,6 +22,7 @@
     </fragment>
     <include app:graph="@navigation/graph_registration" />
     <include app:graph="@navigation/bottom_navigation_graph" />
-    <include app:graph="@navigation/graph_forgot_pass" />
+    <include
+        app:graph="@navigation/graph_forgot_pass" />
 
 </navigation>

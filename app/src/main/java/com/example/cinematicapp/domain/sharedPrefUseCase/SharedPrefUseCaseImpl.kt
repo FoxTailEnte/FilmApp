@@ -10,5 +10,12 @@ class SharedPrefUseCaseImpl @Inject constructor(
     override fun addSignInUserStatus(signIn: Boolean) {
         pref.addSignInUserStatus(signIn)
     }
+
     override fun getSignInUserStatus(): Boolean = pref.getSignInUserStatus()
+
+    override fun saveUserPhone(phone: String) {
+        pref.saveUserPhone(phone)
+    }
+
+    override fun getUserPhone() = pref.getUserPhone()
 }

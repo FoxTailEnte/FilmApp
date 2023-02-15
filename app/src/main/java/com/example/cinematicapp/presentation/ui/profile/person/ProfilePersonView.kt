@@ -6,4 +6,6 @@ import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface ProfilePersonView: MvpView {
+    fun addNewUser(phone: String)
+    fun addNewUserSuccess()
 }

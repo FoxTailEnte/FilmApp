@@ -48,6 +48,8 @@
     <string name="profile_donation">Поддержать разработчика</string>
     <string name="profile_logout">Выйти из аккаунта</string>
     <string name="profile_version">Версия приложения: 2.0.9</string>
+    <string name="profile_add_new_name_success">Имя успешно обновлено</string>
+    <string name="profile_user_info">Если вы хотите изменить данные профиля, то внесите их в полях ниже</string>
     <!-- Person info -->
     <string name="person_info">Если вы хотите изменить данные профиля, то внесите изменения в полях ниже</string>
     <string name="person_complete">Регистрация прошла успешно!</string>
@@ -55,7 +57,7 @@
     <string name="error_unknown">Неизвестная ошибка</string>
     <string name="error_confirm_code_fail">Не верный код подтверждения</string>
     <string name="error_validate_number">Поле должно быть заполнено</string>
-    <string name="error_verify">Ошибка верификации</string>
+    <string name="error_verify">Вы исчерпали лимит запросов на сегодня</string>
     <string name="error_pass_coincidence">Пароли не совпадают</string>
     <string name="error_validate_size_number">Не верный формат номера</string>
     <string name="error_unknown_user_data">Номер телефона не зарегистрирован</string>

@@ -55,6 +55,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(), LogInView {
         if (validateNumber() && validatePass()) {
             setLoadingState(true)
             presenter.authUser(phone, pass)
+            presenter.savePhone(phone)
         }
     }
 

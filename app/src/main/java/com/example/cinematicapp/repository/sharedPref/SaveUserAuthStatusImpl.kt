@@ -19,7 +19,16 @@ class SaveUserAuthStatusImpl @Inject constructor(
 
     override fun getSignInUserStatus(): Boolean = pref.getBoolean(SIGN_IN, false)
 
+    override fun saveUserPhone(phone: String) {
+        editor = pref.edit()
+        editor.putString(PHONE,phone)
+        editor.apply()
+    }
+
+    override fun getUserPhone(): String = pref.getString(PHONE, "")!!
+
     companion object {
         const val SIGN_IN = "sign_in"
+        const val PHONE = "phone"
     }
 }
