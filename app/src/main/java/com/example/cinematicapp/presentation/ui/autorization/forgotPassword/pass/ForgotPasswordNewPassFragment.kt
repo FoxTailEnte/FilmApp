@@ -1,35 +1,23 @@
 package com.example.cinematicapp.presentation.ui.autorization.forgotPassword.pass
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.navArgs
 import com.example.cinematicapp.CinematicApplication
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentForgotPassNewPassBinding
+import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.repository.utils.Extensions.clearBackStack
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
-import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
-class ForgotPasswordNewPassFragment : MvpAppCompatFragment(), ForgotPasswordNewPassView {
-    private lateinit var binding: FragmentForgotPassNewPassBinding
+class ForgotPasswordNewPassFragment : BaseFragment<FragmentForgotPassNewPassBinding>(), ForgotPasswordNewPassView {
     private val args: ForgotPasswordNewPassFragmentArgs by navArgs()
 
     @InjectPresenter
     lateinit var presenter: ForgotPasswordNewPassPresenter
-
-    private fun setupUi() = with(binding) {
-        btFinish.setOnClickListener {
-            validatePass()
-            validateRepeatPass()
-            finalValidate()
-        }
-    }
 
     private fun validatePass(): Boolean = with(binding) {
         if (edPassText.text.toString().trim().isEmpty()) {
@@ -68,31 +56,20 @@ class ForgotPasswordNewPassFragment : MvpAppCompatFragment(), ForgotPasswordNewP
         Toast.makeText(requireContext(), getString(R.string.error_pass_coincidence), Toast.LENGTH_SHORT).show()
     }
 
-    private fun onBackPress() {
-        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                navigateTo(R.id.logInFragment)
-                clearBackStack()
-            }
-        })
-    }
-
     @ProvidePresenter
     fun provideForgotPasswordNewPassPresenter() =
         CinematicApplication.appComponent.provideForgotPasswordNewPassPresenter()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentForgotPassNewPassBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun initializeBinding() = FragmentForgotPassNewPassBinding.inflate(layoutInflater)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        onBackPress()
-        setupUi()
+    override fun setupListener() {
+        with(binding) {
+            btFinish.setOnClickListener {
+                validatePass()
+                validateRepeatPass()
+                finalValidate()
+            }
+        }
     }
 
     override fun setUserPass() {
@@ -101,8 +78,12 @@ class ForgotPasswordNewPassFragment : MvpAppCompatFragment(), ForgotPasswordNewP
             .show()
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance() = ForgotPasswordNewPassFragment()
+    override fun onBackPress() {
+        requireActivity().onBackPressedDispatcher.addCallback(this as LifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                navigateTo(R.id.logInFragment)
+                clearBackStack()
+            }
+        })
     }
 }

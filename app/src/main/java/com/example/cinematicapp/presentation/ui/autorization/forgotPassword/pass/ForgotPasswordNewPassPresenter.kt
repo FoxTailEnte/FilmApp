@@ -1,20 +1,17 @@
 package com.example.cinematicapp.presentation.ui.autorization.forgotPassword.pass
 
-import com.example.cinematicapp.repository.utils.Constants
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.example.cinematicapp.domain.firebaseUseCase.FireBaseDataUseCase
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import javax.inject.Inject
 
 @InjectViewState
-class ForgotPasswordNewPassPresenter @Inject constructor() : MvpPresenter<ForgotPasswordNewPassView>() {
-    private lateinit var mDataBase: DatabaseReference
+class ForgotPasswordNewPassPresenter @Inject constructor(
+    private val firebase: FireBaseDataUseCase
+) : MvpPresenter<ForgotPasswordNewPassView>() {
 
     fun addNewPass(phone: String, pass: String) {
-        mDataBase = Firebase.database.reference
-        mDataBase.child(Constants.USERS).child(phone).child("pass").setValue(pass)
+        firebase.addNewPass(phone,pass)
         viewState.setUserPass()
     }
 }

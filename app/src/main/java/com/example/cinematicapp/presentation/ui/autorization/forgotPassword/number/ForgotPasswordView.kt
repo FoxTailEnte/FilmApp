@@ -9,4 +9,5 @@ interface ForgotPasswordView : MvpView {
     fun userNotRegister()
     fun verificationFailed()
     fun sentCodeSuccess(phone: String, id: String)
+    fun sentSms(phone: String)
 }

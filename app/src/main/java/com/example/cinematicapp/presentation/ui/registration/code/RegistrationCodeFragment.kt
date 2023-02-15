@@ -14,6 +14,7 @@ import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentRegistrationCodeBinding
 import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.repository.utils.Extensions.clearBackStack
+import com.example.cinematicapp.repository.utils.Extensions.getColor
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -34,39 +35,6 @@ class RegistrationCodeFragment : BaseFragment<FragmentRegistrationCodeBinding>()
             setLoadingState(true)
             presenter.enterCode(args.id, edConfirmCodeText.text.toString())
         }
-    }
-
-    override fun onBackPress() {
-        requireActivity().onBackPressedDispatcher.addCallback(this as LifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                navigateTo(R.id.logInFragment)
-                clearBackStack()
-
-            }
-        })
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun startCountDownTimer() = with(binding.tvReSentCode) {
-        isEnabled = false
-        var currentTime = MILLISECONDS_PER_MINUTE
-        timer = object : CountDownTimer(currentTime, MILLISECONDS_PER_SECOND) {
-            override fun onTick(millisUntilFinished: Long) {
-                setTextColor(resources.getColor(R.color.error_edText))
-                currentTime = millisUntilFinished
-                text = getString(
-                    R.string.registration_restore_sms_code,
-                    millisUntilFinished / 1000
-                )
-            }
-
-            override fun onFinish() {
-                text = getString(R.string.registration_repeat_code)
-                isEnabled = true
-                setTextColor(resources.getColor(R.color.white))
-            }
-
-        }.start()
     }
 
     private fun setLoadingState(loading: Boolean) = with(binding) {
@@ -97,15 +65,48 @@ class RegistrationCodeFragment : BaseFragment<FragmentRegistrationCodeBinding>()
         startCountDownTimer()
     }
 
+    @SuppressLint("SetTextI18n")
+    override fun startCountDownTimer() = with(binding.tvReSentCode) {
+        isEnabled = false
+        var currentTime = MILLISECONDS_PER_MINUTE
+        timer = object : CountDownTimer(currentTime, MILLISECONDS_PER_SECOND) {
+            override fun onTick(millisUntilFinished: Long) {
+                setTextColor(R.color.error_edText.getColor(context))
+                currentTime = millisUntilFinished
+                text = getString(
+                    R.string.registration_restore_sms_code,
+                    millisUntilFinished / 1000
+                )
+            }
+
+            override fun onFinish() {
+                text = getString(R.string.registration_repeat_code)
+                isEnabled = true
+                setTextColor(R.color.white.getColor(context))
+            }
+
+        }.start()
+    }
+
     override fun onDetach() {
-        timer.cancel()
         super.onDetach()
+        timer.cancel()
     }
 
     override fun confirmCodeSuccess() {
         navigateTo(RegistrationCodeFragmentDirections
                 .actionRegistrationCodeFragmentToRegistrationPersoneInfoFragment(args.phone))
         setLoadingState(false)
+    }
+
+    override fun onBackPress() {
+        requireActivity().onBackPressedDispatcher.addCallback(this as LifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                navigateTo(R.id.logInFragment)
+                clearBackStack()
+
+            }
+        })
     }
 
     override fun confirmCodeFailToast() {

@@ -1,38 +1,31 @@
 package com.example.cinematicapp.presentation.ui.autorization.forgotPassword.code
 
 import android.annotation.SuppressLint
-import android.os.Bundle
 import android.os.CountDownTimer
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.isVisible
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.navArgs
 import com.example.cinematicapp.CinematicApplication
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentForgotPassCodeBinding
+import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.presentation.ui.registration.code.RegistrationCodeFragmentArgs
 import com.example.cinematicapp.repository.utils.Extensions.clearBackStack
+import com.example.cinematicapp.repository.utils.Extensions.getColor
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
-import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
-class ForgotPasswordCodeFragment : MvpAppCompatFragment(), ForgotPasswordCodeView {
+class ForgotPasswordCodeFragment : BaseFragment<FragmentForgotPassCodeBinding>(), ForgotPasswordCodeView {
 
     @InjectPresenter
     lateinit var presenter: ForgotPasswordCodePresenter
-    private lateinit var binding: FragmentForgotPassCodeBinding
     private lateinit var timer: CountDownTimer
     private val args: RegistrationCodeFragmentArgs by navArgs()
-
-    private fun setupUi() = with(binding) {
-        tvReSentCode.setOnClickListener { presenter.authUser(args.phone) }
-        btConfirmCode.setOnClickListener { validateCode() }
-    }
 
     private fun validateCode() = with(binding) {
         if (edConfirmCodeText.text.toString().trim().isEmpty()) {
@@ -47,22 +40,32 @@ class ForgotPasswordCodeFragment : MvpAppCompatFragment(), ForgotPasswordCodeVie
     private fun setLoadingState(loading: Boolean) = with(binding) {
         if (loading) {
             btConfirmCode.isEnabled = false
-            tvConfirmCode.visibility = View.GONE
-            pbConfirmCode.visibility = View.VISIBLE
+            tvConfirmCode.isVisible = false
+            pbConfirmCode.isVisible = true
         } else {
             btConfirmCode.isEnabled = true
-            tvConfirmCode.visibility = View.VISIBLE
-            pbConfirmCode.visibility = View.GONE
+            tvConfirmCode.isVisible = true
+            pbConfirmCode.isVisible = false
         }
     }
 
+    @ProvidePresenter
+    fun provideRegistrationCodePresenter() = CinematicApplication.appComponent.provideForgotPasswordCodePresenter()
+
+    override fun initializeBinding() = FragmentForgotPassCodeBinding.inflate(layoutInflater)
+
+    override fun setupListener() = with(binding) {
+        tvReSentCode.setOnClickListener { presenter.authUser(args.phone,requireActivity()) }
+        btConfirmCode.setOnClickListener { validateCode() }
+    }
+
     @SuppressLint("SetTextI18n")
-    private fun startCountDownTimer() = with(binding.tvReSentCode) {
+    override fun startCountDownTimer() = with(binding.tvReSentCode) {
         isEnabled = false
         var currentTime = MILLISECONDS_PER_MINUTE
         timer = object : CountDownTimer(currentTime, MILLISECONDS_PER_SECOND) {
             override fun onTick(millisUntilFinished: Long) {
-                setTextColor(resources.getColor(R.color.error_edText))
+                setTextColor(R.color.error_edText.getColor(context))
                 currentTime = millisUntilFinished
                 text = getString(
                     R.string.registration_restore_sms_code,
@@ -73,14 +76,19 @@ class ForgotPasswordCodeFragment : MvpAppCompatFragment(), ForgotPasswordCodeVie
             override fun onFinish() {
                 text = getString(R.string.registration_repeat_code)
                 isEnabled = true
-                setTextColor(resources.getColor(R.color.white))
+                setTextColor(R.color.white.getColor(context))
             }
 
         }.start()
     }
 
-    private fun onBackPress() {
-        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+    override fun onDestroy() {
+        timer.cancel()
+        super.onDestroy()
+    }
+
+    override fun onBackPress() {
+        requireActivity().onBackPressedDispatcher.addCallback(this as LifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 navigateTo(R.id.logInFragment)
                 clearBackStack()
@@ -88,22 +96,12 @@ class ForgotPasswordCodeFragment : MvpAppCompatFragment(), ForgotPasswordCodeVie
         })
     }
 
-    @ProvidePresenter
-    fun provideRegistrationCodePresenter() = CinematicApplication.appComponent.provideForgotPasswordCodePresenter()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentForgotPassCodeBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupUi()
-        startCountDownTimer()
-        onBackPress()
+    override fun confirmCodeSuccess() {
+        navigateTo(
+            ForgotPasswordCodeFragmentDirections
+                .actionForgotPasswordCodeFragmentToForgotPasswordNewPassFragment(args.phone)
+        )
+        setLoadingState(false)
     }
 
     override fun verificationFailed() {
@@ -118,14 +116,6 @@ class ForgotPasswordCodeFragment : MvpAppCompatFragment(), ForgotPasswordCodeVie
         PhoneAuthProvider.verifyPhoneNumber(option.setActivity(requireActivity()).build())
     }
 
-    override fun confirmCodeSuccessToast() {
-        navigateTo(
-            ForgotPasswordCodeFragmentDirections
-                .actionForgotPasswordCodeFragmentToForgotPasswordNewPassFragment(args.phone)
-        )
-        setLoadingState(false)
-    }
-
     override fun confirmCodeFailToast() {
         Toast.makeText(requireContext(), getString(R.string.error_confirm_code_fail), Toast.LENGTH_SHORT).show()
         setLoadingState(false)
@@ -134,8 +124,5 @@ class ForgotPasswordCodeFragment : MvpAppCompatFragment(), ForgotPasswordCodeVie
     companion object {
         const val MILLISECONDS_PER_SECOND: Long = 1000
         const val MILLISECONDS_PER_MINUTE: Long = 300000
-
-        @JvmStatic
-        fun newInstance() = ForgotPasswordCodeFragment()
     }
 }

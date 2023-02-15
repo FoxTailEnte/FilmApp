@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/forgot_password_pass_hit"
-            android:maxLength="12" />
+            android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -84,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/forgot_password_repeat_pass_hint"
-            android:maxLength="12" />
+            android:maxLines="1"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.cardview.widget.CardView
@@ -134,6 +134,7 @@
         app:fabCustomSize="38dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/backpress" />
+        app:srcCompat="@drawable/backpress"
+        tools:ignore="ContentDescription,KeyboardInaccessibleWidget" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

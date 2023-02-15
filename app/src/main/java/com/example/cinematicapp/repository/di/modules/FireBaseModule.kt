@@ -1,9 +1,13 @@
 package com.example.cinematicapp.repository.di.modules
 
-import com.example.cinematicapp.repository.network.firebase.bd.FireBaseUserInfo
-import com.example.cinematicapp.repository.network.firebase.bd.FireBaseUserInfoImpl
-import com.example.cinematicapp.repository.network.firebase.sms.FireBaseSms
-import com.example.cinematicapp.repository.network.firebase.sms.FirebaseSmsImpl
+import com.example.cinematicapp.domain.firebaseUseCase.FireBaseDataUseCase
+import com.example.cinematicapp.domain.firebaseUseCase.FireBaseDataUseCaseImpl
+import com.example.cinematicapp.domain.firebaseUseCase.FireBaseSmsUseCase
+import com.example.cinematicapp.domain.firebaseUseCase.FireBaseSmsUseCaseImpl
+import com.example.cinematicapp.repository.network.firebase.bd.FireBaseData
+import com.example.cinematicapp.repository.network.firebase.bd.FireBaseDataImpl
+import com.example.cinematicapp.repository.network.firebase.bd.FireBaseSms
+import com.example.cinematicapp.repository.network.firebase.bd.FirebaseSmsImpl
 import dagger.Module
 import dagger.Provides
 
@@ -11,8 +15,11 @@ import dagger.Provides
 class FireBaseModule {
 
     @Provides
-    fun provideFireBase(): FireBaseSms = FirebaseSmsImpl()
-
+    fun provideFireBaseSms(): FireBaseSms = FirebaseSmsImpl()
     @Provides
-    fun provideFireBaseUserInfo(): FireBaseUserInfo = FireBaseUserInfoImpl()
+    fun provideFireBaseSmsUseCase(fireBaseSms: FireBaseSms): FireBaseSmsUseCase = FireBaseSmsUseCaseImpl(fireBaseSms)
+    @Provides
+    fun provideFireBaseData(): FireBaseData = FireBaseDataImpl()
+    @Provides
+    fun provideFireBaseDataUseCase(fireBaseData: FireBaseData): FireBaseDataUseCase = FireBaseDataUseCaseImpl(fireBaseData)
 }

@@ -1,4 +1,4 @@
-package com.example.cinematicapp.repository.data.sharedpref
+package com.example.cinematicapp.repository.sharedPref
 
 import android.content.Context
 import android.content.SharedPreferences

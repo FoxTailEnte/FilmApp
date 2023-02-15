@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
@@ -36,4 +37,6 @@ object Extensions {
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
+
+    fun Int.getColor(context: Context): Int = ContextCompat.getColor(context, this)
 }

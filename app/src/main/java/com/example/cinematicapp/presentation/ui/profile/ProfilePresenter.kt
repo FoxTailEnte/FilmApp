@@ -1,13 +1,13 @@
 package com.example.cinematicapp.presentation.ui.profile
 
 import com.example.cinematicapp.R
+import com.example.cinematicapp.domain.sharedPrefUseCase.SharedPrefUseCase
 import com.example.cinematicapp.presentation.adapters.profile.ProfileModel
-import com.example.cinematicapp.repository.data.sharedpref.SaveUserAuthStatus
 import moxy.MvpPresenter
 import javax.inject.Inject
 
 class ProfilePresenter @Inject constructor(
-    private val pref: SaveUserAuthStatus
+    private val pref: SharedPrefUseCase
 ) : MvpPresenter<ProfileView>() {
 
     fun singOutUser(item: ProfileModel) {

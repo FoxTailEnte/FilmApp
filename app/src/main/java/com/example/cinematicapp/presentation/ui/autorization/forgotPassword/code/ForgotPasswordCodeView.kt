@@ -10,6 +10,6 @@ interface ForgotPasswordCodeView : MvpView {
     fun verificationFailed()
     fun sentCodeSuccess(phone: String, id: String)
     fun sentCode(option: PhoneAuthOptions.Builder)
-    fun confirmCodeSuccessToast()
+    fun confirmCodeSuccess()
     fun confirmCodeFailToast()
 }

@@ -59,11 +59,13 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edPhoneText"
+            android:inputType="number"
             style="@style/base_text_input_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/number"
-            android:maxLength="12" />
+            android:maxLength="12"
+            android:maxLines="1"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.cardview.widget.CardView

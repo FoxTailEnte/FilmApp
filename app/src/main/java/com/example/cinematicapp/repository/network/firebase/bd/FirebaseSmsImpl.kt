@@ -1,4 +1,4 @@
-package com.example.cinematicapp.repository.network.firebase.sms
+package com.example.cinematicapp.repository.network.firebase.bd
 
 import android.app.Activity
 import com.example.cinematicapp.repository.utils.Constants
@@ -29,11 +29,11 @@ class FirebaseSmsImpl : FireBaseSms {
         }
     }
 
-    override fun authUser(phone: String, action: (Boolean?) -> Unit) {
-        var currentString: Boolean? = null
+    override fun authUser(phone: String, action: (Boolean) -> Unit) {
+        var currentString: Boolean
         mDataBase = FirebaseDatabase.getInstance().getReference(Constants.USERS)
         mDataBase.child(phone).get().addOnSuccessListener {
-            if (it.value == null) currentString = true
+            currentString = it.value == null
             action.invoke(currentString)
         }
     }

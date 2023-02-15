@@ -1,35 +1,24 @@
 package com.example.cinematicapp.presentation.ui.autorization.forgotPassword.number
 
-import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import com.example.cinematicapp.CinematicApplication
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentForgotPasswordBinding
+import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.repository.utils.Constants
 import com.example.cinematicapp.repository.utils.Extensions.navigateBack
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
-import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
-class ForgotPasswordFragment : MvpAppCompatFragment(), ForgotPasswordView {
+class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding>(), ForgotPasswordView {
 
     @InjectPresenter
     lateinit var presenter: ForgotPasswordPresenter
-    private lateinit var binding: FragmentForgotPasswordBinding
-
-    private fun setupUi() = with(binding) {
-        btBackPress.setOnClickListener { navigateBack() }
-        btSendCode.setOnClickListener {
-            validateNumber()
-        }
-    }
 
     private fun validateNumber() = with(binding) {
         if (edPhoneText.text.toString().trim().isEmpty()) {
@@ -41,7 +30,7 @@ class ForgotPasswordFragment : MvpAppCompatFragment(), ForgotPasswordView {
                 edPhone.isErrorEnabled = false
                 setLoadingState(true)
                 hideKeyBoard()
-                presenter.checkUserPhone(edPhoneText.text.toString(),requireActivity())
+                presenter.checkUserPhone(edPhoneText.text.toString())
             }
         }
     }
@@ -62,7 +51,19 @@ class ForgotPasswordFragment : MvpAppCompatFragment(), ForgotPasswordView {
         requireActivity().setKeyboardVisibility(false)
     }
 
-    private fun checkInputNumber() = with(binding.edPhoneText) {
+    @ProvidePresenter
+    fun provideRegistrationNumberPresenter() = CinematicApplication.appComponent.provideForgotPasswordPresenter()
+
+    override fun initializeBinding() = FragmentForgotPasswordBinding.inflate(layoutInflater)
+
+    override fun setupListener() = with(binding) {
+        btBackPress.setOnClickListener { navigateBack() }
+        btSendCode.setOnClickListener {
+            validateNumber()
+        }
+    }
+
+    override fun checkInputNumber() = with(binding.edPhoneText) {
         addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -78,25 +79,16 @@ class ForgotPasswordFragment : MvpAppCompatFragment(), ForgotPasswordView {
 
             override fun afterTextChanged(s: Editable?) {
             }
-
         })
     }
 
-    @ProvidePresenter
-    fun provideRegistrationNumberPresenter() = CinematicApplication.appComponent.provideForgotPasswordPresenter()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentForgotPasswordBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun sentCodeSuccess(phone: String, id: String) {
+        navigateTo(ForgotPasswordFragmentDirections.actionForgotPasswordFragmentToForgotPasswordCodeFragment(phone, id))
+        setLoadingState(false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupUi()
-        checkInputNumber()
+    override fun sentSms(phone: String) {
+        presenter.sentSms(phone, requireActivity())
     }
 
     override fun userNotRegister() {
@@ -106,11 +98,6 @@ class ForgotPasswordFragment : MvpAppCompatFragment(), ForgotPasswordView {
 
     override fun verificationFailed() {
         Toast.makeText(requireContext(), getString(R.string.error_verify), Toast.LENGTH_SHORT).show()
-        setLoadingState(false)
-    }
-
-    override fun sentCodeSuccess(phone: String, id: String) {
-        navigateTo(ForgotPasswordFragmentDirections.actionForgotPasswordFragmentToForgotPasswordCodeFragment(phone, id))
         setLoadingState(false)
     }
 }

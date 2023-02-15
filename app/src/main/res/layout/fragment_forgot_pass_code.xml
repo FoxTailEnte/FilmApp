@@ -45,11 +45,13 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edConfirmCodeText"
+            android:inputType="number"
             style="@style/base_text_input_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/registration_hint"
-            android:maxLength="12" />
+            android:maxLength="12"
+            android:maxLines="1"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -64,7 +66,8 @@
         app:fabCustomSize="38dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/backpress" />
+        app:srcCompat="@drawable/backpress"
+        tools:ignore="ContentDescription,KeyboardInaccessibleWidget" />
 
     <TextView
         android:id="@+id/tvReSentCode"
