@@ -49,4 +49,8 @@ class ProfileFragment: BaseFragment<FragmentProfileBinding>(), ProfileView {
     override fun navigateToProfileInformation() {
         navigateTo(ProfileFragmentDirections.actionProfileFragmentToProfilePersonFragment())
     }
+
+    override fun navigateToNewPass() {
+        navigateTo(ProfileFragmentDirections.actionProfileFragmentToNewPassNumberFragment2())
+    }
 }

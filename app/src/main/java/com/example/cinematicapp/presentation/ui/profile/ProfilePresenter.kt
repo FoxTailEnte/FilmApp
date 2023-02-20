@@ -15,7 +15,7 @@ class ProfilePresenter @Inject constructor(
     fun singOutUser(item: ProfileModel) {
         when (item.name ) {
             R.string.profile_information -> viewState.navigateToProfileInformation()
-            R.string.profile_restore_pass -> Unit
+            R.string.profile_restore_pass -> viewState.navigateToNewPass()
             R.string.profile_notification -> Unit
             R.string.profile_report -> Unit
             R.string.profile_donation -> Unit

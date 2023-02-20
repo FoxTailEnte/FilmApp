@@ -6,6 +6,9 @@ import com.example.cinematicapp.presentation.ui.autorization.forgotPassword.numb
 import com.example.cinematicapp.presentation.ui.autorization.forgotPassword.pass.ForgotPasswordNewPassPresenter
 import com.example.cinematicapp.presentation.ui.autorization.login.LogInPresenter
 import com.example.cinematicapp.presentation.ui.profile.ProfilePresenter
+import com.example.cinematicapp.presentation.ui.profile.pass.code.NewPassCodePresenter
+import com.example.cinematicapp.presentation.ui.profile.pass.newPass.NewPassNewPassPresenter
+import com.example.cinematicapp.presentation.ui.profile.pass.number.NewPassNumberPresenter
 import com.example.cinematicapp.presentation.ui.profile.person.ProfilePersonPresenter
 import com.example.cinematicapp.presentation.ui.registration.code.RegistrationCodePresenter
 import com.example.cinematicapp.presentation.ui.registration.number.RegistrationNumberPresenter
@@ -37,4 +40,7 @@ interface AppComponent {
     fun provideForgotPasswordPresenter(): ForgotPasswordPresenter
     fun provideProfilePersonPresenter(): ProfilePersonPresenter
     fun provideProfilePresenter(): ProfilePresenter
+    fun provideNewPassNumberPresenter(): NewPassNumberPresenter
+    fun provideNewPassCodePresenter(): NewPassCodePresenter
+    fun provideNewPassNewPassPresenter(): NewPassNewPassPresenter
 }

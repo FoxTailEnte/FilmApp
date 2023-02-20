@@ -13,10 +13,43 @@
         <action
             android:id="@+id/action_profileFragment_to_profilePersonFragment"
             app:destination="@id/profilePersonFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_newPassNumberFragment2"
+            app:destination="@id/newPassNumberFragment" />
     </fragment>
     <fragment
         android:id="@+id/profilePersonFragment"
         android:name="com.example.cinematicapp.presentation.ui.profile.person.ProfilePersonFragment"
         android:label="ProfilePersonFragment"
-        tools:layout="@layout/fragment_person_info"/>
+        tools:layout="@layout/fragment_person_info" />
+    <fragment
+        android:id="@+id/newPassNumberFragment"
+        android:name="com.example.cinematicapp.presentation.ui.profile.pass.number.NewPassNumberFragment"
+        android:label="NewPassNumberFragment"
+        tools:layout="@layout/fragment_new_pass_number" >
+        <action
+            android:id="@+id/action_newPassNumberFragment_to_newPassCodeFragment"
+            app:destination="@id/newPassCodeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newPassCodeFragment"
+        android:name="com.example.cinematicapp.presentation.ui.profile.pass.code.NewPassCodeFragment"
+        android:label="NewPassCodeFragment"
+        tools:layout="@layout/fragment_new_pass_code" >
+        <action
+            android:id="@+id/action_newPassCodeFragment_to_newPassNewPassFragment"
+            app:destination="@id/newPassNewPassFragment" />
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_new_pass_new_pass"
+        android:id="@+id/newPassNewPassFragment"
+        android:name="com.example.cinematicapp.presentation.ui.profile.pass.newPass.NewPassNewPassFragment"
+        android:label="NewPassNewPassFragment" >
+        <argument
+            android:name="phone"
+            app:argType="string" />
+    </fragment>
 </navigation>

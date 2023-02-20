@@ -8,4 +8,5 @@ import moxy.viewstate.strategy.StateStrategyType
 interface ProfileView: MvpView {
     fun signOutComplete()
     fun navigateToProfileInformation()
+    fun navigateToNewPass()
 }
