@@ -5,14 +5,15 @@ import com.example.cinematicapp.presentation.ui.autorization.forgotPassword.code
 import com.example.cinematicapp.presentation.ui.autorization.forgotPassword.number.ForgotPasswordPresenter
 import com.example.cinematicapp.presentation.ui.autorization.forgotPassword.pass.ForgotPasswordNewPassPresenter
 import com.example.cinematicapp.presentation.ui.autorization.login.LogInPresenter
+import com.example.cinematicapp.presentation.ui.home.HomePresenter
 import com.example.cinematicapp.presentation.ui.profile.ProfilePresenter
 import com.example.cinematicapp.presentation.ui.profile.pass.code.NewPassCodePresenter
 import com.example.cinematicapp.presentation.ui.profile.pass.newPass.NewPassNewPassPresenter
 import com.example.cinematicapp.presentation.ui.profile.pass.number.NewPassNumberPresenter
 import com.example.cinematicapp.presentation.ui.profile.person.ProfilePersonPresenter
-import com.example.cinematicapp.presentation.ui.registration.code.RegistrationCodePresenter
-import com.example.cinematicapp.presentation.ui.registration.number.RegistrationNumberPresenter
-import com.example.cinematicapp.presentation.ui.registration.person.RegistrationPersonInfoPresenter
+import com.example.cinematicapp.presentation.ui.autorization.registration.code.RegistrationCodePresenter
+import com.example.cinematicapp.presentation.ui.autorization.registration.number.RegistrationNumberPresenter
+import com.example.cinematicapp.presentation.ui.autorization.registration.person.RegistrationPersonInfoPresenter
 import com.example.cinematicapp.repository.di.modules.FireBaseModule
 import com.example.cinematicapp.repository.di.modules.SharedPrefModule
 import dagger.BindsInstance
@@ -43,4 +44,5 @@ interface AppComponent {
     fun provideNewPassNumberPresenter(): NewPassNumberPresenter
     fun provideNewPassCodePresenter(): NewPassCodePresenter
     fun provideNewPassNewPassPresenter(): NewPassNewPassPresenter
+    fun provideHomePresenter(): HomePresenter
 }

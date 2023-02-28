@@ -1,4 +1,4 @@
-package com.example.cinematicapp.presentation.ui.registration.number
+package com.example.cinematicapp.presentation.ui.autorization.registration.number
 
 import android.app.Activity
 import com.example.cinematicapp.domain.firebaseUseCase.FireBaseSmsUseCase

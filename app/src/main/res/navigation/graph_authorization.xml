@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/graph_authorization"
+    app:startDestination="@id/logInFragment">
+
+    <fragment
+        android:id="@+id/logInFragment"
+        android:name="com.example.cinematicapp.presentation.ui.autorization.login.LogInFragment"
+        android:label="fragment_log_in"
+        tools:layout="@layout/fragment_log_in" >
+        <action
+            android:id="@+id/action_logInFragment_to_forgotPasswordFragment"
+            app:destination="@id/forgotPasswordFragment" />
+        <action
+            android:id="@+id/action_logInFragment_to_registrationNumberFragment"
+            app:destination="@id/registrationNumberFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="com.example.cinematicapp.presentation.ui.autorization.forgotPassword.number.ForgotPasswordFragment"
+        android:label="ForgotPasswordFragment"
+        tools:layout="@layout/fragment_forgot_password" >
+        <action
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/graph_authorization"
+            android:id="@+id/action_forgotPasswordFragment_to_forgotPasswordCodeFragment2"
+            app:destination="@id/forgotPasswordCodeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/forgotPasswordCodeFragment"
+        android:name="com.example.cinematicapp.presentation.ui.autorization.forgotPassword.code.ForgotPasswordCodeFragment"
+        android:label="ForgotPasswordCodeFragment"
+        tools:layout="@layout/fragment_forgot_pass_code" >
+        <action
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/graph_authorization"
+            android:id="@+id/action_forgotPasswordCodeFragment_to_forgotPasswordNewPassFragment"
+            app:destination="@id/forgotPasswordNewPassFragment" />
+        <argument
+            android:name="phone"
+            app:argType="string" />
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationNumberFragment"
+        android:name="com.example.cinematicapp.presentation.ui.autorization.registration.number.RegistrationNumberFragment"
+        android:label="RegistrationNumberFragment"
+        tools:layout="@layout/fragment_registration_number" >
+        <action
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/graph_authorization"
+            android:id="@+id/action_registrationNumberFragment_to_registrationCodeFragment"
+            app:destination="@id/registrationCodeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationCodeFragment"
+        android:name="com.example.cinematicapp.presentation.ui.autorization.registration.code.RegistrationCodeFragment"
+        android:label="RegistrationCodeFragment"
+        tools:layout="@layout/fragment_forgot_pass_code">
+        <action
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/graph_authorization"
+            android:id="@+id/action_registrationCodeFragment_to_registrationPersonInfoFragment"
+            app:destination="@id/registrationPersonInfoFragment" />
+        <argument
+            android:name="phone"
+            app:argType="string" />
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationPersonInfoFragment"
+        android:name="com.example.cinematicapp.presentation.ui.autorization.registration.person.RegistrationPersonInfoFragment"
+        android:label="RegistrationPersonInfoFragment"
+        tools:layout="@layout/fragment_registration_person_info">
+        <argument
+            android:name="phone"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/forgotPasswordNewPassFragment"
+        android:name="com.example.cinematicapp.presentation.ui.autorization.forgotPassword.pass.ForgotPasswordNewPassFragment"
+        android:label="ForgotPasswordNewPassFragment"
+        tools:layout="@layout/fragment_forgot_pass_new_pass">
+        <argument
+            android:name="phone"
+            app:argType="string" />
+    </fragment>
+
+</navigation>

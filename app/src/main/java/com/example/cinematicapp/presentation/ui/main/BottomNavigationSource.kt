@@ -2,5 +2,6 @@ package com.example.cinematicapp.presentation.ui.main
 
 interface BottomNavigationSource {
 
-    fun hideBottomNavigation(visibility: Boolean)
+    fun hideSearchMenu(visibility: Boolean)
+    fun hideBottomMenu(visibility: Boolean)
 }

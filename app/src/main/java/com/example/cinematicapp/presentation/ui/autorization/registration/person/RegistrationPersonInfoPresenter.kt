@@ -1,4 +1,4 @@
-package com.example.cinematicapp.presentation.ui.registration.person
+package com.example.cinematicapp.presentation.ui.autorization.registration.person
 
 import com.example.cinematicapp.domain.firebaseUseCase.FireBaseDataUseCase
 import com.example.cinematicapp.repository.network.firebase.models.UserModel

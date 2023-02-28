@@ -1,10 +1,10 @@
-package com.example.cinematicapp.presentation.ui.registration.code
+package com.example.cinematicapp.presentation.ui.autorization.registration.code
 
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
+import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
-@StateStrategyType(AddToEndSingleStrategy::class)
+@StateStrategyType(OneExecutionStateStrategy::class)
 interface RegistrationCodeView: MvpView {
     fun confirmCodeSuccess()
     fun confirmCodeFailToast()

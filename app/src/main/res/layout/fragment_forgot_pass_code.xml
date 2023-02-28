@@ -45,13 +45,13 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edConfirmCodeText"
-            android:inputType="number"
             style="@style/base_text_input_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/registration_hint"
+            android:inputType="number"
             android:maxLength="12"
-            android:maxLines="1"/>
+            android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

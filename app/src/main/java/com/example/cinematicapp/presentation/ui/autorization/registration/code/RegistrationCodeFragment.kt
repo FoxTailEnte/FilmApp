@@ -1,19 +1,16 @@
-package com.example.cinematicapp.presentation.ui.registration.code
+package com.example.cinematicapp.presentation.ui.autorization.registration.code
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
-import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.navArgs
 import com.example.cinematicapp.CinematicApplication.Companion.appComponent
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentRegistrationCodeBinding
 import com.example.cinematicapp.presentation.base.BaseFragment
-import com.example.cinematicapp.repository.utils.Extensions.clearBackStack
 import com.example.cinematicapp.repository.utils.Extensions.getColor
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import moxy.presenter.InjectPresenter
@@ -49,24 +46,8 @@ class RegistrationCodeFragment : BaseFragment<FragmentRegistrationCodeBinding>()
         }
     }
 
-    @ProvidePresenter
-    fun provideRegistrationCodePresenter() = appComponent.provideRegistrationCodePresenter()
-
-    override fun initializeBinding() = FragmentRegistrationCodeBinding.inflate(layoutInflater)
-
-    override fun setupListener() = with(binding) {
-        tvReSentCode.setOnClickListener { presenter.authUser(args.phone, requireActivity()) }
-        btConfirmCode.setOnClickListener { validateCode() }
-        btBackPress.setOnClickListener { navigateTo(R.id.registrationNumberFragment) }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        startCountDownTimer()
-    }
-
     @SuppressLint("SetTextI18n")
-    override fun startCountDownTimer() = with(binding.tvReSentCode) {
+    private fun startCountDownTimer() = with(binding.tvReSentCode) {
         isEnabled = false
         var currentTime = MILLISECONDS_PER_MINUTE
         timer = object : CountDownTimer(currentTime, MILLISECONDS_PER_SECOND) {
@@ -88,25 +69,31 @@ class RegistrationCodeFragment : BaseFragment<FragmentRegistrationCodeBinding>()
         }.start()
     }
 
+    @ProvidePresenter
+    fun provideRegistrationCodePresenter() = appComponent.provideRegistrationCodePresenter()
+
+    override fun initializeBinding() = FragmentRegistrationCodeBinding.inflate(layoutInflater)
+
+    override fun setupListener() = with(binding) {
+        tvReSentCode.setOnClickListener { presenter.authUser(args.phone, requireActivity()) }
+        btConfirmCode.setOnClickListener { validateCode() }
+        btBackPress.setOnClickListener { navigateTo(R.id.registrationNumberFragment) }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        startCountDownTimer()
+    }
+
     override fun onDetach() {
-        super.onDetach()
         timer.cancel()
+        super.onDetach()
     }
 
     override fun confirmCodeSuccess() {
         navigateTo(RegistrationCodeFragmentDirections
-                .actionRegistrationCodeFragmentToRegistrationPersoneInfoFragment(args.phone))
+                .actionRegistrationCodeFragmentToRegistrationPersonInfoFragment(args.phone))
         setLoadingState(false)
-    }
-
-    override fun onBackPress() {
-        requireActivity().onBackPressedDispatcher.addCallback(this as LifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                navigateTo(R.id.logInFragment)
-                clearBackStack()
-
-            }
-        })
     }
 
     override fun confirmCodeFailToast() {

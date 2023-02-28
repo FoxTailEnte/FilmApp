@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_navigation_graph"
     app:startDestination="@id/graph_home">
-
     <include app:graph="@navigation/graph_home" />
     <include app:graph="@navigation/graph_library" />
     <include app:graph="@navigation/graph_watch_later" />

@@ -1,13 +1,10 @@
-package com.example.cinematicapp.presentation.ui.registration.number
+package com.example.cinematicapp.presentation.ui.autorization.registration.number
 
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.lifecycle.LifecycleOwner
-import androidx.navigation.fragment.findNavController
 import com.example.cinematicapp.CinematicApplication.Companion.appComponent
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentRegistrationNumberBinding
@@ -75,6 +72,7 @@ class RegistrationNumberFragment :BaseFragment<FragmentRegistrationNumberBinding
     override fun checkInputNumber() = with(binding.edPhoneText) {
         addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                Unit
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -87,26 +85,19 @@ class RegistrationNumberFragment :BaseFragment<FragmentRegistrationNumberBinding
             }
 
             override fun afterTextChanged(s: Editable?) {
+                Unit
             }
         })
     }
 
     override fun sentCodeSuccess(phone: String, id: String) {
-        navigateTo(RegistrationNumberFragmentDirections
-            .actionRegistrationNumberFragmentToRegistrationCodeFragment(phone, id))
+        navigateTo(
+            RegistrationNumberFragmentDirections.actionRegistrationNumberFragmentToRegistrationCodeFragment(phone, id))
         setLoadingState(false)
     }
 
     override fun sentSms(phone: String) {
-        presenter.sendSms(phone,requireActivity())
-    }
-
-    override fun onBackPress() {
-        requireActivity().onBackPressedDispatcher.addCallback(this as LifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                findNavController().navigateUp()
-            }
-        })
+        presenter.sendSms(phone, requireActivity())
     }
 
     override fun verificationFailed() {

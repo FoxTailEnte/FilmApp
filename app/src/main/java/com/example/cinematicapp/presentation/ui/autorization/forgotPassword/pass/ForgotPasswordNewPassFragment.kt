@@ -1,15 +1,12 @@
 package com.example.cinematicapp.presentation.ui.autorization.forgotPassword.pass
 
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.navArgs
 import com.example.cinematicapp.CinematicApplication
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentForgotPassNewPassBinding
 import com.example.cinematicapp.presentation.base.BaseFragment
-import com.example.cinematicapp.repository.utils.Extensions.clearBackStack
-import com.example.cinematicapp.repository.utils.Extensions.navigateTo
+import com.example.cinematicapp.repository.utils.Extensions.navigateBack
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
@@ -73,17 +70,8 @@ class ForgotPasswordNewPassFragment : BaseFragment<FragmentForgotPassNewPassBind
     }
 
     override fun setUserPass() {
-        navigateTo(R.id.logInFragment)
+        navigateBack()
         Toast.makeText(requireContext(), getString(R.string.forgot_password_finish_add_new_pass), Toast.LENGTH_SHORT)
             .show()
-    }
-
-    override fun onBackPress() {
-        requireActivity().onBackPressedDispatcher.addCallback(this as LifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                navigateTo(R.id.logInFragment)
-                clearBackStack()
-            }
-        })
     }
 }

@@ -66,6 +66,7 @@ class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding>(), Fo
     override fun checkInputNumber() = with(binding.edPhoneText) {
         addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                Unit
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -78,12 +79,13 @@ class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding>(), Fo
             }
 
             override fun afterTextChanged(s: Editable?) {
+                Unit
             }
         })
     }
 
     override fun sentCodeSuccess(phone: String, id: String) {
-        navigateTo(ForgotPasswordFragmentDirections.actionForgotPasswordFragmentToForgotPasswordCodeFragment(phone, id))
+        navigateTo(ForgotPasswordFragmentDirections.actionForgotPasswordFragmentToForgotPasswordCodeFragment2(phone, id))
         setLoadingState(false)
     }
 

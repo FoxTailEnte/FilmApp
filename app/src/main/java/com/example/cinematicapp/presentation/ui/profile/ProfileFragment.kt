@@ -1,13 +1,12 @@
 package com.example.cinematicapp.presentation.ui.profile
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.example.cinematicapp.CinematicApplication.Companion.appComponent
 import com.example.cinematicapp.databinding.FragmentProfileBinding
 import com.example.cinematicapp.presentation.adapters.profile.ProfileAdapter
 import com.example.cinematicapp.presentation.base.BaseFragment
-import com.example.cinematicapp.presentation.ui.main.MainActivity
+import com.example.cinematicapp.repository.utils.Extensions.getMainActivityView
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -29,6 +28,10 @@ class ProfileFragment: BaseFragment<FragmentProfileBinding>(), ProfileView {
 
     override fun initializeBinding() = FragmentProfileBinding.inflate(layoutInflater)
 
+    override fun setupUi() {
+        getMainActivityView()?.hideSearchMenu(false)
+    }
+
     override fun setupListener() = with(binding) {
         val phone = presenter.getUserPhone()
         presenter.getUserName(phone) {
@@ -42,8 +45,7 @@ class ProfileFragment: BaseFragment<FragmentProfileBinding>(), ProfileView {
     }
 
     override fun signOutComplete() {
-        requireActivity().finish()
-        requireActivity().startActivity(Intent(requireContext(),MainActivity::class.java))
+        navigateTo(ProfileFragmentDirections.actionProfileFragmentToGraphAuthorization())
     }
 
     override fun navigateToProfileInformation() {
@@ -51,6 +53,6 @@ class ProfileFragment: BaseFragment<FragmentProfileBinding>(), ProfileView {
     }
 
     override fun navigateToNewPass() {
-        navigateTo(ProfileFragmentDirections.actionProfileFragmentToNewPassNumberFragment2())
+        navigateTo(ProfileFragmentDirections.actionProfileFragmentToNewPassNumberFragment())
     }
 }

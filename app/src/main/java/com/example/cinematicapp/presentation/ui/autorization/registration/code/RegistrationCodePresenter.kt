@@ -1,4 +1,4 @@
-package com.example.cinematicapp.presentation.ui.registration.code
+package com.example.cinematicapp.presentation.ui.autorization.registration.code
 
 import android.app.Activity
 import com.example.cinematicapp.domain.firebaseUseCase.FireBaseSmsUseCase

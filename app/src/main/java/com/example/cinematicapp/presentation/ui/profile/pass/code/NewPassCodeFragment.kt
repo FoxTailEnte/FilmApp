@@ -1,17 +1,16 @@
 package com.example.cinematicapp.presentation.ui.profile.pass.code
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import android.os.CountDownTimer
+import android.view.View
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
-import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.navArgs
 import com.example.cinematicapp.CinematicApplication
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentNewPassCodeBinding
 import com.example.cinematicapp.presentation.base.BaseFragment
-import com.example.cinematicapp.repository.utils.Extensions.clearBackStack
 import com.example.cinematicapp.repository.utils.Extensions.getColor
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.google.firebase.auth.PhoneAuthOptions
@@ -53,18 +52,8 @@ class NewPassCodeFragment : BaseFragment<FragmentNewPassCodeBinding>(), NewPassC
         presenter.authUser(phone,requireActivity())
     }
 
-    @ProvidePresenter
-    fun provideNewPassCodePresenter() = CinematicApplication.appComponent.provideNewPassCodePresenter()
-
-    override fun initializeBinding() = FragmentNewPassCodeBinding.inflate(layoutInflater)
-
-    override fun setupListener() = with(binding) {
-        tvReSentCode.setOnClickListener { getNumber() }
-        btConfirmCode.setOnClickListener { validateCode() }
-    }
-
     @SuppressLint("SetTextI18n")
-    override fun startCountDownTimer() = with(binding.tvReSentCode) {
+    private fun startCountDownTimer() = with(binding.tvReSentCode) {
         isEnabled = false
         var currentTime = MILLISECONDS_PER_MINUTE
         timer = object : CountDownTimer(currentTime, MILLISECONDS_PER_SECOND) {
@@ -86,18 +75,24 @@ class NewPassCodeFragment : BaseFragment<FragmentNewPassCodeBinding>(), NewPassC
         }.start()
     }
 
+    @ProvidePresenter
+    fun provideNewPassCodePresenter() = CinematicApplication.appComponent.provideNewPassCodePresenter()
+
+    override fun initializeBinding() = FragmentNewPassCodeBinding.inflate(layoutInflater)
+
+    override fun setupListener() = with(binding) {
+        tvReSentCode.setOnClickListener { getNumber() }
+        btConfirmCode.setOnClickListener { validateCode() }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        startCountDownTimer()
+    }
+
     override fun onDestroy() {
         timer.cancel()
         super.onDestroy()
-    }
-
-    override fun onBackPress() {
-        requireActivity().onBackPressedDispatcher.addCallback(this as LifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                navigateTo(R.id.graph_profile)
-                clearBackStack()
-            }
-        })
     }
 
     override fun confirmCodeSuccess() {

@@ -1,7 +1,7 @@
 package com.example.cinematicapp.repository.di.modules
 
-import com.example.cinematicapp.presentation.ui.registration.code.RegistrationCodeFragment
-import com.example.cinematicapp.presentation.ui.registration.number.RegistrationNumberFragment
+import com.example.cinematicapp.presentation.ui.autorization.registration.code.RegistrationCodeFragment
+import com.example.cinematicapp.presentation.ui.autorization.registration.number.RegistrationNumberFragment
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

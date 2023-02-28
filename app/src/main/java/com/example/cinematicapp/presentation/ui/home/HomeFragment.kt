@@ -1,33 +1,31 @@
 package com.example.cinematicapp.presentation.ui.home
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.example.cinematicapp.repository.utils.Extensions.backPressFinishApp
-import com.example.cinematicapp.repository.utils.Extensions.getBottomNavigation
+import com.example.cinematicapp.CinematicApplication
 import com.example.cinematicapp.databinding.FragmentHomeBinding
+import com.example.cinematicapp.presentation.base.BaseFragment
+import com.example.cinematicapp.repository.utils.Extensions.getMainActivityView
+import com.example.cinematicapp.repository.utils.Extensions.navigateTo
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 
-class HomeFragment : Fragment() {
-    private lateinit var binding: FragmentHomeBinding
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root
+class HomeFragment : BaseFragment<FragmentHomeBinding>(), HomeView {
+
+    @InjectPresenter
+    lateinit var presenter: HomePresenter
+
+    @ProvidePresenter
+    fun provideHomePresenter() = CinematicApplication.appComponent.provideHomePresenter()
+
+    override fun initializeBinding() = FragmentHomeBinding.inflate(layoutInflater)
+
+    override fun checkUserAuth() {
+          if (!presenter.checkUserAuthStatus()) navigateTo(HomeFragmentDirections.actionHomeFragmentToGraphAuthorization())
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        getBottomNavigation()?.hideBottomNavigation(true)
-        backPressFinishApp()
+    override fun setupUi() {
+        getMainActivityView()?.hideSearchMenu(true)
+        getMainActivityView()?.hideBottomMenu(true)
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance() = HomeFragment()
-    }
 }

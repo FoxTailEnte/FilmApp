@@ -1,5 +1,6 @@
 package com.example.cinematicapp.presentation.ui.autorization.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,8 +12,9 @@ import com.example.cinematicapp.CinematicApplication.Companion.appComponent
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentLogInBinding
 import com.example.cinematicapp.presentation.base.BaseFragment
+import com.example.cinematicapp.presentation.ui.main.MainActivity
 import com.example.cinematicapp.repository.utils.Constants
-import com.example.cinematicapp.repository.utils.Extensions.getBottomNavigation
+import com.example.cinematicapp.repository.utils.Extensions.getMainActivityView
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
 import moxy.presenter.InjectPresenter
@@ -81,12 +83,13 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(), LogInView {
     override fun initializeBinding() = FragmentLogInBinding.inflate(layoutInflater)
 
     override fun setupUi() {
-        getBottomNavigation()?.hideBottomNavigation(false)
+        getMainActivityView()?.hideSearchMenu(false)
+        getMainActivityView()?.hideBottomMenu(false)
     }
 
     override fun setupListener() {
         with (binding) {
-            forgotPassword.setOnClickListener { navigateTo(LogInFragmentDirections.actionLogInFragmentToGraphForgotPass()) }
+            forgotPassword.setOnClickListener { navigateTo(LogInFragmentDirections.actionLogInFragmentToForgotPasswordFragment()) }
             btSignIn.setOnClickListener {
                 hideKeyBoard()
                 validateNumber()
@@ -95,27 +98,20 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(), LogInView {
             }
             tvRegistration.setOnClickListener {
                 navigateTo(
-                    LogInFragmentDirections
-                        .actionLogInFragmentToRegistrationNavigation()
-                )
+                    LogInFragmentDirections.actionLogInFragmentToRegistrationNumberFragment())
             }
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        checkUserAuth()
         checkInputNumber()
-    }
-
-    override fun checkUserAuth() {
-        if (presenter.checkUserAuthStatus()) navigateTo(LogInFragmentDirections
-                .actionLogInFragmentToBottomNavigationGraph())
     }
 
     override fun checkInputNumber() = with(binding) {
         edNumberText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                Unit
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -128,12 +124,14 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(), LogInView {
             }
 
             override fun afterTextChanged(s: Editable?) {
+                Unit
             }
         })
     }
 
     override fun userAuthComplete() {
-        navigateTo(LogInFragmentDirections.actionLogInFragmentToBottomNavigationGraph())
+        requireActivity().finish()
+        requireActivity().startActivity(Intent(requireContext(), MainActivity::class.java))
         setLoadingState(false)
     }
 

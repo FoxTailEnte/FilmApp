@@ -1,15 +1,13 @@
-package com.example.cinematicapp.presentation.ui.registration.person
+package com.example.cinematicapp.presentation.ui.autorization.registration.person
 
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.navArgs
 import com.example.cinematicapp.CinematicApplication.Companion.appComponent
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentRegistrationPersonInfoBinding
 import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.repository.network.firebase.models.UserModel
-import com.example.cinematicapp.repository.utils.Extensions.clearBackStack
+import com.example.cinematicapp.repository.utils.Extensions.navigateBack
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
 import moxy.presenter.InjectPresenter
@@ -105,19 +103,8 @@ class RegistrationPersonInfoFragment : BaseFragment<FragmentRegistrationPersonIn
         }
     }
 
-    override fun onBackPress() {
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this as LifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    navigateTo(R.id.logInFragment)
-                    clearBackStack()
-                }
-            })
-    }
-
     override fun completeRegistration() {
-        navigateTo(R.id.logInFragment)
+        navigateBack()
         Toast.makeText(requireContext(), getString(R.string.registration_person_complete_toast), Toast.LENGTH_SHORT).show()
     }
 }

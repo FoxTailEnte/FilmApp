@@ -8,32 +8,31 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(), BottomNavigationSource {
     private lateinit var binding: ActivityMainBinding
-    private val navController: NavController by lazy { (supportFragmentManager.findFragmentById(R.id.containerView) as NavHostFragment).navController }
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.bottomNavigationView.setupWithNavController(navController)
-        bottomNavigationController()
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        navController = (supportFragmentManager.findFragmentById(R.id.containerView) as NavHostFragment).navController
+        bottomNavigationView.setupWithNavController(navController)
     }
 
-    override fun hideBottomNavigation(visibility: Boolean) {
+    override fun hideSearchMenu(visibility: Boolean) {
+        binding.imageView.isVisible = visibility
+        binding.cardView.isVisible = visibility
+    }
+
+    override fun hideBottomMenu(visibility:Boolean) {
         binding.bottomNavigationView.isVisible = visibility
     }
 
-    private fun bottomNavigationController() = with(binding) {
-        bottomNavigationView.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.home -> navController.navigate(R.id.graph_home)
-                R.id.library -> navController.navigate(R.id.graph_library)
-                R.id.watchLater -> navController.navigate(R.id.graph_watch_later)
-                R.id.profile -> navController.navigate(R.id.graph_profile)
-            }
-            true
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

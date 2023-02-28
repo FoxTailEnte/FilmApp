@@ -4,16 +4,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.lifecycle.LifecycleOwner
 import com.example.cinematicapp.CinematicApplication.Companion.appComponent
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentNewPassNumberBinding
 import com.example.cinematicapp.presentation.base.BaseFragment
-import com.example.cinematicapp.presentation.ui.autorization.forgotPassword.number.ForgotPasswordFragmentDirections
-import com.example.cinematicapp.presentation.ui.autorization.forgotPassword.pass.ForgotPasswordNewPassFragment
 import com.example.cinematicapp.repository.utils.Constants
-import com.example.cinematicapp.repository.utils.Extensions.clearBackStack
 import com.example.cinematicapp.repository.utils.Extensions.navigateBack
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
@@ -95,14 +90,6 @@ class NewPassNumberFragment : BaseFragment<FragmentNewPassNumberBinding>(), NewP
 
     override fun sentSms(phone: String) {
         presenter.sentSms(phone, requireActivity())
-    }
-
-    override fun onBackPress() {
-        requireActivity().onBackPressedDispatcher.addCallback(this as LifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                navigateBack()
-            }
-        })
     }
 
     override fun userNotRegister() {

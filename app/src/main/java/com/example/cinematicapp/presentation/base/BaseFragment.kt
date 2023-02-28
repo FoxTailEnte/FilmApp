@@ -17,7 +17,6 @@ abstract class BaseFragment<out VB : ViewBinding> : MvpAppCompatFragment() {
     open fun checkUserAuth() = Unit
     open fun checkInputNumber() = Unit
     open fun onBackPress() = Unit
-    open fun startCountDownTimer() = Unit
 
     abstract fun initializeBinding(): VB
 
@@ -25,7 +24,7 @@ abstract class BaseFragment<out VB : ViewBinding> : MvpAppCompatFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupUi()
         checkInputNumber()
-        startCountDownTimer()
+        checkUserAuth()
         setupListener()
         onBackPress()
     }

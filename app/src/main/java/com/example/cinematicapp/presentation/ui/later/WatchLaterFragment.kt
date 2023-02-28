@@ -1,26 +1,15 @@
 package com.example.cinematicapp.presentation.ui.later
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.example.cinematicapp.databinding.FragmentWatchLaterBinding
+import com.example.cinematicapp.presentation.base.BaseFragment
+import com.example.cinematicapp.repository.utils.Extensions.getMainActivityView
 
 
-class WatchLaterFragment : Fragment() {
-    private lateinit var binding: FragmentWatchLaterBinding
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-     binding = FragmentWatchLaterBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding>() {
 
-    companion object {
+    override fun initializeBinding() = FragmentWatchLaterBinding.inflate(layoutInflater)
 
-        @JvmStatic
-        fun newInstance() = WatchLaterFragment()
+    override fun setupUi() {
+        getMainActivityView()?.hideSearchMenu(true)
     }
 }

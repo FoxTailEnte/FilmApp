@@ -9,5 +9,9 @@
         android:name="com.example.cinematicapp.presentation.ui.home.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_graph_authorization"
+            app:destination="@id/graph_authorization" />
     </fragment>
+    <include app:graph="@navigation/graph_authorization" />
 </navigation>

@@ -14,8 +14,11 @@
             android:id="@+id/action_profileFragment_to_profilePersonFragment"
             app:destination="@id/profilePersonFragment" />
         <action
-            android:id="@+id/action_profileFragment_to_newPassNumberFragment2"
+            android:id="@+id/action_profileFragment_to_newPassNumberFragment"
             app:destination="@id/newPassNumberFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_graph_authorization"
+            app:destination="@id/graph_authorization" />
     </fragment>
     <fragment
         android:id="@+id/profilePersonFragment"
@@ -52,4 +55,5 @@
             android:name="phone"
             app:argType="string" />
     </fragment>
+    <include app:graph="@navigation/graph_authorization" />
 </navigation>

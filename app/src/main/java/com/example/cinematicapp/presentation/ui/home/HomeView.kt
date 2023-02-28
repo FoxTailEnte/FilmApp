@@ -1,10 +1,9 @@
-package com.example.cinematicapp.presentation.ui.registration.person
+package com.example.cinematicapp.presentation.ui.home
 
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface RegistrationPersonInfoView: MvpView {
-    fun completeRegistration()
+interface HomeView: MvpView {
 }
