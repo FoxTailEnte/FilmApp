@@ -17,6 +17,8 @@ import com.example.cinematicapp.repository.utils.Constants
 import com.example.cinematicapp.repository.utils.Extensions.getMainActivityView
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
+import com.example.cinematicapp.repository.utils.ViewUtils.validatePass
+import com.example.cinematicapp.repository.utils.ViewUtils.validatePhone
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
@@ -27,37 +29,18 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(), LogInView {
     lateinit var presenter: LogInPresenter
 
     private fun validateNumber(): Boolean = with(binding) {
-        if (edNumberText.text.toString().trim().isEmpty()) {
-            edNumber.error = getString(R.string.error_validate_number)
-            false
-        } else {
-            if (edNumberText.text.toString().length != 12 || !edNumberText.text!!.startsWith(Constants.VALIDATE_NUMBER)) {
-                edNumber.error = getString(R.string.error_validate_size_number)
-                false
-            } else {
-                edNumber.isErrorEnabled = false
-                true
-            }
-        }
+        edNumber.validatePhone(edNumberText.text.toString())
     }
 
     private fun validatePass(): Boolean = with(binding) {
-        if (edPassText.text.toString().trim().isEmpty()) {
-            edPass.error = getString(R.string.error_validate_number)
-            false
-        } else {
-            edPass.isErrorEnabled = false
-            true
-        }
+        edPass.validatePass(edPassText.text.toString())
     }
 
     private fun finalValidate() = with(binding) {
-        val phone = edNumberText.text.toString()
-        val pass = edPassText.text.toString()
         if (validateNumber() && validatePass()) {
             setLoadingState(true)
-            presenter.authUser(phone, pass)
-            presenter.savePhone(phone)
+            presenter.authUser(edNumberText.text.toString(), edPassText.text.toString())
+            presenter.savePhone(edNumberText.text.toString())
         }
     }
 

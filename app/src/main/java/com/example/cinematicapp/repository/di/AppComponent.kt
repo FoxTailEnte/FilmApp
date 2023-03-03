@@ -15,13 +15,14 @@ import com.example.cinematicapp.presentation.ui.autorization.registration.code.R
 import com.example.cinematicapp.presentation.ui.autorization.registration.number.RegistrationNumberPresenter
 import com.example.cinematicapp.presentation.ui.autorization.registration.person.RegistrationPersonInfoPresenter
 import com.example.cinematicapp.repository.di.modules.FireBaseModule
+import com.example.cinematicapp.repository.di.modules.NetworkModule
 import com.example.cinematicapp.repository.di.modules.SharedPrefModule
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [FireBaseModule::class, SharedPrefModule::class])
+@Component(modules = [FireBaseModule::class, SharedPrefModule::class, NetworkModule::class])
 interface AppComponent {
 
     @Component.Builder

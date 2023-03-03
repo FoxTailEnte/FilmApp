@@ -9,4 +9,6 @@ object Constants {
     const val PLUS = "+"
     const val SHARED_PREF = "shared_preferences"
     const val FAIL = "fail"
+    const val ERROR_EMPTY_EDIT_TEXT = "Поле должно быть заполнено"
+    const val ERROR_VALIDATE_NUMBER_SIZE = "Не верный формат номера"
 }

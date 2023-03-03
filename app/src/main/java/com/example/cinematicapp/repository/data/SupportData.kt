@@ -1,6 +1,7 @@
 package com.example.cinematicapp.repository.data
 
 import com.example.cinematicapp.R
+import com.example.cinematicapp.presentation.adapters.mainRcView.MainRcViewModel
 import com.example.cinematicapp.presentation.adapters.profile.ProfileModel
 
 fun profileListSubmit() = listOf(
@@ -28,5 +29,27 @@ fun profileListSubmit() = listOf(
         R.string.profile_logout,
         R.drawable.profile_logout,
         1
+    )
+)
+
+fun mainRcViewListSubmit() = listOf(
+    MainRcViewModel(
+        R.string.shutter,
+    ), MainRcViewModel(
+        R.string.horror
+    ), MainRcViewModel(
+        R.string.detective
+    ), MainRcViewModel(
+        R.string.thriller
+    ), MainRcViewModel(
+        R.string.fantasy
+    ), MainRcViewModel(
+        R.string.comedies
+    ), MainRcViewModel(
+        R.string.journey
+    ), MainRcViewModel(
+        R.string.dramas
+    ), MainRcViewModel(
+        R.string.fantastic
     )
 )

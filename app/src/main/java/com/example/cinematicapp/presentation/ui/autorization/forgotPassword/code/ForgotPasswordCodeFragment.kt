@@ -13,6 +13,7 @@ import com.example.cinematicapp.databinding.FragmentForgotPassCodeBinding
 import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.repository.utils.Extensions.getColor
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
+import com.example.cinematicapp.repository.utils.ViewUtils.validate
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import moxy.presenter.InjectPresenter
@@ -26,10 +27,8 @@ class ForgotPasswordCodeFragment : BaseFragment<FragmentForgotPassCodeBinding>()
     private val args: ForgotPasswordCodeFragmentArgs by navArgs()
 
     private fun validateCode() = with(binding) {
-        if (edConfirmCodeText.text.toString().trim().isEmpty()) {
-            edConfirmCode.error = getString(R.string.error_validate_number)
-        } else {
-            edConfirmCode.isErrorEnabled = false
+        val status = edConfirmCode.validate(edConfirmCodeText.text.toString())
+        if (status) {
             setLoadingState(true)
             presenter.enterCode(args.id, edConfirmCodeText.text.toString())
         }

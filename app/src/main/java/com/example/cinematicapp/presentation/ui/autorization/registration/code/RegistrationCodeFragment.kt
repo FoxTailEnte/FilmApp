@@ -13,6 +13,7 @@ import com.example.cinematicapp.databinding.FragmentRegistrationCodeBinding
 import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.repository.utils.Extensions.getColor
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
+import com.example.cinematicapp.repository.utils.ViewUtils.validate
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
@@ -25,10 +26,8 @@ class RegistrationCodeFragment : BaseFragment<FragmentRegistrationCodeBinding>()
     private lateinit var timer: CountDownTimer
 
     private fun validateCode() = with(binding) {
-        if (edConfirmCodeText.text.toString().trim().isEmpty()) {
-            edConfirmCode.error = getString(R.string.error_validate_number)
-        } else {
-            edConfirmCode.isErrorEnabled = false
+       val status = edConfirmCode.validate(edConfirmCodeText.text.toString())
+        if (status) {
             setLoadingState(true)
             presenter.enterCode(args.id, edConfirmCodeText.text.toString())
         }

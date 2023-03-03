@@ -10,6 +10,7 @@ import com.example.cinematicapp.repository.network.firebase.models.UserModel
 import com.example.cinematicapp.repository.utils.Extensions.navigateBack
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
+import com.example.cinematicapp.repository.utils.ViewUtils.validate
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
@@ -22,50 +23,27 @@ class RegistrationPersonInfoFragment : BaseFragment<FragmentRegistrationPersonIn
     lateinit var presenter: RegistrationPersonInfoPresenter
 
     private fun validateName(): Boolean = with(binding) {
-        if (edNameText.text.toString().trim().isEmpty()) {
-            edName.error = getString(R.string.error_validate_number)
-            false
-        } else {
-            edName.isErrorEnabled = false
-            true
-        }
+        edName.validate(edNameText.text.toString())
     }
 
     private fun validateSecondName(): Boolean = with(binding) {
-        if (edSecondNameText.text.toString().trim().isEmpty()) {
-            edSecondName.error = getString(R.string.error_validate_number)
-            false
-        } else {
-            edSecondName.isErrorEnabled = false
-            true
-        }
+        edSecondName.validate(edSecondNameText.text.toString())
     }
 
     private fun validatePass(): Boolean = with(binding) {
-        if (edPassText.text.toString().trim().isEmpty()) {
-            edPass.error = getString(R.string.error_validate_number)
-            false
-        } else {
-            edPass.isErrorEnabled = false
-            true
-        }
+        edPass.validate(edPassText.text.toString())
     }
 
     private fun validatePassRepeat(): Boolean = with(binding) {
-        if (edRepeatPassText.text.toString().trim().isEmpty()) {
-            edRepeatPass.error = getString(R.string.error_validate_number)
-            false
-        } else {
-            edRepeatPass.isErrorEnabled = false
-            true
-        }
+        edRepeatPass.validate(edRepeatPassText.text.toString())
     }
 
     private fun finalValidate() = with(binding) {
-        val name = edNameText.text.toString()
-        val secondName = edSecondNameText.text.toString()
-        val pass = edPassText.text.toString()
-        val userModel = UserModel(name, secondName, pass)
+        val userModel = UserModel(
+            edNameText.text.toString(),
+            edSecondNameText.text.toString(),
+            edPassText.text.toString()
+        )
         if (edPassText.text?.trim()!!.isNotEmpty() && edRepeatPassText.text?.trim()!!.isNotEmpty()) {
             if (edPassText.text.toString() != edRepeatPassText.text.toString()) {
                 showPassErrorToast()
@@ -105,6 +83,7 @@ class RegistrationPersonInfoFragment : BaseFragment<FragmentRegistrationPersonIn
 
     override fun completeRegistration() {
         navigateBack()
-        Toast.makeText(requireContext(), getString(R.string.registration_person_complete_toast), Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), getString(R.string.registration_person_complete_toast), Toast.LENGTH_SHORT)
+            .show()
     }
 }

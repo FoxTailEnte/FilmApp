@@ -12,6 +12,7 @@ import com.example.cinematicapp.repository.utils.Constants
 import com.example.cinematicapp.repository.utils.Extensions.navigateBack
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
+import com.example.cinematicapp.repository.utils.ViewUtils.validatePhone
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
@@ -21,17 +22,11 @@ class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding>(), Fo
     lateinit var presenter: ForgotPasswordPresenter
 
     private fun validateNumber() = with(binding) {
-        if (edPhoneText.text.toString().trim().isEmpty()) {
-            edPhone.error = getString(R.string.error_validate_number)
-        } else {
-            if (edPhoneText.text.toString().length != 12 || !edPhoneText.text!!.startsWith(Constants.VALIDATE_NUMBER)) {
-                edPhone.error = getString(R.string.error_validate_size_number)
-            } else {
-                edPhone.isErrorEnabled = false
-                setLoadingState(true)
-                hideKeyBoard()
-                presenter.checkUserPhone(edPhoneText.text.toString())
-            }
+        val status = edPhone.validatePhone(edPhoneText.text.toString())
+        if (status) {
+            setLoadingState(true)
+            hideKeyBoard()
+            presenter.checkUserPhone(edPhoneText.text.toString())
         }
     }
 
@@ -70,7 +65,7 @@ class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding>(), Fo
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (text.toString().length == 1 && !text!!.startsWith("+")) {
+                if (text.toString().length == 1 && !text!!.startsWith(Constants.PLUS)) {
                     removeTextChangedListener(this)
                     setText(getString(R.string.validate_number_start))
                     setSelection(text!!.lastIndex + 1)

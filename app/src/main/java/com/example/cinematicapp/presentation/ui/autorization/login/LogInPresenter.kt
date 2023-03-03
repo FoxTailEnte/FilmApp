@@ -25,7 +25,6 @@ class LogInPresenter @Inject constructor(
         }
     }
 
-    fun checkUserAuthStatus(): Boolean = pref.getSignInUserStatus()
     fun savePhone(phone: String) {
         pref.saveUserPhone(phone)
     }

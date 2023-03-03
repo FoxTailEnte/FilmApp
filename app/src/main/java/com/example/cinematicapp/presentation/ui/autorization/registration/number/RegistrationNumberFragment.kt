@@ -9,9 +9,9 @@ import com.example.cinematicapp.CinematicApplication.Companion.appComponent
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentRegistrationNumberBinding
 import com.example.cinematicapp.presentation.base.BaseFragment
-import com.example.cinematicapp.repository.utils.Constants
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
+import com.example.cinematicapp.repository.utils.ViewUtils.validatePhone
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
@@ -20,6 +20,19 @@ class RegistrationNumberFragment :BaseFragment<FragmentRegistrationNumberBinding
 
     @InjectPresenter
     lateinit var presenter: RegistrationNumberPresenter
+
+    private fun validateNumber() = with(binding) {
+        val status = edPhone.validatePhone(edPhoneText.text.toString())
+        if(status) {
+            setLoadingState(true)
+            hideKeyBoard()
+            presenter.checkUserPhone(edPhoneText.text.toString())
+        }
+    }
+
+    private fun hideKeyBoard() {
+        requireActivity().setKeyboardVisibility(false)
+    }
 
     private fun setLoadingState(state: Boolean) = with(binding) {
         if (state) {
@@ -31,25 +44,6 @@ class RegistrationNumberFragment :BaseFragment<FragmentRegistrationNumberBinding
             tvSendCode.visibility = View.VISIBLE
             pbSendCode.visibility = View.GONE
         }
-    }
-
-    private fun validateNumber() = with(binding) {
-        if (edPhoneText.text.toString().trim().isEmpty()) {
-            edPhone.error = getString(R.string.error_validate_number)
-        } else {
-            if (edPhoneText.text.toString().length != 12 || !edPhoneText.text!!.startsWith(Constants.VALIDATE_NUMBER)) {
-                edPhone.error = getString(R.string.error_validate_size_number)
-            } else {
-                edPhone.isErrorEnabled = false
-                setLoadingState(true)
-                hideKeyBoard()
-                presenter.checkUserPhone(edPhoneText.text.toString())
-            }
-        }
-    }
-
-    private fun hideKeyBoard() {
-        requireActivity().setKeyboardVisibility(false)
     }
 
     @ProvidePresenter

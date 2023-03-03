@@ -64,6 +64,17 @@
     <string name="error_unknown_user_pass">Не верный телефон или пароль</string>
     <string name="error_user_be_register">Номер телефона уже зарегистрирован</string>
     <string name="error_user_not_register">Номер телефона не зарегистрирован</string>
+    <!-- Main RcView Adapter -->
+    <string name="shutter">Боевики</string>
+    <string name="horror">Ужасы</string>
+    <string name="detective">Детективы</string>
+    <string name="thriller">Триллеры</string>
+    <string name="fantasy">Фэнтези</string>
+    <string name="comedies">Комедийные</string>
+    <string name="journey">Приключения</string>
+    <string name="dramas">Драмы</string>
+    <string name="fantastic">Фантастика</string>
+    <string name="search">Поиск</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

@@ -7,6 +7,7 @@ import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentForgotPassNewPassBinding
 import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.repository.utils.Extensions.navigateBack
+import com.example.cinematicapp.repository.utils.ViewUtils.validatePass
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
@@ -17,33 +18,20 @@ class ForgotPasswordNewPassFragment : BaseFragment<FragmentForgotPassNewPassBind
     lateinit var presenter: ForgotPasswordNewPassPresenter
 
     private fun validatePass(): Boolean = with(binding) {
-        if (edPassText.text.toString().trim().isEmpty()) {
-            edPass.error = getString(R.string.error_validate_number)
-            false
-        } else {
-            edPass.isErrorEnabled = false
-            true
-        }
+        edPass.validatePass(edPassText.text.toString())
     }
 
     private fun validateRepeatPass(): Boolean = with(binding) {
-        if (edRepeatPassText.text.toString().trim().isEmpty()) {
-            edRepeatPass.error = getString(R.string.error_validate_number)
-            false
-        } else {
-            edRepeatPass.isErrorEnabled = false
-            true
-        }
+        edRepeatPass.validatePass(edRepeatPassText.text.toString())
     }
 
     private fun finalValidate() = with(binding) {
-        val pass = edPassText.text.toString()
         if (edPassText.text?.trim()!!.isNotEmpty() && edRepeatPassText.text?.trim()!!.isNotEmpty()) {
             if (edPassText.text.toString() != edRepeatPassText.text.toString()) {
                 showPassErrorToast()
             } else {
                 if (validatePass() && validatePass()) {
-                    presenter.addNewPass(args.phone, pass)
+                    presenter.addNewPass(args.phone, edPassText.text.toString())
                 }
             }
         }
@@ -71,7 +59,6 @@ class ForgotPasswordNewPassFragment : BaseFragment<FragmentForgotPassNewPassBind
 
     override fun setUserPass() {
         navigateBack()
-        Toast.makeText(requireContext(), getString(R.string.forgot_password_finish_add_new_pass), Toast.LENGTH_SHORT)
-            .show()
+        Toast.makeText(requireContext(), getString(R.string.forgot_password_finish_add_new_pass), Toast.LENGTH_SHORT).show()
     }
 }
