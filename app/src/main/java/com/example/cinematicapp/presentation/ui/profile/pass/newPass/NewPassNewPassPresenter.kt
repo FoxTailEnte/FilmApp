@@ -1,6 +1,7 @@
 package com.example.cinematicapp.presentation.ui.profile.pass.newPass
 
 import com.example.cinematicapp.domain.firebaseUseCase.FireBaseDataUseCase
+import com.example.cinematicapp.presentation.base.BasePresenter
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import javax.inject.Inject
@@ -8,7 +9,7 @@ import javax.inject.Inject
 @InjectViewState
 class NewPassNewPassPresenter @Inject constructor(
     private val firebase: FireBaseDataUseCase
-) : MvpPresenter<NewPassNewPassView>() {
+) : BasePresenter<NewPassNewPassView>() {
 
     fun addNewPass(phone: String, pass: String) {
         firebase.addNewPass(phone,pass)

@@ -28,7 +28,7 @@
             tools:layout_editor_absoluteY="108dp" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout"
+            android:id="@+id/edSearch"
             style="@style/base_text_input_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -44,6 +44,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edSearchText"
                 style="@style/base_text_input_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,9 +61,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout"
+            app:layout_constraintBottom_toBottomOf="@+id/edSearch"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textInputLayout"
+            app:layout_constraintTop_toTopOf="@+id/edSearch"
             app:srcCompat="@drawable/menu_search_icon" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -73,7 +74,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/edSearch"
             tools:itemCount="5"
             tools:listitem="@layout/item_rc_view_main">
 

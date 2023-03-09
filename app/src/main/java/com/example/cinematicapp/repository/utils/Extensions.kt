@@ -8,11 +8,11 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
-import com.example.cinematicapp.presentation.ui.main.BottomNavigationSource
+import com.example.cinematicapp.presentation.ui.main.MainSource
 
 object Extensions {
 
-    fun Fragment.getMainActivityView() = requireActivity() as? BottomNavigationSource
+    fun Fragment.getMainActivityView() = requireActivity() as? MainSource
     fun Fragment.navigateTo(direction: NavDirections) = findNavController().navigate(direction)
     fun Fragment.navigateTo(id: Int) = findNavController().navigate(id)
     fun Fragment.navigateBack() = findNavController().navigateUp()

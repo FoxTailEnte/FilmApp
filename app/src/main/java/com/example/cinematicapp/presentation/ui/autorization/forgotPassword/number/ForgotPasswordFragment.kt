@@ -16,7 +16,7 @@ import com.example.cinematicapp.repository.utils.ViewUtils.validatePhone
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
-class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding>(), ForgotPasswordView {
+class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding, ForgotPasswordView, ForgotPasswordPresenter>(), ForgotPasswordView {
 
     @InjectPresenter
     lateinit var presenter: ForgotPasswordPresenter

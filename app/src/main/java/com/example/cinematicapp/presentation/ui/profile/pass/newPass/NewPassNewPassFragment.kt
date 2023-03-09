@@ -13,7 +13,7 @@ import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
-class NewPassNewPassFragment : BaseFragment<FragmentNewPassNewPassBinding>(), NewPassNewPassView {
+class NewPassNewPassFragment : BaseFragment<FragmentNewPassNewPassBinding, NewPassNewPassView, NewPassNewPassPresenter>(), NewPassNewPassView {
 
     @InjectPresenter
     lateinit var presenter: NewPassNewPassPresenter

@@ -12,7 +12,7 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
-class ProfileFragment: BaseFragment<FragmentProfileBinding>(), ProfileView {
+class ProfileFragment: BaseFragment<FragmentProfileBinding, ProfileView, ProfilePresenter>(), ProfileView {
     private lateinit var adapter: ProfileAdapter
 
     @InjectPresenter
@@ -54,5 +54,9 @@ class ProfileFragment: BaseFragment<FragmentProfileBinding>(), ProfileView {
 
     override fun navigateToNewPass() {
         navigateTo(ProfileFragmentDirections.actionProfileFragmentToNewPassNumberFragment())
+    }
+
+    override fun navigateToNotifications() {
+        navigateTo(ProfileFragmentDirections.actionProfileFragmentToNotificationsFragment())
     }
 }

@@ -19,7 +19,7 @@ import com.google.firebase.auth.PhoneAuthProvider
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
-class ForgotPasswordCodeFragment : BaseFragment<FragmentForgotPassCodeBinding>(), ForgotPasswordCodeView {
+class ForgotPasswordCodeFragment : BaseFragment<FragmentForgotPassCodeBinding, ForgotPasswordCodeView, ForgotPasswordCodePresenter>(), ForgotPasswordCodeView {
 
     @InjectPresenter
     lateinit var presenter: ForgotPasswordCodePresenter

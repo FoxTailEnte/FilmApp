@@ -14,6 +14,7 @@ import com.example.cinematicapp.presentation.ui.profile.person.ProfilePersonPres
 import com.example.cinematicapp.presentation.ui.autorization.registration.code.RegistrationCodePresenter
 import com.example.cinematicapp.presentation.ui.autorization.registration.number.RegistrationNumberPresenter
 import com.example.cinematicapp.presentation.ui.autorization.registration.person.RegistrationPersonInfoPresenter
+import com.example.cinematicapp.presentation.ui.profile.notifications.NotificationsPresenter
 import com.example.cinematicapp.repository.di.modules.FireBaseModule
 import com.example.cinematicapp.repository.di.modules.NetworkModule
 import com.example.cinematicapp.repository.di.modules.SharedPrefModule
@@ -46,4 +47,5 @@ interface AppComponent {
     fun provideNewPassCodePresenter(): NewPassCodePresenter
     fun provideNewPassNewPassPresenter(): NewPassNewPassPresenter
     fun provideHomePresenter(): HomePresenter
+    fun provideNotificationPresenter(): NotificationsPresenter
 }

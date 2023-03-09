@@ -4,6 +4,7 @@ import android.app.Activity
 import com.example.cinematicapp.domain.firebaseUseCase.FireBaseDataUseCase
 import com.example.cinematicapp.domain.firebaseUseCase.FireBaseSmsUseCase
 import com.example.cinematicapp.domain.sharedPrefUseCase.SharedPrefUseCase
+import com.example.cinematicapp.presentation.base.BasePresenter
 import com.example.cinematicapp.repository.utils.Constants
 import moxy.InjectViewState
 import moxy.MvpPresenter
@@ -13,7 +14,7 @@ import javax.inject.Inject
 class NewPassCodePresenter @Inject constructor(
     private val firebase: FireBaseSmsUseCase,
     private val pref: SharedPrefUseCase
-) : MvpPresenter<NewPassCodeCodeView>() {
+) : BasePresenter<NewPassCodeCodeView>() {
 
     fun getNumber() = pref.getUserPhone()
 

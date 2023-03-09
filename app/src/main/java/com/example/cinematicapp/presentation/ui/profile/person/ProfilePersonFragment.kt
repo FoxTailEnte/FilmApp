@@ -9,7 +9,7 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
-class ProfilePersonFragment : BaseFragment<FragmentPersonInfoBinding>(), ProfilePersonView {
+class ProfilePersonFragment : BaseFragment<FragmentPersonInfoBinding, ProfilePersonView, ProfilePersonPresenter>(), ProfilePersonView {
 
     @InjectPresenter
     lateinit var presenter: ProfilePersonPresenter

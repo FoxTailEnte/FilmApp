@@ -12,7 +12,7 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
-class HomeFragment : BaseFragment<FragmentHomeBinding>(), HomeView {
+class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(), HomeView {
 
     @InjectPresenter
     lateinit var presenter: HomePresenter
@@ -29,7 +29,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), HomeView {
 
     override fun setupUi() {
         initRc()
-        presenter.getItems()
+        presenter.getItems(getMainActivityView()?.searchListener())
 
         getMainActivityView()?.hideSearchMenu(true)
         getMainActivityView()?.hideBottomMenu(true)

@@ -5,7 +5,7 @@ import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.repository.utils.Extensions.getMainActivityView
 
 
-class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
+class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, LibraryPresenter>(), LibraryView {
 
     override fun initializeBinding() = FragmentLibraryBinding.inflate(layoutInflater)
 

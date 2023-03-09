@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_profileFragment_to_graph_authorization"
             app:destination="@id/graph_authorization" />
+        <action
+            android:id="@+id/action_profileFragment_to_notificationsFragment"
+            app:destination="@id/notificationsFragment" />
     </fragment>
     <fragment
         android:id="@+id/profilePersonFragment"
@@ -29,7 +32,7 @@
         android:id="@+id/newPassNumberFragment"
         android:name="com.example.cinematicapp.presentation.ui.profile.pass.number.NewPassNumberFragment"
         android:label="NewPassNumberFragment"
-        tools:layout="@layout/fragment_new_pass_number" >
+        tools:layout="@layout/fragment_new_pass_number">
         <action
             android:id="@+id/action_newPassNumberFragment_to_newPassCodeFragment"
             app:destination="@id/newPassCodeFragment" />
@@ -38,7 +41,7 @@
         android:id="@+id/newPassCodeFragment"
         android:name="com.example.cinematicapp.presentation.ui.profile.pass.code.NewPassCodeFragment"
         android:label="NewPassCodeFragment"
-        tools:layout="@layout/fragment_new_pass_code" >
+        tools:layout="@layout/fragment_new_pass_code">
         <action
             android:id="@+id/action_newPassCodeFragment_to_newPassNewPassFragment"
             app:destination="@id/newPassNewPassFragment" />
@@ -47,13 +50,18 @@
             app:argType="string" />
     </fragment>
     <fragment
-        tools:layout="@layout/fragment_new_pass_new_pass"
         android:id="@+id/newPassNewPassFragment"
         android:name="com.example.cinematicapp.presentation.ui.profile.pass.newPass.NewPassNewPassFragment"
-        android:label="NewPassNewPassFragment" >
+        android:label="NewPassNewPassFragment"
+        tools:layout="@layout/fragment_new_pass_new_pass">
         <argument
             android:name="phone"
             app:argType="string" />
     </fragment>
     <include app:graph="@navigation/graph_authorization" />
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.example.cinematicapp.presentation.ui.profile.notifications.NotificationsFragment"
+        android:label="NotificationsFragment"
+        tools:layout="@layout/fragment_notifications" />
 </navigation>

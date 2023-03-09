@@ -75,6 +75,12 @@
     <string name="dramas">Драмы</string>
     <string name="fantastic">Фантастика</string>
     <string name="search">Поиск</string>
+    <!--  Notifications -->
+    <string name="notifications_title">Уведомления</string>
+    <string name="notifications_update_app">Обновления приложения</string>
+    <string name="subscription_renewal">Продление подписки</string>
+    <string name="films_for_you">Подборки фильмов для вас</string>
+    <string name="watch_later_notification">Запланированные просмотры</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

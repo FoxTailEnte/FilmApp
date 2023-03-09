@@ -9,10 +9,12 @@ class HomeFilmHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: ResponseModel2) = with(binding) {
+        if (item.poster != null) {
             Picasso.get()
                 .load(item.poster.previewUrl)
-                .resize(500,500).centerInside()
+                .resize(500, 500).centerInside()
                 .into(imageView3)
-        textView5.text = item.name
+            textView5.text = item.name
         }
     }
+}

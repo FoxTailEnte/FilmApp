@@ -18,7 +18,7 @@ import com.google.firebase.auth.PhoneAuthProvider
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
-class NewPassCodeFragment : BaseFragment<FragmentNewPassCodeBinding>(), NewPassCodeCodeView {
+class NewPassCodeFragment : BaseFragment<FragmentNewPassCodeBinding, NewPassCodeCodeView, NewPassCodePresenter>(), NewPassCodeCodeView {
 
     @InjectPresenter
     lateinit var presenter: NewPassCodePresenter

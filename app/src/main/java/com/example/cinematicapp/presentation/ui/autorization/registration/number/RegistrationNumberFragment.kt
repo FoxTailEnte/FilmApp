@@ -16,7 +16,7 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
-class RegistrationNumberFragment :BaseFragment<FragmentRegistrationNumberBinding>(), RegistrationNumberView {
+class RegistrationNumberFragment :BaseFragment<FragmentRegistrationNumberBinding, RegistrationNumberView, RegistrationNumberPresenter>(), RegistrationNumberView {
 
     @InjectPresenter
     lateinit var presenter: RegistrationNumberPresenter

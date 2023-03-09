@@ -4,19 +4,20 @@ import com.example.cinematicapp.R
 import com.example.cinematicapp.domain.firebaseUseCase.FireBaseDataUseCase
 import com.example.cinematicapp.domain.sharedPrefUseCase.SharedPrefUseCase
 import com.example.cinematicapp.presentation.adapters.profile.ProfileModel
+import com.example.cinematicapp.presentation.base.BasePresenter
 import moxy.MvpPresenter
 import javax.inject.Inject
 
 class ProfilePresenter @Inject constructor(
     private val pref: SharedPrefUseCase,
     private val firebase: FireBaseDataUseCase
-) : MvpPresenter<ProfileView>() {
+) : BasePresenter<ProfileView>() {
 
     fun singOutUser(item: ProfileModel) {
         when (item.name ) {
             R.string.profile_information -> viewState.navigateToProfileInformation()
             R.string.profile_restore_pass -> viewState.navigateToNewPass()
-            R.string.profile_notification -> Unit
+            R.string.profile_notification -> viewState.navigateToNotifications()
             R.string.profile_report -> Unit
             R.string.profile_donation -> Unit
             R.string.profile_logout -> {

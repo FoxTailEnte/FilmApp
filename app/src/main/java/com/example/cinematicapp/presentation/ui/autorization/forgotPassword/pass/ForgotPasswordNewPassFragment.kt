@@ -6,12 +6,13 @@ import com.example.cinematicapp.CinematicApplication
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentForgotPassNewPassBinding
 import com.example.cinematicapp.presentation.base.BaseFragment
+import com.example.cinematicapp.presentation.ui.autorization.forgotPassword.number.ForgotPasswordView
 import com.example.cinematicapp.repository.utils.Extensions.navigateBack
 import com.example.cinematicapp.repository.utils.ViewUtils.validatePass
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
-class ForgotPasswordNewPassFragment : BaseFragment<FragmentForgotPassNewPassBinding>(), ForgotPasswordNewPassView {
+class ForgotPasswordNewPassFragment : BaseFragment<FragmentForgotPassNewPassBinding, ForgotPasswordNewPassView, ForgotPasswordNewPassPresenter>(), ForgotPasswordNewPassView {
     private val args: ForgotPasswordNewPassFragmentArgs by navArgs()
 
     @InjectPresenter

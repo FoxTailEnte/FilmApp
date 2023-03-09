@@ -7,7 +7,12 @@ import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import moxy.MvpAppCompatFragment
 
-abstract class BaseFragment<out VB : ViewBinding> : MvpAppCompatFragment() {
+abstract class BaseFragment<
+        out VB : ViewBinding,
+        V: BaseView,
+        out P:BasePresenter<V>
+    >: MvpAppCompatFragment(), BaseView {
+
     protected val binding: VB
     get() = _binding!!
     private var _binding: VB? = null

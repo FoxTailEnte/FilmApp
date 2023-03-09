@@ -15,6 +15,7 @@ class NetworkModule {
 
     @Provides
     fun provideHomeFilmUseCase(getHomeFilms: GetHomeFilms): GetHomeFilmsUseCase = GetHomeFilmsUseCaseImpl(getHomeFilms)
+
     @Provides
     fun provideHomeFilmApi(api: Api): GetHomeFilms = GetHomeFilmsImpl(api)
 }

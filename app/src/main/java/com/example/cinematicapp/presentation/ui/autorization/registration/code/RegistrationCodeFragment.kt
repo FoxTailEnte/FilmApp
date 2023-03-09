@@ -18,7 +18,7 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
-class RegistrationCodeFragment : BaseFragment<FragmentRegistrationCodeBinding>(), RegistrationCodeView {
+class RegistrationCodeFragment : BaseFragment<FragmentRegistrationCodeBinding, RegistrationCodeView, RegistrationCodePresenter>(), RegistrationCodeView {
     private val args: RegistrationCodeFragmentArgs by navArgs()
 
     @InjectPresenter

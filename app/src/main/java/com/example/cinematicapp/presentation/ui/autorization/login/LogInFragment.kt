@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -23,7 +24,7 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
-class LogInFragment : BaseFragment<FragmentLogInBinding>(), LogInView {
+class LogInFragment : BaseFragment<FragmentLogInBinding, LogInView, LogInPresenter>(), LogInView {
 
     @InjectPresenter
     lateinit var presenter: LogInPresenter

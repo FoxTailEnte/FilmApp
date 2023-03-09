@@ -1,6 +1,7 @@
 package com.example.cinematicapp.repository.network.firebase.bd
 
 import android.app.Activity
+import android.util.Log
 import com.example.cinematicapp.repository.utils.Constants
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
@@ -20,7 +21,9 @@ class FirebaseSmsImpl : FireBaseSms {
     override fun authUser(phone: String, pass: String, action: (Boolean?) -> Unit) {
         var currentString: Boolean? = null
         mDataBase = FirebaseDatabase.getInstance().getReference(Constants.USERS)
+        Log.d("MyLog","gergeg")
         mDataBase.child(phone).get().addOnSuccessListener {
+            Log.d("MyLog","gergeg")
             if (it.value != null) {
                 val currentPass = it.child(Constants.PASS).value
                 currentString = currentPass.toString() == pass

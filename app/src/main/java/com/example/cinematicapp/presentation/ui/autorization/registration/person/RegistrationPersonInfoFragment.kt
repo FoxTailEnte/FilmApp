@@ -15,7 +15,7 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
-class RegistrationPersonInfoFragment : BaseFragment<FragmentRegistrationPersonInfoBinding>(),
+class RegistrationPersonInfoFragment : BaseFragment<FragmentRegistrationPersonInfoBinding, RegistrationPersonInfoView, RegistrationPersonInfoPresenter>(),
     RegistrationPersonInfoView {
     private val args: RegistrationPersonInfoFragmentArgs by navArgs()
 

@@ -16,7 +16,7 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
-class NewPassNumberFragment : BaseFragment<FragmentNewPassNumberBinding>(), NewPassNumberView {
+class NewPassNumberFragment : BaseFragment<FragmentNewPassNumberBinding, NewPassNumberView, NewPassNumberPresenter>(), NewPassNumberView {
 
     @InjectPresenter
     lateinit var presenter: NewPassNumberPresenter

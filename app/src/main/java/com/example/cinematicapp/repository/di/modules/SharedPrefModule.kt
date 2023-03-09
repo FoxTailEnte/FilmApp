@@ -15,6 +15,7 @@ class SharedPrefModule {
 
     @Provides
     fun provideSharedPrefUseCase(saveUserAuthStatus: SaveUserAuthStatus): SharedPrefUseCase = SharedPrefUseCaseImpl(saveUserAuthStatus)
+
     @Provides
     fun provideSharedPref(context: Context): SaveUserAuthStatus = SaveUserAuthStatusImpl(context)
 
