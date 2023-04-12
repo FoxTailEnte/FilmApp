@@ -34,6 +34,8 @@ fun profileListSubmit() = listOf(
 
 fun mainRcViewListSubmit() = listOf(
     MainRcViewModel(
+        R.string.all
+    ), MainRcViewModel(
         R.string.shutter,
     ), MainRcViewModel(
         R.string.horror

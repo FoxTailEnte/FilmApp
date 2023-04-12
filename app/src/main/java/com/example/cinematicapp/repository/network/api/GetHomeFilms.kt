@@ -5,5 +5,7 @@ import io.reactivex.Single
 
 interface GetHomeFilms {
 
-    fun getAllFilms(film: Array<String>): Single<BaseFilmResponse>
+    fun getRandomFilms(film: Array<String>): Single<BaseFilmResponse>
+
+    fun getGenresFilms(film: Array<String>): Single<BaseFilmResponse>
 }

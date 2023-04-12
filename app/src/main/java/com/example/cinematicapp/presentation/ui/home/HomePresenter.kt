@@ -14,9 +14,17 @@ class HomePresenter @Inject constructor(
 
     fun checkUserAuthStatus(): Boolean = pref.getSignInUserStatus()
 
-    fun getItems(film: Array<String>?) {
+    fun getRandomFilms(film: Array<String>?) {
         if(film != null) {
-            getHomeFilmsUseCase.getAllFilms(film).regularRequest { response ->
+            getHomeFilmsUseCase.getRandomFilms(film).regularRequest { response ->
+                viewState.submitList(response)
+            }
+        }
+    }
+
+    fun getGenresFilms(film: Array<String>?) {
+        if(film != null) {
+            getHomeFilmsUseCase.getGenresFilms(film).regularRequest { response ->
                 viewState.submitList(response)
             }
         }

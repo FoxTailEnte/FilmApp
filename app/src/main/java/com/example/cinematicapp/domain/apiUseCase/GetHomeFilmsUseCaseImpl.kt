@@ -9,6 +9,8 @@ class GetHomeFilmsUseCaseImpl @Inject constructor(
     private val homeFilms: GetHomeFilms,
 ) : GetHomeFilmsUseCase {
 
-    override fun getAllFilms(film: Array<String>): Single<BaseFilmResponse> = homeFilms.getAllFilms(film)
+    override fun getRandomFilms(film: Array<String>): Single<BaseFilmResponse> = homeFilms.getRandomFilms(film)
+
+    override fun getGenresFilms(film: Array<String>): Single<BaseFilmResponse> = homeFilms.getGenresFilms(film)
 
 }

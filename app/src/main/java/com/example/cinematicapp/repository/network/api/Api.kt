@@ -10,13 +10,13 @@ interface Api {
 
     @GET("movie")
     @Headers("X-API-KEY: ZZ81QVH-9604YYP-Q462SHP-Y74PR68")
-    fun getRandomFilm(
+    fun getRandomFilms(
         @Query("name") name: Array<String>
     ): Single<BaseFilmResponse>
 
     @GET("movie")
     @Headers("X-API-KEY: ZZ81QVH-9604YYP-Q462SHP-Y74PR68")
-    fun getGenresFilm(
+    fun getGenresFilms(
         @Query("genres.name") name: Array<String>
     ): Single<BaseFilmResponse>
 }

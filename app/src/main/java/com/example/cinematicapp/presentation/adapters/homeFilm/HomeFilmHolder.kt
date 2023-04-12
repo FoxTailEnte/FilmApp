@@ -9,9 +9,11 @@ class HomeFilmHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: BaseFilmInfoResponse) = with(binding) {
-        Picasso.get()
-            .load(item.poster.previewUrl)
-            .into(imageView3)
+        if(item.poster != null) {
+            Picasso.get()
+                .load(item.poster.previewUrl)
+                .into(imageView3)
+        }
         textView5.text = item.name
     }
 }

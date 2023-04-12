@@ -1,8 +1,6 @@
 package com.example.cinematicapp.presentation.ui.home
 
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.cinematicapp.CinematicApplication
@@ -35,12 +33,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
         if (!presenter.checkUserAuthStatus()) navigateTo(HomeFragmentDirections.actionHomeFragmentToGraphAuthorization())
     }
 
-    override fun setupListener() {
-        val edText = requireActivity().findViewById<EditText>(R.id.edSearchText)
-        edText.setOnEditorActionListener { v, actionId, event ->
+    override fun setupListener() = with(binding) {
+        edSearchText.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val array = arrayOf(edText.text.toString())
-                presenter.getItems(array)
+                val array = arrayOf(edSearchText.text.toString())
+                presenter.getRandomFilms(array)
                 requireActivity().setKeyboardVisibility(false)
             }
             true
@@ -50,7 +47,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
     override fun setupUi() {
         initRc()
         initRcMain()
-        presenter.getItems(arrayOf(""))
+        presenter.getRandomFilms(arrayOf(""))
         getMainActivityView()?.hideBottomMenu(true)
     }
 
@@ -62,8 +59,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
 
     private fun initRcMain() {
         adapterMain = MainRcViewAdapter {
-            val string = getString(it.name)
-            Toast.makeText(this.context, "${string}", Toast.LENGTH_SHORT).show()
+            if(getString(it.name) != getString(R.string.all)) {
+                val array = arrayOf(getString(it.name).lowercase())
+                presenter.getGenresFilms(array)
+            } else {
+                presenter.getRandomFilms(arrayOf(""))
+            }
         }
         binding.recyclerViewMain.adapter = adapterMain
     }
