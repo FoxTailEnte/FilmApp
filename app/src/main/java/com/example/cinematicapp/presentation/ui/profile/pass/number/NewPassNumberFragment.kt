@@ -36,7 +36,7 @@ class NewPassNumberFragment : BaseFragment<FragmentNewPassNumberBinding, NewPass
         }
     }
 
-    private fun setLoadingState(loading: Boolean) = with(binding) {
+    override fun setLoadingState(loading: Boolean) = with(binding) {
         if (loading) {
             btSendCode.isEnabled = false
             tvSendCode.visibility = View.GONE

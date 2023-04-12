@@ -86,4 +86,8 @@ class RegistrationPersonInfoFragment : BaseFragment<FragmentRegistrationPersonIn
         Toast.makeText(requireContext(), getString(R.string.registration_person_complete_toast), Toast.LENGTH_SHORT)
             .show()
     }
+
+    override fun setLoadingState(isLoading: Boolean) {
+        TODO("Not yet implemented")
+    }
 }

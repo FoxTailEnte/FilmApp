@@ -6,7 +6,6 @@ import com.example.cinematicapp.CinematicApplication.Companion.appComponent
 import com.example.cinematicapp.databinding.FragmentProfileBinding
 import com.example.cinematicapp.presentation.adapters.profile.ProfileAdapter
 import com.example.cinematicapp.presentation.base.BaseFragment
-import com.example.cinematicapp.repository.utils.Extensions.getMainActivityView
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -29,7 +28,6 @@ class ProfileFragment: BaseFragment<FragmentProfileBinding, ProfileView, Profile
     override fun initializeBinding() = FragmentProfileBinding.inflate(layoutInflater)
 
     override fun setupUi() {
-        getMainActivityView()?.hideSearchMenu(false)
     }
 
     override fun setupListener() = with(binding) {
@@ -58,5 +56,9 @@ class ProfileFragment: BaseFragment<FragmentProfileBinding, ProfileView, Profile
 
     override fun navigateToNotifications() {
         navigateTo(ProfileFragmentDirections.actionProfileFragmentToNotificationsFragment())
+    }
+
+    override fun setLoadingState(isLoading: Boolean) {
+        TODO("Not yet implemented")
     }
 }

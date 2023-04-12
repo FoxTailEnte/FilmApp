@@ -6,7 +6,6 @@ import com.example.cinematicapp.CinematicApplication
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentForgotPassNewPassBinding
 import com.example.cinematicapp.presentation.base.BaseFragment
-import com.example.cinematicapp.presentation.ui.autorization.forgotPassword.number.ForgotPasswordView
 import com.example.cinematicapp.repository.utils.Extensions.navigateBack
 import com.example.cinematicapp.repository.utils.ViewUtils.validatePass
 import moxy.presenter.InjectPresenter
@@ -61,5 +60,9 @@ class ForgotPasswordNewPassFragment : BaseFragment<FragmentForgotPassNewPassBind
     override fun setUserPass() {
         navigateBack()
         Toast.makeText(requireContext(), getString(R.string.forgot_password_finish_add_new_pass), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun setLoadingState(isLoading: Boolean) {
+        TODO("Not yet implemented")
     }
 }

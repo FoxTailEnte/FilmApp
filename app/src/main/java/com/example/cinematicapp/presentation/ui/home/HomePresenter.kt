@@ -9,15 +9,15 @@ import javax.inject.Inject
 @InjectViewState
 class HomePresenter @Inject constructor(
     private val pref: SharedPrefUseCase,
-    private val getHomeFilmsUseCase: GetHomeFilmsUseCase
+    private val getHomeFilmsUseCase: GetHomeFilmsUseCase,
 ) : BasePresenter<HomeView>() {
 
     fun checkUserAuthStatus(): Boolean = pref.getSignInUserStatus()
 
     fun getItems(film: Array<String>?) {
         if(film != null) {
-            getHomeFilmsUseCase.getAllFilms(film) {
-                viewState.submitList(it)
+            getHomeFilmsUseCase.getAllFilms(film).regularRequest { response ->
+                viewState.submitList(response)
             }
         }
     }

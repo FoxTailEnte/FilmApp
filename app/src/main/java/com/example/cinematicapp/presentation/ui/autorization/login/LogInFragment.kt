@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -45,7 +44,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding, LogInView, LogInPresent
         }
     }
 
-    private fun setLoadingState(loading: Boolean) = with(binding) {
+    override fun setLoadingState(loading: Boolean) = with(binding) {
         if (loading) {
             btSignIn.isEnabled = false
             tvSignIn.isVisible = false
@@ -67,7 +66,6 @@ class LogInFragment : BaseFragment<FragmentLogInBinding, LogInView, LogInPresent
     override fun initializeBinding() = FragmentLogInBinding.inflate(layoutInflater)
 
     override fun setupUi() {
-        getMainActivityView()?.hideSearchMenu(false)
         getMainActivityView()?.hideBottomMenu(false)
     }
 

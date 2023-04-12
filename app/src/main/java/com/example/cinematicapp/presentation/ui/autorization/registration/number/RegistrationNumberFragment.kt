@@ -34,7 +34,7 @@ class RegistrationNumberFragment :BaseFragment<FragmentRegistrationNumberBinding
         requireActivity().setKeyboardVisibility(false)
     }
 
-    private fun setLoadingState(state: Boolean) = with(binding) {
+    override fun setLoadingState(state: Boolean) = with(binding) {
         if (state) {
             btSendCode.isEnabled = false
             tvSendCode.visibility = View.GONE

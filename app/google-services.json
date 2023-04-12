@@ -1,26 +1,19 @@
 {
   "project_info": {
     "project_number": "657996929955",
+    "firebase_url": "https://cinematicapp-c58cd-default-rtdb.firebaseio.com",
     "project_id": "cinematicapp-c58cd",
     "storage_bucket": "cinematicapp-c58cd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:657996929955:android:7d7eafc352ddab96ac5816",
+        "mobilesdk_app_id": "1:657996929955:android:72368ff84474cc55ac5816",
         "android_client_info": {
           "package_name": "com.example.cinematicapp"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "657996929955-lrj31rn6pq0gq38cjvhenbsvhus5thhh.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.cinematicapp",
-            "certificate_hash": "f0b35ab391aeddaaab9c3b8232f0fb1fc2eee86a"
-          }
-        },
         {
           "client_id": "657996929955-2eb1k8gvvakakpuufq1l42qemurolhig.apps.googleusercontent.com",
           "client_type": 3

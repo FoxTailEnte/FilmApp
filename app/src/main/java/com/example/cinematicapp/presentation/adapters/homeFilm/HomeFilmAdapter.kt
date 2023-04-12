@@ -2,13 +2,14 @@ package com.example.cinematicapp.presentation.adapters.homeFilm
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cinematicapp.databinding.ItemHomeFilmBinding
 
 class HomeFilmAdapter(
 ) : RecyclerView.Adapter<HomeFilmHolder>() {
 
-    private val list: MutableList<ResponseModel2> by lazy { mutableListOf() }
+    private var list = emptyList<BaseFilmInfoResponse>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = HomeFilmHolder(
         ItemHomeFilmBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -20,10 +21,14 @@ class HomeFilmAdapter(
 
     override fun getItemCount() = list.size
 
-    fun submitList(list: ResponseModel) {
-        this.list.addAll(list.docs.map{
-            it
-        })
-        notifyDataSetChanged()
+    fun setСomposedData(newData: List<BaseFilmInfoResponse>) {
+        val diffUtil = HomeFilmDiffUtil(list, newData)
+        val diffResult = DiffUtil.calculateDiff(diffUtil)
+        list = newData
+        diffResult.dispatchUpdatesTo(this)
+
+
     }
+
+
 }

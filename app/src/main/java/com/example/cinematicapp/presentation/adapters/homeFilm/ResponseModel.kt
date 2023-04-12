@@ -1,12 +1,12 @@
 package com.example.cinematicapp.presentation.adapters.homeFilm
 
-data class ResponseModel (
-    val docs: List<ResponseModel2>
+data class BaseFilmResponse (
+    val docs: List<BaseFilmInfoResponse>
     )
-data class ResponseModel2 (
+data class BaseFilmInfoResponse (
     val name: String,
-    val poster: ResponseModel3
+    val poster: Poster
         )
-data class ResponseModel3 (
+data class Poster (
     val previewUrl: String
         )

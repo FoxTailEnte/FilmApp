@@ -36,7 +36,7 @@ class NewPassCodeFragment : BaseFragment<FragmentNewPassCodeBinding, NewPassCode
         }
     }
 
-    private fun setLoadingState(loading: Boolean) = with(binding) {
+    override fun setLoadingState(loading: Boolean) = with(binding) {
         if (loading) {
             btConfirmCode.isEnabled = false
             tvConfirmCode.isVisible = false

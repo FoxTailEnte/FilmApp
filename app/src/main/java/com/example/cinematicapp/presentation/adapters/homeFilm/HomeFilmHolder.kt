@@ -8,13 +8,10 @@ class HomeFilmHolder(
     private val binding: ItemHomeFilmBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: ResponseModel2) = with(binding) {
-        if (item.poster != null) {
-            Picasso.get()
-                .load(item.poster.previewUrl)
-                .resize(500, 500).centerInside()
-                .into(imageView3)
-            textView5.text = item.name
-        }
+    fun bind(item: BaseFilmInfoResponse) = with(binding) {
+        Picasso.get()
+            .load(item.poster.previewUrl)
+            .into(imageView3)
+        textView5.text = item.name
     }
 }

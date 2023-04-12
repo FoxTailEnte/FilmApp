@@ -17,6 +17,10 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="ProgressBarStyle">
+        <item name="colorAccent">@color/base_text</item>
+    </style>
+
     <style name="base_text_input_layout_pass" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxBackgroundColor">@color/main_editText</item>
         <item name="errorIconDrawable">@null</item>

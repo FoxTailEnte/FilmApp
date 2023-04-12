@@ -77,6 +77,10 @@ class NewPassNewPassFragment : BaseFragment<FragmentNewPassNewPassBinding, NewPa
             .show()
     }
 
+    override fun setLoadingState(isLoading: Boolean) {
+        TODO("Not yet implemented")
+    }
+
     override fun onBackPress() {
         requireActivity().onBackPressedDispatcher.addCallback(this as LifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {

@@ -64,4 +64,8 @@ class ProfilePersonFragment : BaseFragment<FragmentPersonInfoBinding, ProfilePer
     override fun addNewUserSuccess() {
         Toast.makeText(requireContext(), getString(R.string.profile_add_new_name_success), Toast.LENGTH_LONG).show()
     }
+
+    override fun setLoadingState(isLoading: Boolean) {
+        TODO("Not yet implemented")
+    }
 }
