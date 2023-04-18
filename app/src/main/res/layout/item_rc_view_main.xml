@@ -7,7 +7,7 @@
     android:background="@color/main_background">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/textView13"
+        android:id="@+id/tvGenre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

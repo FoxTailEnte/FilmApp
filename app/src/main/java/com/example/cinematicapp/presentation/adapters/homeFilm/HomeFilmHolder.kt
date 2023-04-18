@@ -1,19 +1,53 @@
 package com.example.cinematicapp.presentation.adapters.homeFilm
 
+import android.graphics.drawable.Drawable
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.example.cinematicapp.databinding.ItemHomeFilmBinding
-import com.squareup.picasso.Picasso
+import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmInfoResponse
 
 class HomeFilmHolder(
-    private val binding: ItemHomeFilmBinding
+    private val binding: ItemHomeFilmBinding,
+    private val callBack: (item: BaseFilmInfoResponse) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: BaseFilmInfoResponse) = with(binding) {
+    fun bind(item: BaseFilmInfoResponse, lastPosition: Boolean, callBackLoad: () -> Unit) = with(binding) {
         if(item.poster != null) {
-            Picasso.get()
+            Glide.with(binding.root)
                 .load(item.poster.previewUrl)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        return false
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        if (lastPosition) {
+                            callBackLoad.invoke()
+                        }
+                        return false
+                    }
+
+                })
                 .into(imageView3)
         }
-        textView5.text = item.name
+        tvTitle.text = item.name
+        itemView.setOnClickListener {
+            callBack.invoke(item)
+        }
     }
 }

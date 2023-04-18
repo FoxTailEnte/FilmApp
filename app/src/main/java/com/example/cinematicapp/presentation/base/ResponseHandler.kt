@@ -1,6 +1,7 @@
 package com.example.cinematicapp.presentation.base
 
-import com.example.cinematicapp.presentation.adapters.homeFilm.BaseFilmResponse
+import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmResponse
+import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseIdFilmResponse
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -16,8 +17,17 @@ interface ResponseHandler<out T : BaseView> {
     ) =
         subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { view.setLoadingState(true) }
-            .doFinally { /*view.setLoadingState(false)*/ }
+            .subscribe({
+                successAction?.invoke(it)
+            }, { exception ->
+
+            }).addTo(compositeDisposable)
+
+    fun Single<BaseIdFilmResponse>.singleRequest(
+        successAction: ((BaseIdFilmResponse) -> Unit)?,
+    ) =
+        subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 successAction?.invoke(it)
             }, { exception ->

@@ -12,6 +12,18 @@
         <action
             android:id="@+id/action_homeFragment_to_graph_authorization"
             app:destination="@id/graph_authorization" />
+        <action
+            android:id="@+id/action_homeFragment_to_filmInfoFragment"
+            app:destination="@id/filmInfoFragment" />
     </fragment>
     <include app:graph="@navigation/graph_authorization" />
+    <fragment
+        android:id="@+id/filmInfoFragment"
+        android:name="com.example.cinematicapp.presentation.ui.filmInfo.FilmInfoFragment"
+        android:label="FilmInfoFragment"
+        tools:layout="@layout/fragment_film_info">
+        <argument
+            android:name="id"
+            app:argType="integer" />
+    </fragment>
 </navigation>

@@ -1,6 +1,7 @@
 package com.example.cinematicapp.presentation.adapters.homeFilm
 
 import androidx.recyclerview.widget.DiffUtil
+import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmInfoResponse
 
 class HomeFilmDiffUtil(
     private val oldList: List<BaseFilmInfoResponse>,

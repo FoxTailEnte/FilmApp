@@ -9,8 +9,8 @@ class MainRcViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: MainRcViewModel) = with(binding) {
-        textView13.text = root.context.getString(item.name)
-        textView13.setOnClickListener {
+        tvGenre.text = root.context.getString(item.name)
+        tvGenre.setOnClickListener {
             callBack.invoke(item)
         }
         }

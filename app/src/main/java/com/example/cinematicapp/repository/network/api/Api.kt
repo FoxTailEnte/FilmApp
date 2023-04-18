@@ -1,9 +1,11 @@
 package com.example.cinematicapp.repository.network.api
 
-import com.example.cinematicapp.presentation.adapters.homeFilm.BaseFilmResponse
+import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmResponse
+import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseIdFilmResponse
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface Api {
@@ -17,6 +19,12 @@ interface Api {
     @GET("movie")
     @Headers("X-API-KEY: ZZ81QVH-9604YYP-Q462SHP-Y74PR68")
     fun getGenresFilms(
-        @Query("genres.name") name: Array<String>
+        @Query("genres.name") genre: Array<String>
     ): Single<BaseFilmResponse>
+
+    @GET("movie/{id}")
+    @Headers("X-API-KEY: ZZ81QVH-9604YYP-Q462SHP-Y74PR68")
+    fun getIdFilms(
+        @Path("id") id: String
+    ): Single<BaseIdFilmResponse>
 }
