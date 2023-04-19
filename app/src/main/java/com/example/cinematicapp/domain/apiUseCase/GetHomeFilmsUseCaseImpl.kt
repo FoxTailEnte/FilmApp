@@ -10,9 +10,9 @@ class GetHomeFilmsUseCaseImpl @Inject constructor(
     private val homeFilms: GetHomeFilms,
 ) : GetHomeFilmsUseCase {
 
-    override fun getRandomFilms(film: Array<String>): Single<BaseFilmResponse> = homeFilms.getRandomFilms(film)
+    override fun getRandomFilms(page: Int, size: Int, film: Array<String>,): Single<BaseFilmResponse> = homeFilms.getRandomFilms(page, size, film)
 
-    override fun getGenresFilms(film: Array<String>): Single<BaseFilmResponse> = homeFilms.getGenresFilms(film)
+    override fun getGenresFilms(page: Int, size: Int, film: Array<String>): Single<BaseFilmResponse> = homeFilms.getGenresFilms(page, size, film)
 
     override fun getIdFilms(film: String): Single<BaseIdFilmResponse> = homeFilms.getIdFilms(film)
 }

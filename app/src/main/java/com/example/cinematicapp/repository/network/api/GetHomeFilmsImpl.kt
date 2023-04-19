@@ -10,9 +10,9 @@ class GetHomeFilmsImpl @Inject constructor(
 ) : GetHomeFilms {
 
 
-    override fun getRandomFilms(film: Array<String>): Single<BaseFilmResponse> = api.getRandomFilms(film)
+    override fun getRandomFilms(page: Int, size: Int, film: Array<String>): Single<BaseFilmResponse> = api.getRandomFilms(page, size, film)
 
-    override fun getGenresFilms(film: Array<String>): Single<BaseFilmResponse> = api.getGenresFilms(film)
+    override fun getGenresFilms(page: Int, size: Int, film: Array<String>): Single<BaseFilmResponse> = api.getGenresFilms(page, size, film)
 
     override fun getIdFilms(film: String): Single<BaseIdFilmResponse> = api.getIdFilms(film)
 }

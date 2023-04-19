@@ -1,6 +1,8 @@
 package com.example.cinematicapp.presentation.base
 
-import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmResponse
+import android.util.Log
+import androidx.paging.PagingData
+import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmInfoResponse
 import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseIdFilmResponse
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -12,12 +14,13 @@ interface ResponseHandler<out T : BaseView> {
     val compositeDisposable: CompositeDisposable
     val view: T
 
-    fun Single<BaseFilmResponse>.regularRequest(
-        successAction: ((BaseFilmResponse) -> Unit)?,
+    fun Single<PagingData<BaseFilmInfoResponse>>.regularRequest(
+        successAction: ((PagingData<BaseFilmInfoResponse>) -> Unit)?,
     ) =
         subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+                Log.d("MyLog", it.toString())
                 successAction?.invoke(it)
             }, { exception ->
 

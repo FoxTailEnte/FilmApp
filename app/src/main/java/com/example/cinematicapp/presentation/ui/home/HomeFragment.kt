@@ -1,13 +1,13 @@
 package com.example.cinematicapp.presentation.ui.home
 
 import android.view.inputmethod.EditorInfo
-import androidx.core.view.isVisible
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.cinematicapp.CinematicApplication
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentHomeBinding
 import com.example.cinematicapp.presentation.adapters.homeFilm.HomeFilmAdapter
-import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmResponse
+import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmInfoResponse
 import com.example.cinematicapp.presentation.adapters.mainRcView.MainRcViewAdapter
 import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.repository.utils.Extensions.getMainActivityView
@@ -79,13 +79,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
         presenter.getRandomFilms(arrayOf(""))
     }
 
-    override fun submitList(items: BaseFilmResponse) {
-        val itemList = items.docs
-        adapter.setСomposedData(itemList!!)
+    override fun submitList(items: PagingData<BaseFilmInfoResponse>) {
+        adapter.submitData(lifecycle,items)
     }
 
     override fun setLoadingState(isLoading: Boolean) {
-        binding.lPBar.isVisible = isLoading
+        /*binding.lPBar.isVisible = isLoading*/
     }
 
 }
