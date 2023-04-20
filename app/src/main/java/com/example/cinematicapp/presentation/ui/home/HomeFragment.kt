@@ -71,6 +71,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
         checkLoadingAdapter()
     }
 
+    private fun initRcMain() {
+        adapterMain = MainRcViewAdapter {
+            if(getString(it.name) != getString(R.string.all)) {
+                presenter.getGenresFilms(arrayOf(getString(it.name).lowercase()), Constants.GENRES)
+            } else {
+                presenter.getRandomFilms(arrayOf(""), Constants.BASE)
+            }
+        }
+        binding.recyclerViewMain.adapter = adapterMain
+    }
+
     private fun checkLoadingAdapter() = with(binding) {
         rcHome.adapter = adapter.withLoadStateHeaderAndFooter(
             header = FilmsLoaderStateAdapter(),
@@ -81,8 +92,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
             footer = footerAdapter
         )
         adapter.addLoadStateListener { loadState ->
-            rcHome.isVisible = loadState.source.refresh is LoadState.NotLoading
-            pBar.isVisible = loadState.refresh is LoadState.Loading
+            if (loadState.source.refresh is LoadState.NotLoading &&
+                loadState.refresh is LoadState.Loading
+            ) setLoadingState(true) else setLoadingState(false)
         }
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
@@ -91,17 +103,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
                 else 1
             }
         }
-    }
-
-    private fun initRcMain() {
-        adapterMain = MainRcViewAdapter {
-            if(getString(it.name) != getString(R.string.all)) {
-                presenter.getGenresFilms(arrayOf(getString(it.name).lowercase()), Constants.GENRES)
-            } else {
-                presenter.getRandomFilms(arrayOf(""), Constants.BASE)
-            }
-        }
-        binding.recyclerViewMain.adapter = adapterMain
     }
 
     private fun getRandomFilms() {
@@ -115,8 +116,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
         }, 200)
     }
 
-    override fun setLoadingState(isLoading: Boolean) {
-
+    override fun setLoadingState(isLoading: Boolean) = with(binding) {
+        rcHome.isVisible = !isLoading
+        pBar.isVisible = isLoading
     }
 
 }
