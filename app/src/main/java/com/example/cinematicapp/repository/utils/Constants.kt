@@ -11,4 +11,8 @@ object Constants {
     const val FAIL = "fail"
     const val ERROR_EMPTY_EDIT_TEXT = "Поле должно быть заполнено"
     const val ERROR_VALIDATE_NUMBER_SIZE = "Не верный формат номера"
+
+    const val SEARCH = "Search"
+    const val GENRES = "Genres"
+    const val BASE = "Base"
 }

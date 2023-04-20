@@ -15,7 +15,7 @@ class HomeFilmHolder(
     private val callBack: (item: BaseFilmInfoResponse) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: BaseFilmInfoResponse, lastPosition: Boolean, callBackLoad: () -> Unit) = with(binding) {
+    fun bind(item: BaseFilmInfoResponse) = with(binding) {
         if(item.poster != null) {
             Glide.with(binding.root)
                 .load(item.poster.previewUrl)
@@ -36,9 +36,6 @@ class HomeFilmHolder(
                         dataSource: DataSource?,
                         isFirstResource: Boolean
                     ): Boolean {
-                        if (lastPosition) {
-                            callBackLoad.invoke()
-                        }
                         return false
                     }
 

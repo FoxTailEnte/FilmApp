@@ -86,16 +86,35 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchContainer">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcHome"
+            android:layout_width="0dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="3"
+            tools:listitem="@layout/item_home_film"
+            android:layout_height="0dp" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <LinearLayout
         android:id="@+id/lPBar"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:background="@color/main_background"
         android:elevation="2dp"
-        android:gravity="center"
+        android:gravity="bottom"
         android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/swipeLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchContainer">
@@ -106,14 +125,5 @@
             android:layout_height="wrap_content"
             android:theme="@style/ProgressBarStyle" />
     </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcHome"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchContainer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

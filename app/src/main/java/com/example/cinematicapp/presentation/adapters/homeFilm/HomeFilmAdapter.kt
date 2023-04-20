@@ -8,7 +8,6 @@ import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmIn
 
 class HomeFilmAdapter(
     private val callBack: (item: BaseFilmInfoResponse) -> Unit,
-    private val callBackLoad: () -> Unit,
 ) : PagingDataAdapter<BaseFilmInfoResponse ,HomeFilmHolder>(HomeFilmDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = HomeFilmHolder(
@@ -18,8 +17,6 @@ class HomeFilmAdapter(
     }
 
     override fun onBindViewHolder(holder: HomeFilmHolder, position: Int) {
-        holder.bind(getItem(position)!!, position == itemCount - 1) {
-            callBackLoad.invoke()
-        }
+        holder.bind(getItem(position)!!)
     }
 }
