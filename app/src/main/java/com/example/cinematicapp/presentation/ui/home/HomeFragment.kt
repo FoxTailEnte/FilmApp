@@ -29,7 +29,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
     lateinit var presenter: HomePresenter
     private lateinit var adapter: HomeFilmAdapter
     private lateinit var adapterMain: MainRcViewAdapter
-    private val layoutManager by lazy {GridLayoutManager(requireContext(),3)}
     private val footerAdapter = FilmsLoaderStateAdapter()
     private val headerAdapter = FilmsLoaderStateAdapter()
 
@@ -64,7 +63,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
     }
 
     private fun initRc() {
-        binding.rcHome.layoutManager = layoutManager
+        binding.rcHome.layoutManager = GridLayoutManager(requireContext(),3)
         adapter = HomeFilmAdapter {
             navigateTo(HomeFragmentDirections.actionHomeFragmentToFilmInfoFragment(it.id))
         }
@@ -92,11 +91,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
             footer = footerAdapter
         )
         adapter.addLoadStateListener { loadState ->
-            if (loadState.source.refresh is LoadState.NotLoading &&
-                loadState.refresh is LoadState.Loading
-            ) setLoadingState(true) else setLoadingState(false)
+            if (loadState.refresh is LoadState.Loading) setLoadingState(true) else setLoadingState(false)
         }
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+        GridLayoutManager(requireContext(),3).spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return if (position == 0 && headerAdapter.itemCount > 0) 3
                 else if (position == concatAdapter.itemCount - 1 && footerAdapter.itemCount > 0) 3

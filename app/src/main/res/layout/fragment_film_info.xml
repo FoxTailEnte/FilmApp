@@ -13,6 +13,21 @@
         android:background="@color/main_background"
         tools:context=".presentation.ui.autorization.registration.number.RegistrationNumberFragment">
 
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btBackPress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/main_editText"
+            android:clickable="true"
+            app:borderWidth="0dp"
+            app:fabCustomSize="38dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/backpress"
+            tools:ignore="ContentDescription,KeyboardInaccessibleWidget" />
         <LinearLayout
             android:id="@+id/lPBar"
             android:layout_width="0dp"
@@ -249,30 +264,34 @@
             app:layout_constraintTop_toBottomOf="@id/tvBudgetValue" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button2"
+            android:id="@+id/btLibrary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:backgroundTint="@color/cart_person"
             android:paddingHorizontal="8dp"
             android:paddingVertical="8dp"
             android:text="Избранное"
             android:textColor="@color/white"
             android:textSize="21sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tvBudget"
             app:layout_constraintTop_toBottomOf="@+id/textView18Line" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button"
+            android:id="@+id/btWatchLater"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:backgroundTint="@color/cart_person"
             android:paddingHorizontal="8dp"
             android:paddingVertical="8dp"
             android:text="Желаемое"
             android:textColor="@color/white"
             android:textSize="21sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/tvBudgetValue"
             app:layout_constraintTop_toBottomOf="@+id/textView18Line" />
     </androidx.constraintlayout.widget.ConstraintLayout>

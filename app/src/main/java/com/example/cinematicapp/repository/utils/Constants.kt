@@ -5,6 +5,8 @@ object Constants {
     const val PASS = "pass"
     const val NAME = "name"
     const val SECOND_NAME = "secondName"
+    const val LIBRARY = "library"
+    const val WATCH_LATER = "watchLater"
     const val VALIDATE_NUMBER = "+7"
     const val PLUS = "+"
     const val SHARED_PREF = "shared_preferences"

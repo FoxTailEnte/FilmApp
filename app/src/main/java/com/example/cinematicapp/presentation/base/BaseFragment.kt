@@ -27,11 +27,15 @@ abstract class BaseFragment<
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupUi()
         checkInputNumber()
         checkUserAuth()
         setupListener()
         onBackPress()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setupUi()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

@@ -1,4 +1,4 @@
-package com.example.cinematicapp.repository.network
+package com.example.cinematicapp.repository.network.parsHome
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -12,13 +12,11 @@ class PassengerDataSourceImpl(
         config = PagingConfig(18),
         pagingSourceFactory = {dataSource.apply {
             submitFilmList(film, genres)
-        }}).observable
-    )
+        }}).observable)
 
     override fun getGenresFilms(film: Array<String>, genres: Boolean) = (Pager(
         config = PagingConfig(18),
         pagingSourceFactory = {dataSource.apply {
             submitFilmList(film,true)
-        }}).observable
-            )
+        }}).observable)
 }

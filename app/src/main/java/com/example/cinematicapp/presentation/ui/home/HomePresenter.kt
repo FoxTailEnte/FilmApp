@@ -2,7 +2,7 @@ package com.example.cinematicapp.presentation.ui.home
 
 import com.example.cinematicapp.domain.sharedPrefUseCase.SharedPrefUseCase
 import com.example.cinematicapp.presentation.base.BasePresenter
-import com.example.cinematicapp.repository.network.PassengerSource
+import com.example.cinematicapp.repository.network.parsHome.PassengerSource
 import com.example.cinematicapp.repository.utils.Constants
 import io.reactivex.disposables.CompositeDisposable
 import moxy.InjectViewState

@@ -12,7 +12,8 @@ interface Api {
 
     @GET("movie")
     //@Headers("X-API-KEY: ZZ81QVH-9604YYP-Q462SHP-Y74PR68")
-    @Headers("X-API-KEY: YE3YWPE-9K7M3VQ-HT5TP07-SKBYY2X")
+    //@Headers("X-API-KEY: YE3YWPE-9K7M3VQ-HT5TP07-SKBYY2X")
+    @Headers("X-API-KEY: X1BW30P-PC14PS7-MW2TD4B-TEYGFMZ")
     fun getRandomFilms(
         @Query("page") page: Int,
         @Query("limit") size: Int = 10,
@@ -21,7 +22,8 @@ interface Api {
 
     @GET("movie")
     //@Headers("X-API-KEY: ZZ81QVH-9604YYP-Q462SHP-Y74PR68")
-    @Headers("X-API-KEY: YE3YWPE-9K7M3VQ-HT5TP07-SKBYY2X")
+    //@Headers("X-API-KEY: YE3YWPE-9K7M3VQ-HT5TP07-SKBYY2X")
+    @Headers("X-API-KEY: X1BW30P-PC14PS7-MW2TD4B-TEYGFMZ")
     fun getGenresFilms(
         @Query("page") page: Int,
         @Query("limit") size: Int = 10,
@@ -30,7 +32,8 @@ interface Api {
 
     @GET("movie/{id}")
     //@Headers("X-API-KEY: ZZ81QVH-9604YYP-Q462SHP-Y74PR68")
-    @Headers("X-API-KEY: YE3YWPE-9K7M3VQ-HT5TP07-SKBYY2X")
+    //@Headers("X-API-KEY: YE3YWPE-9K7M3VQ-HT5TP07-SKBYY2X")
+    @Headers("X-API-KEY: X1BW30P-PC14PS7-MW2TD4B-TEYGFMZ")
     fun getIdFilms(
         @Path("id") id: String
     ): Single<BaseIdFilmResponse>

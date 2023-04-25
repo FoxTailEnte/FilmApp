@@ -1,4 +1,4 @@
-package com.example.cinematicapp.repository.network
+package com.example.cinematicapp.repository.network.parsHome
 
 import androidx.paging.PagingState
 import androidx.paging.rxjava2.RxPagingSource

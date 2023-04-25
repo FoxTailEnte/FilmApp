@@ -1,6 +1,7 @@
 package com.example.cinematicapp.presentation.ui.filmInfo
 
 import android.graphics.drawable.Drawable
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -14,6 +15,7 @@ import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseIdFilm
 import com.example.cinematicapp.presentation.adapters.homeFilm.models.Persons
 import com.example.cinematicapp.presentation.adapters.personFilmInfoAdapter.PersonFilmInfoAdapter
 import com.example.cinematicapp.presentation.base.BaseFragment
+import com.example.cinematicapp.repository.utils.Extensions.navigateBack
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
@@ -30,17 +32,34 @@ class FilmInfoFragment : BaseFragment<FragmentFilmInfoBinding, FilmInfoView, Fil
     override fun initializeBinding() = FragmentFilmInfoBinding.inflate(layoutInflater)
 
     override fun setupListener() = with(binding) {
-        setLoadingState(true)
-        presenter.getIdFilms(args.id.toString())
+        btBackPress.setOnClickListener {
+            navigateBack()
+        }
+        btLibrary.setOnClickListener {
+            presenter.checkLibraryItem(args.id) {
+                if(it) presenter.addToLibrary(args.id, binding.tvTitle.text.toString())
+                else Toast.makeText(this@FilmInfoFragment.context, "Давно лошком был?", Toast.LENGTH_LONG).show()
+            }
+        }
+        btWatchLater.setOnClickListener {
+            presenter.checkWatchLaterItem(args.id) {
+                if(it) presenter.addToWatchLater(args.id, binding.tvTitle.text.toString())
+                else Toast.makeText(this@FilmInfoFragment.context, "Давно лошком был?", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     override fun setupUi() {
         initRc()
+        setLoadingState(true)
+        presenter.getIdFilms(args.id.toString())
+        presenter.getUserPhone()
     }
 
     private fun initRc() {
         adapter = PersonFilmInfoAdapter()
         binding.RcPerson.adapter = adapter
+
     }
 
     private fun convertTime(time: Int): String {

@@ -1,42 +1,38 @@
 package com.example.cinematicapp.repository.network.firebase.bd
 
 import android.app.Activity
-import android.util.Log
 import com.example.cinematicapp.repository.utils.Constants
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import java.util.concurrent.TimeUnit
 
 
 class FirebaseSmsImpl : FireBaseSms {
-    private lateinit var mDataBase: DatabaseReference
+    private var myDataBase = Firebase.firestore
     private lateinit var mCallBack: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     private lateinit var mAuth: FirebaseAuth
 
     override fun authUser(phone: String, pass: String, action: (Boolean?) -> Unit) {
         var currentString: Boolean? = null
-        mDataBase = FirebaseDatabase.getInstance().getReference(Constants.USERS)
-        Log.d("MyLog","gergeg")
-        mDataBase.child(phone).get().addOnSuccessListener {
-            Log.d("MyLog","gergeg")
-            if (it.value != null) {
-                val currentPass = it.child(Constants.PASS).value
-                currentString = currentPass.toString() == pass
+        myDataBase.collection(Constants.USERS).document(phone).get().addOnSuccessListener {
+            if (it != null) {
+                currentString = it.get(Constants.PASS).toString() == pass
             }
             action.invoke(currentString)
         }
     }
 
     override fun authUser(phone: String, action: (Boolean) -> Unit) {
-        var currentString: Boolean
-        mDataBase = FirebaseDatabase.getInstance().getReference(Constants.USERS)
-        mDataBase.child(phone).get().addOnSuccessListener {
-            currentString = it.value == null
+        var currentString = true
+        myDataBase.collection(Constants.USERS).get().addOnSuccessListener { it ->
+            it.documents.forEach {
+                currentString = it.id != phone
+            }
             action.invoke(currentString)
         }
     }
