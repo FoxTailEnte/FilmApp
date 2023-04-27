@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <View
-            android:id="@+id/view2"
+            android:id="@+id/mainLine"
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/main_editText"
@@ -39,7 +39,7 @@
             app:boxCornerRadiusBottomStart="10dp"
             app:boxCornerRadiusTopEnd="10dp"
             app:boxCornerRadiusTopStart="10dp"
-            app:layout_constraintEnd_toStartOf="@+id/imageView"
+            app:layout_constraintEnd_toStartOf="@+id/ivFilters"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -58,7 +58,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageView"
+            android:id="@+id/ivFilters"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -106,7 +106,7 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <!--<LinearLayout
+    <LinearLayout
         android:id="@+id/lPBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -124,6 +124,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ProgressBarStyle" />
-    </LinearLayout>-->
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

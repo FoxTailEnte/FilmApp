@@ -2,6 +2,7 @@ package com.example.cinematicapp.presentation.ui.labrary
 
 import android.os.Handler
 import android.os.Looper
+import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
@@ -37,6 +38,20 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
         initRc()
         initRcMain()
         getFilmsList()
+    }
+
+    override fun setupListener() = with(binding) {
+       /* edSearchText.setOnEditorActionListener { _, actionId, _ ->
+            if(actionId == EditorInfo.IME_ACTION_SEARCH) {
+                presenter.getRandomFilms(arrayOf(edSearchText.text.toString()), Constants.SEARCH)
+                requireActivity().setKeyboardVisibility(false)
+            }
+            true
+        }*/
+        swipeLayout.setOnRefreshListener {
+            presenter.getRefreshFilms()
+            swipeLayout.isRefreshing = false
+        }
     }
 
     private fun initRc() = with(binding) {
@@ -87,6 +102,8 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
         }, 200)
     }
 
-    override fun setLoadingState(isLoading: Boolean) {
+    override fun setLoadingState(isLoading: Boolean) = with(binding) {
+        rcLib.isVisible = !isLoading
+        pBar.isVisible = isLoading
     }
 }

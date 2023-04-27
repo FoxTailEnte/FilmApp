@@ -10,7 +10,7 @@ interface FireBaseData {
     fun checkLibraryItem(phone:String, id: Int, action:(List<Int>?) -> Unit)
     fun checkWatchLaterItem(phone:String, id: Int, action:(List<Int>?) -> Unit)
     fun addToWatchLater(phone: String, film: List<Any?>)
-    fun getWatchLater(phone: String, id: Int, action: (List<Int>?) -> Unit)
+    fun getWatchLater(phone: String, action: (ArrayList<String>?) -> Unit)
     fun addToLibrary(phone: String, film: List<Any?>)
     fun getLibrary(phone: String, action: (ArrayList<String>?) -> Unit)
 }

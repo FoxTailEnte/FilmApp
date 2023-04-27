@@ -4,6 +4,7 @@ import com.example.cinematicapp.domain.firebaseUseCase.FireBaseDataUseCase
 import com.example.cinematicapp.domain.sharedPrefUseCase.SharedPrefUseCase
 import com.example.cinematicapp.presentation.base.BasePresenter
 import com.example.cinematicapp.repository.network.parsHome.PassengerSource
+import com.example.cinematicapp.repository.utils.Constants
 import io.reactivex.disposables.CompositeDisposable
 import moxy.InjectViewState
 import javax.inject.Inject
@@ -28,24 +29,24 @@ class LibraryPresenter @Inject constructor(
     fun getLibraryList() {
         firestore.getLibrary(getUserPhone()) {
             val list = it?.toTypedArray()
-            if (list != null) getRandomFilms(list, "")
+            if (list != null) getRandomFilms(list, "id")
         }
     }
 
-    private fun getRandomFilms(film: Array<String>, call: String) {
+    fun getRandomFilms(film: Array<String>, call: String) {
         currentFilmArray = film
         currentCall = call
-        mDisposable.add(dataSource.getFilmsById(film, "id", film.size).subscribe {
+        mDisposable.add(dataSource.getFilmsById(film, currentCall, film.size).subscribe {
             viewState.submitList(it)
         })
     }
 
 
-    /* fun getRefreshFilms() {
+     fun getRefreshFilms() {
          when (currentCall) {
              Constants.BASE -> getRandomFilms(currentFilmArray,currentCall)
-             Constants.SEARCH -> getRandomFilms(currentFilmArray,currentCall)
-             Constants.GENRES -> getGenresFilms(currentFilmArray,currentCall)
+             //Constants.SEARCH -> getRandomFilms(currentFilmArray,currentCall)
+             //Constants.GENRES -> getGenresFilms(currentFilmArray,currentCall)
          }
-     }*/
+     }
 }

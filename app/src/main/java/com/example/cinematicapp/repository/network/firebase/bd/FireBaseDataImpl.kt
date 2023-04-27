@@ -54,10 +54,14 @@ class FireBaseDataImpl : FireBaseData {
         myDataBase.collection(Constants.USERS).document(phone).update(Constants.WATCH_LATER, currentList)
     }
 
-    override fun getWatchLater(phone: String, id: Int, action: (List<Int>?) -> Unit) {
+    override fun getWatchLater(phone: String, action: (ArrayList<String>?) -> Unit) {
         myDataBase.collection(Constants.USERS).document(phone).get().addOnSuccessListener {
+            val array = arrayListOf<String>()
             val list: List<Int>? = it.data?.get(Constants.WATCH_LATER) as List<Int>?
-            action.invoke(list)
+            list?.forEach {
+                array.add(it.toString())
+            }
+            action.invoke(array)
         }
     }
 

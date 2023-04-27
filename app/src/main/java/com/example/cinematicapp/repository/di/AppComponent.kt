@@ -16,6 +16,7 @@ import com.example.cinematicapp.presentation.ui.autorization.registration.number
 import com.example.cinematicapp.presentation.ui.autorization.registration.person.RegistrationPersonInfoPresenter
 import com.example.cinematicapp.presentation.ui.filmInfo.FilmInfoPresenter
 import com.example.cinematicapp.presentation.ui.labrary.LibraryPresenter
+import com.example.cinematicapp.presentation.ui.later.WatchLaterPresenter
 import com.example.cinematicapp.presentation.ui.profile.notifications.NotificationsPresenter
 import com.example.cinematicapp.repository.di.modules.FireBaseModule
 import com.example.cinematicapp.repository.di.modules.NetworkModule
@@ -50,6 +51,7 @@ interface AppComponent {
     fun provideNewPassNewPassPresenter(): NewPassNewPassPresenter
     fun provideHomePresenter(): HomePresenter
     fun provideLibraryPresenter(): LibraryPresenter
+    fun provideWatchLaterPresenter(): WatchLaterPresenter
     fun provideFilmInfoPresenter(): FilmInfoPresenter
     fun provideNotificationPresenter(): NotificationsPresenter
 }

@@ -39,8 +39,8 @@ class FireBaseDataUseCaseImpl @Inject constructor(
         firebase.addToWatchLater(phone, film)
     }
 
-    override fun getWatchLater(phone: String, id: Int, action: (List<Int>?) -> Unit) {
-        firebase.getWatchLater(phone,id) {
+    override fun getWatchLater(phone: String, action: (ArrayList<String>?) -> Unit) {
+        firebase.getWatchLater(phone) {
             action.invoke(it)
         }
     }
