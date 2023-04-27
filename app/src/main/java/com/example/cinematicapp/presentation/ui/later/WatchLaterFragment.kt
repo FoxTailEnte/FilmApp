@@ -15,6 +15,7 @@ import com.example.cinematicapp.presentation.adapters.libraryFilm.LibraryFilmAda
 import com.example.cinematicapp.presentation.adapters.mainRcView.MainRcViewAdapter
 import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.presentation.ui.home.HomeFragmentDirections
+import com.example.cinematicapp.repository.utils.Constants
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -82,9 +83,9 @@ class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding, WatchLaterVie
     private fun initRcMain() {
         adapterMain = MainRcViewAdapter {
             if(getString(it.name) != getString(R.string.all)) {
-                // presenter.getGenresFilms(arrayOf(getString(it.name).lowercase()), Constants.GENRES)
+                 presenter.getGenresWatchLaterFilms(arrayOf(getString(it.name).lowercase()), Constants.GENRES)
             } else {
-                // presenter.getRandomFilms(arrayOf(""), Constants.BASE)
+                 presenter.getRandomWatchLaterFilms(arrayOf(""), Constants.BASE)
             }
         }
         binding.recyclerViewMain.adapter = adapterMain

@@ -16,5 +16,7 @@ class GetHomeFilmsImpl @Inject constructor(
 
     override fun getGenresFilms(page: Int, size: Int, film: Array<String>): Single<BaseFilmResponse> = api.getGenresFilms(page, size, film)
 
+    override fun getGenresLibraryFilms(page: Int, size: Int, film: Array<String>, genres: Array<String>): Single<BaseFilmResponse> = api.getGenresLibraryFilms(page, size, film, genres)
+
     override fun getIdFilms(film: String): Single<BaseIdFilmResponse> = api.getIdFilms(film)
 }

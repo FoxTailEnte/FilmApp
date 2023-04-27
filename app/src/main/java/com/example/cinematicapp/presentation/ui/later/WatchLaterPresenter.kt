@@ -12,7 +12,7 @@ import javax.inject.Inject
 @InjectViewState
 class WatchLaterPresenter @Inject constructor(
     private val dataSource: PassengerSource,
-    private val firestore: FireBaseDataUseCase,
+    private val fireStore: FireBaseDataUseCase,
     private val pref: SharedPrefUseCase
 ) : BasePresenter<WatchLaterView>() {
 
@@ -27,16 +27,24 @@ class WatchLaterPresenter @Inject constructor(
     }
 
     fun getWatchLaterList() {
-        firestore.getWatchLater(getUserPhone()) {
+        fireStore.getWatchLater(getUserPhone()) {
             val list = it?.toTypedArray()
-            if (list != null) getRandomFilms(list, "")
+            if (list != null) getRandomWatchLaterFilms(list, Constants.ID)
         }
     }
 
-    private fun getRandomFilms(film: Array<String>, call: String) {
+    fun getRandomWatchLaterFilms(film: Array<String>, call: String) {
         currentFilmArray = film
         currentCall = call
-        mDisposable.add(dataSource.getFilmsById(film, "id", film.size).subscribe {
+        mDisposable.add(dataSource.getFilmsById(film, currentCall, film.size).subscribe {
+            viewState.submitList(it)
+        })
+    }
+
+    fun getGenresWatchLaterFilms(film: Array<String>, call: String) {
+        currentFilmArray = film
+        currentCall = call
+        mDisposable.add(dataSource.getFilmsById(film, currentCall, film.size).subscribe {
             viewState.submitList(it)
         })
     }
@@ -44,9 +52,9 @@ class WatchLaterPresenter @Inject constructor(
 
      fun getRefreshFilms() {
          when (currentCall) {
-             Constants.BASE -> getRandomFilms(currentFilmArray,currentCall)
+             Constants.BASE -> getRandomWatchLaterFilms(currentFilmArray,currentCall)
              //Constants.SEARCH -> getRandomFilms(currentFilmArray,currentCall)
-             //Constants.GENRES -> getGenresFilms(currentFilmArray,currentCall)
+             Constants.GENRES -> getGenresWatchLaterFilms(currentFilmArray,currentCall)
          }
      }
 }

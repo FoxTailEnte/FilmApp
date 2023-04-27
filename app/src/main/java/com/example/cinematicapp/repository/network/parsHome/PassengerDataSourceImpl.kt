@@ -13,18 +13,24 @@ class PassengerDataSourceImpl(
     override fun getRandomFilm(film: Array<String>, type: String) = (Pager(
         config = PagingConfig(12),
         pagingSourceFactory = {dataSource.apply {
-            submitFilmList(film, type, 100)
+            submitFilmList(film, null, type, 100)
         }}).observable.cachedIn(CoroutineScope(Dispatchers.Main)))
 
     override fun getGenresFilms(film: Array<String>, type: String) = (Pager(
         config = PagingConfig(12),
         pagingSourceFactory = {dataSource.apply {
-            submitFilmList(film,type,100)
+            submitFilmList(film, null, type,100)
         }}).observable.cachedIn(CoroutineScope(Dispatchers.Main)))
 
     override fun getFilmsById(film: Array<String>, type: String, listSize: Int) = (Pager(
         config = PagingConfig(12),
         pagingSourceFactory = {dataSource.apply {
-            submitFilmList(film,type, listSize)
+            submitFilmList(film, null,type, listSize)
+        }}).observable.cachedIn(CoroutineScope(Dispatchers.Main)))
+
+    override fun getGenresLibraryFilms(film: Array<String>, genres: Array<String>, type: String, listSize: Int) = (Pager(
+        config = PagingConfig(12),
+        pagingSourceFactory = {dataSource.apply {
+            submitFilmList(film, genres, type, listSize)
         }}).observable.cachedIn(CoroutineScope(Dispatchers.Main)))
 }

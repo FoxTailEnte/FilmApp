@@ -1,5 +1,6 @@
 package com.example.cinematicapp.repository.network.parsHome
 
+import android.util.Log
 import androidx.paging.PagingState
 import androidx.paging.rxjava2.RxPagingSource
 import com.example.cinematicapp.domain.apiUseCase.GetHomeFilmsUseCase
@@ -13,6 +14,7 @@ class PassengersRepos(
 ) : RxPagingSource<Int, BaseFilmInfoResponse>() {
 
     private val filmList by lazy { mutableListOf<String>() }
+    private val filmGenresList by lazy { mutableListOf<String>() }
     private var size = 0
     private var searchType = ""
 
@@ -20,9 +22,11 @@ class PassengersRepos(
         return null
     }
 
-    fun submitFilmList(film: Array<String>?, type: String, listSize: Int) {
+    fun submitFilmList(film: Array<String>?, genres: Array<String>?, type: String, listSize: Int) {
         size = listSize
         searchType = type
+        filmGenresList.clear()
+        if(genres != null)filmGenresList.addAll(genres.asList())
         filmList.clear()
         filmList.addAll(film!!.asList())
     }
@@ -47,6 +51,18 @@ class PassengersRepos(
                         toResponseResult(nextPageNumber, it)
                     }
                     .onErrorReturn {
+                        LoadResult.Error(it)
+                    }
+            }
+            "GenresLibrary" -> {
+                return getHomeFilmsUseCase.getGenresLibraryFilms(nextPageNumber, 12, film = filmList.toTypedArray(), filmGenresList.toTypedArray())
+                    .subscribeOn(Schedulers.io())
+                    .map {
+                        Log.d("MyLog", it.toString())
+                        toResponseResult(nextPageNumber, it)
+                    }
+                    .onErrorReturn {
+                        Log.d("MyLog", it.stackTraceToString())
                         LoadResult.Error(it)
                     }
             }

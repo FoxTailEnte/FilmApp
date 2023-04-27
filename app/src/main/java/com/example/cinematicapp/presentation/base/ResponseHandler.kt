@@ -1,6 +1,5 @@
 package com.example.cinematicapp.presentation.base
 
-import android.util.Log
 import androidx.paging.PagingData
 import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmInfoResponse
 import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmResponse
@@ -21,7 +20,6 @@ interface ResponseHandler<out T : BaseView> {
         subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Log.d("MyLog", it.toString())
                 successAction?.invoke(it)
             }, { exception ->
 

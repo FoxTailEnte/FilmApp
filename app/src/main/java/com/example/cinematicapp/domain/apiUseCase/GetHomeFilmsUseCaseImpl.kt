@@ -16,5 +16,7 @@ class GetHomeFilmsUseCaseImpl @Inject constructor(
 
     override fun getGenresFilms(page: Int, size: Int, film: Array<String>): Single<BaseFilmResponse> = homeFilms.getGenresFilms(page, size, film)
 
+    override fun getGenresLibraryFilms(page: Int, size: Int, film: Array<String>, genres: Array<String>): Single<BaseFilmResponse> = homeFilms.getGenresLibraryFilms(page, size, film, genres)
+
     override fun getIdFilms(film: String): Single<BaseIdFilmResponse> = homeFilms.getIdFilms(film)
 }

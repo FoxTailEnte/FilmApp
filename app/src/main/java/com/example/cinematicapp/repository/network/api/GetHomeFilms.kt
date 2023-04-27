@@ -12,5 +12,7 @@ interface GetHomeFilms {
 
     fun getGenresFilms(page: Int, size: Int, film: Array<String>): Single<BaseFilmResponse>
 
+    fun getGenresLibraryFilms(page: Int, size: Int, film: Array<String>, genres: Array<String>): Single<BaseFilmResponse>
+
     fun getIdFilms(film: String): Single<BaseIdFilmResponse>
 }

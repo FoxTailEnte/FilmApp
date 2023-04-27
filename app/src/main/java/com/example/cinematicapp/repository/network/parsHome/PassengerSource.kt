@@ -11,4 +11,6 @@ interface PassengerSource {
     fun getFilmsById(film: Array<String>, type: String, listSize: Int): Observable<PagingData<BaseFilmInfoResponse>>
 
     fun getGenresFilms(film: Array<String>, type: String): Observable<PagingData<BaseFilmInfoResponse>>
+
+    fun getGenresLibraryFilms(film: Array<String>, genres: Array<String>, type: String, listSize: Int): Observable<PagingData<BaseFilmInfoResponse>>
 }
