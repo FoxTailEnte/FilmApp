@@ -106,7 +106,7 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/lPBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -124,6 +124,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ProgressBarStyle" />
-    </LinearLayout>
+    </LinearLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

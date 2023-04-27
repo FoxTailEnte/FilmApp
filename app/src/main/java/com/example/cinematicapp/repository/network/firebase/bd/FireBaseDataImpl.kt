@@ -27,43 +27,53 @@ class FireBaseDataImpl : FireBaseData {
         myDataBase.collection(Constants.USERS).document(phone).collection(Constants.NAME).get().addOnSuccessListener {
             name = it.toString()
         }
-        myDataBase.collection(Constants.USERS).document(phone).collection(Constants.SECOND_NAME).get().addOnSuccessListener {
-            secondName = it.toString()
-            action.invoke("$name $secondName")
+        myDataBase.collection(Constants.USERS).document(phone).collection(Constants.SECOND_NAME).get()
+            .addOnSuccessListener {
+                secondName = it.toString()
+                action.invoke("$name $secondName")
+            }
+    }
+
+    override fun checkLibraryItem(phone: String, id: Int, action: (List<Int>?) -> Unit) {
+        myDataBase.collection(Constants.USERS).document(phone).get().addOnSuccessListener {
+            val list: List<Int>? = it.data?.get(Constants.LIBRARY) as List<Int>?
+            action.invoke(list)
+
         }
     }
 
-    override fun checkLibraryItem(phone:String, id: Int, action:(Boolean) -> Unit) {
-        /*var currentString: Boolean
-        myDataBase.collection(Constants.USERS).document(phone).collection(Constants.LIBRARY).child(id.toString()).get().addOnSuccessListener {
-            currentString = it.value == null
-            action.invoke(currentString)
-        }*/
+    override fun checkWatchLaterItem(phone: String, id: Int, action: (List<Int>?) -> Unit) {
+        myDataBase.collection(Constants.USERS).document(phone).get().addOnSuccessListener {
+            val list: List<Int>? = it.data?.get(Constants.WATCH_LATER) as List<Int>?
+            action.invoke(list)
+        }
     }
 
-    override fun checkWatchLaterItem(phone:String, id: Int, action:(Boolean) -> Unit) {
-      /*  var currentString: Boolean
-        myDataBase.child(Constants.USERS).child(phone).child(Constants.WATCH_LATER).child(id.toString()).get().addOnSuccessListener {
-            currentString = it.value == null
-            action.invoke(currentString)
-        }*/
+    override fun addToWatchLater(phone: String, film: List<Any?>) {
+        val currentList = film.filterIsInstance<Int>()
+        myDataBase.collection(Constants.USERS).document(phone).update(Constants.WATCH_LATER, currentList)
     }
 
-    override fun addToWatchLater(phone: String, id: Int, name: String) {
-       /* myDataBase.child(Constants.USERS).child(phone).child(Constants.WATCH_LATER).child(id.toString()).setValue(name)*/
+    override fun getWatchLater(phone: String, id: Int, action: (List<Int>?) -> Unit) {
+        myDataBase.collection(Constants.USERS).document(phone).get().addOnSuccessListener {
+            val list: List<Int>? = it.data?.get(Constants.WATCH_LATER) as List<Int>?
+            action.invoke(list)
+        }
     }
 
-    override fun getWatchLater() {
-
+    override fun addToLibrary(phone: String, film: List<Any?>) {
+        val currentList = film.filterIsInstance<Int>()
+        myDataBase.collection(Constants.USERS).document(phone).update(Constants.LIBRARY, currentList)
     }
 
-    override fun addToLibrary(phone: String, id: Int, name: String) {
-/*
-        myDataBase.child(Constants.USERS).child(phone).child(Constants.LIBRARY).child(id.toString()).setValue(name)
-*/
-    }
-
-    override fun getLibrary() {
-
+    override fun getLibrary(phone: String, action: (ArrayList<String>?) -> Unit) {
+        myDataBase.collection(Constants.USERS).document(phone).get().addOnSuccessListener {
+            val array = arrayListOf<String>()
+            val list: List<Int>? = it.data?.get(Constants.LIBRARY) as List<Int>?
+            list?.forEach {
+                array.add(it.toString())
+            }
+            action.invoke(array)
+        }
     }
 }

@@ -13,44 +13,59 @@ class PassengersRepos(
 ) : RxPagingSource<Int, BaseFilmInfoResponse>() {
 
     private val filmList by lazy { mutableListOf<String>() }
-    private var isGenres = false
+    private var size = 0
+    private var searchType = ""
 
     override fun getRefreshKey(state: PagingState<Int, BaseFilmInfoResponse>): Int? {
         return null
     }
 
-    fun submitFilmList(film: Array<String>?, genres: Boolean) {
-        isGenres = genres
+    fun submitFilmList(film: Array<String>?, type: String, listSize: Int) {
+        size = listSize
+        searchType = type
         filmList.clear()
         filmList.addAll(film!!.asList())
     }
 
     override fun loadSingle(params: LoadParams<Int>): Single<LoadResult<Int, BaseFilmInfoResponse>> {
         val nextPageNumber = params.key ?: 1
-        if(isGenres) {
-            return getHomeFilmsUseCase.getGenresFilms(nextPageNumber, 18, film = filmList.toTypedArray())
-                .subscribeOn(Schedulers.io())
-                .map {
-                    toResponseResult(nextPageNumber, it)
-                }
-                .onErrorReturn {
-                    LoadResult.Error(it)
-                }
-        } else {
-            return getHomeFilmsUseCase.getRandomFilms(nextPageNumber, 18, film = filmList.toTypedArray())
-                .subscribeOn(Schedulers.io())
-                .map {
-                    toResponseResult(nextPageNumber, it)
-                }
-                .onErrorReturn {
-                    LoadResult.Error(it)
-                }
+        when (searchType) {
+            "genres" -> {
+                return getHomeFilmsUseCase.getGenresFilms(nextPageNumber, 12, film = filmList.toTypedArray())
+                    .subscribeOn(Schedulers.io())
+                    .map {
+                        toResponseResult(nextPageNumber, it)
+                    }
+                    .onErrorReturn {
+                        LoadResult.Error(it)
+                    }
+            }
+            "id" -> {
+                return getHomeFilmsUseCase.getFilmsByIds(nextPageNumber, 12, film = filmList.toTypedArray())
+                    .subscribeOn(Schedulers.io())
+                    .map {
+                        toResponseResult(nextPageNumber, it)
+                    }
+                    .onErrorReturn {
+                        LoadResult.Error(it)
+                    }
+            }
+            else -> {
+                return getHomeFilmsUseCase.getRandomFilms(nextPageNumber, 12, film = filmList.toTypedArray())
+                    .subscribeOn(Schedulers.io())
+                    .map {
+                        toResponseResult(nextPageNumber, it)
+                    }
+                    .onErrorReturn {
+                        LoadResult.Error(it)
+                    }
+            }
         }
     }
 
     private fun toResponseResult(position:Int, response: BaseFilmResponse): LoadResult<Int, BaseFilmInfoResponse> = LoadResult.Page(
             data = response.docs!!,
         prevKey = if (position == 1) null else position - 1,
-        nextKey = if (position == 100) null else position + 1
+        nextKey = if (position == size) null else position + 1
         )
 }

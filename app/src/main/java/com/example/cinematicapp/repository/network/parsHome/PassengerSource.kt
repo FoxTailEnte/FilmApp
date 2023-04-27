@@ -6,7 +6,9 @@ import io.reactivex.Observable
 
 interface PassengerSource {
 
-    fun getRandomFilm(film: Array<String>, genres: Boolean): Observable<PagingData<BaseFilmInfoResponse>>
+    fun getRandomFilm(film: Array<String>, type: String): Observable<PagingData<BaseFilmInfoResponse>>
 
-    fun getGenresFilms(film: Array<String>, genres: Boolean): Observable<PagingData<BaseFilmInfoResponse>>
+    fun getFilmsById(film: Array<String>, type: String, listSize: Int): Observable<PagingData<BaseFilmInfoResponse>>
+
+    fun getGenresFilms(film: Array<String>, type: String): Observable<PagingData<BaseFilmInfoResponse>>
 }

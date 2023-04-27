@@ -3,6 +3,7 @@ package com.example.cinematicapp.presentation.base
 import android.util.Log
 import androidx.paging.PagingData
 import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmInfoResponse
+import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmResponse
 import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseIdFilmResponse
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -35,5 +36,17 @@ interface ResponseHandler<out T : BaseView> {
                 successAction?.invoke(it)
             }, { exception ->
 
+            }).addTo(compositeDisposable)
+
+    fun Single<BaseFilmResponse>.singlerRequest(
+        successAction: ((BaseFilmResponse) -> Unit)?,
+    ) =
+        subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {
+            }
+            .subscribe({
+                successAction?.invoke(it)
+            }, { exception ->
             }).addTo(compositeDisposable)
 }

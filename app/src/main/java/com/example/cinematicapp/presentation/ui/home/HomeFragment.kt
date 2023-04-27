@@ -62,12 +62,30 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
         getMainActivityView()?.hideBottomMenu(true)
     }
 
-    private fun initRc() {
-        binding.rcHome.layoutManager = GridLayoutManager(requireContext(),3)
+    private fun initRc() = with(binding) {
+        val filmLayoutManager = GridLayoutManager(requireContext(),3)
+        binding.rcHome.layoutManager = filmLayoutManager
         adapter = HomeFilmAdapter {
             navigateTo(HomeFragmentDirections.actionHomeFragmentToFilmInfoFragment(it.id))
         }
-        checkLoadingAdapter()
+        rcHome.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = FilmsLoaderStateAdapter(),
+            footer = FilmsLoaderStateAdapter()
+        )
+        val concatAdapter = adapter.withLoadStateHeaderAndFooter(
+            header = headerAdapter,
+            footer = footerAdapter
+        )
+        filmLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (position == 0 && headerAdapter.itemCount > 0) 3
+                else if (position == concatAdapter.itemCount - 1 && footerAdapter.itemCount > 0) 3
+                else 1
+            }
+        }
+        adapter.addLoadStateListener { loadState ->
+            if (loadState.refresh is LoadState.Loading) setLoadingState(true) else setLoadingState(false)
+        }
     }
 
     private fun initRcMain() {
@@ -79,27 +97,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
             }
         }
         binding.recyclerViewMain.adapter = adapterMain
-    }
-
-    private fun checkLoadingAdapter() = with(binding) {
-        rcHome.adapter = adapter.withLoadStateHeaderAndFooter(
-            header = FilmsLoaderStateAdapter(),
-            footer = FilmsLoaderStateAdapter()
-        )
-        val concatAdapter = adapter.withLoadStateHeaderAndFooter(
-            header = headerAdapter,
-            footer = footerAdapter
-        )
-        adapter.addLoadStateListener { loadState ->
-            if (loadState.refresh is LoadState.Loading) setLoadingState(true) else setLoadingState(false)
-        }
-        GridLayoutManager(requireContext(),3).spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return if (position == 0 && headerAdapter.itemCount > 0) 3
-                else if (position == concatAdapter.itemCount - 1 && footerAdapter.itemCount > 0) 3
-                else 1
-            }
-        }
     }
 
     private fun getRandomFilms() {

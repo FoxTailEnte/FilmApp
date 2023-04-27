@@ -14,7 +14,6 @@ import com.example.cinematicapp.presentation.adapters.libraryFilm.LibraryFilmAda
 import com.example.cinematicapp.presentation.adapters.mainRcView.MainRcViewAdapter
 import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.presentation.ui.home.HomeFragmentDirections
-import com.example.cinematicapp.repository.utils.Constants
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -30,7 +29,7 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
     private val headerAdapter = FilmsLoaderStateAdapter()
 
     @ProvidePresenter
-    fun provideHomePresenter() = CinematicApplication.appComponent.provideHomePresenter()
+    fun provideLibraryPresenter() = CinematicApplication.appComponent.provideLibraryPresenter()
 
     override fun initializeBinding() = FragmentLibraryBinding.inflate(layoutInflater)
 
@@ -40,30 +39,12 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
         getFilmsList()
     }
 
-    private fun initRc() {
-        binding.rcLib.layoutManager = GridLayoutManager(requireContext(),3)
+    private fun initRc() = with(binding) {
+        val filmLayoutManager = GridLayoutManager(requireContext(),3)
+        rcLib.layoutManager = filmLayoutManager
         adapter = LibraryFilmAdapter {
             navigateTo(HomeFragmentDirections.actionHomeFragmentToFilmInfoFragment(it.id))
         }
-        checkLoadingAdapter()
-    }
-
-    private fun initRcMain() {
-        adapterMain = MainRcViewAdapter {
-            if(getString(it.name) != getString(R.string.all)) {
-                presenter.getGenresFilms(arrayOf(getString(it.name).lowercase()), Constants.GENRES)
-            } else {
-                presenter.getRandomFilms(arrayOf(""), Constants.BASE)
-            }
-        }
-        binding.recyclerViewMain.adapter = adapterMain
-    }
-
-    private fun getFilmsList() {
-        presenter.getRandomFilms(arrayOf(""), Constants.BASE)
-    }
-
-    private fun checkLoadingAdapter() = with(binding) {
         rcLib.adapter = adapter.withLoadStateHeaderAndFooter(
             header = FilmsLoaderStateAdapter(),
             footer = FilmsLoaderStateAdapter()
@@ -75,13 +56,28 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
         adapter.addLoadStateListener { loadState ->
             if (loadState.refresh is LoadState.Loading) setLoadingState(true) else setLoadingState(false)
         }
-        GridLayoutManager(requireContext(),3).spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+        filmLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return if (position == 0 && headerAdapter.itemCount > 0) 3
                 else if (position == concatAdapter.itemCount - 1 && footerAdapter.itemCount > 0) 3
                 else 1
             }
         }
+    }
+
+    private fun initRcMain() {
+        adapterMain = MainRcViewAdapter {
+            if(getString(it.name) != getString(R.string.all)) {
+               // presenter.getGenresFilms(arrayOf(getString(it.name).lowercase()), Constants.GENRES)
+            } else {
+               // presenter.getRandomFilms(arrayOf(""), Constants.BASE)
+            }
+        }
+        binding.recyclerViewMain.adapter = adapterMain
+    }
+
+    private fun getFilmsList() {
+        presenter.getLibraryList()
     }
 
     override fun submitList(items: PagingData<BaseFilmInfoResponse>) {

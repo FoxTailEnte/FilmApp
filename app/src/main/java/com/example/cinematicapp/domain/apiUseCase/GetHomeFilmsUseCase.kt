@@ -8,6 +8,8 @@ interface GetHomeFilmsUseCase {
 
     fun getRandomFilms(page: Int, size: Int, film: Array<String>): Single<BaseFilmResponse>
 
+    fun getFilmsByIds(page: Int, size: Int, film: Array<String>): Single<BaseFilmResponse>
+
     fun getGenresFilms(page: Int, size: Int, film: Array<String>): Single<BaseFilmResponse>
 
     fun getIdFilms(film: String): Single<BaseIdFilmResponse>

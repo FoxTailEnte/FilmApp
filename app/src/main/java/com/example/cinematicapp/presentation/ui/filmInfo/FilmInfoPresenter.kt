@@ -15,7 +15,8 @@ class FilmInfoPresenter @Inject constructor(
 ) : BasePresenter<FilmInfoView>() {
 
     private lateinit var phone: String
-
+    private var libraryList = mutableListOf<Int>()
+    private var watchLaterList = mutableListOf<Int>()
     fun getUserPhone(): String {
         phone = pref.getUserPhone()
         return phone
@@ -30,24 +31,44 @@ class FilmInfoPresenter @Inject constructor(
         }
     }
 
-    fun checkLibraryItem(id: Int, action:(Boolean) -> Unit) {
+    fun checkLibraryItem(id: Int, action: (Boolean) -> Unit) {
         firebase.checkLibraryItem(phone, id) {
-            action.invoke(it)
+            if (it == null) {
+                libraryList.clear()
+                action.invoke(false)
+            } else {
+                libraryList.clear()
+                it.forEach { film ->
+                    libraryList.add(film)
+                }
+                action.invoke(it.toString().contains(id.toString()))
+            }
         }
     }
 
-    fun checkWatchLaterItem(id: Int, action:(Boolean) -> Unit) {
+    fun checkWatchLaterItem(id: Int, action: (Boolean) -> Unit) {
         firebase.checkWatchLaterItem(phone, id) {
-            action.invoke(it)
+            if (it == null) {
+                watchLaterList.clear()
+                action.invoke(false)
+            } else {
+                watchLaterList.clear()
+                it.forEach { film ->
+                    watchLaterList.add(film)
+                }
+                action.invoke(it.toString().contains(id.toString()))
+            }
         }
     }
 
-    fun addToLibrary(id: Int, name: String) {
-        firebase.addToLibrary(phone, id, name)
+    fun addToLibrary(film: Int) {
+        libraryList.add(film)
+        firebase.addToLibrary(phone, libraryList)
     }
 
-    fun addToWatchLater(id: Int, name: String) {
-        firebase.addToWatchLater(phone, id, name)
+    fun addToWatchLater(film: Int) {
+        watchLaterList.add(film)
+        firebase.addToWatchLater(phone, watchLaterList)
     }
 
 }

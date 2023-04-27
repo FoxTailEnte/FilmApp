@@ -23,31 +23,35 @@ class FireBaseDataUseCaseImpl @Inject constructor(
         action.invoke(it)
     }
 
-    override fun checkLibraryItem(phone:String, id: Int, action:(Boolean) -> Unit) {
+    override fun checkLibraryItem(phone:String, id: Int, action:(List<Int>?) -> Unit) {
         firebase.checkLibraryItem(phone, id) {
             action.invoke(it)
         }
     }
 
-    override fun checkWatchLaterItem(phone:String, id: Int, action:(Boolean) -> Unit) {
+    override fun checkWatchLaterItem(phone:String, id: Int, action:(List<Int>?) -> Unit) {
         firebase.checkWatchLaterItem(phone, id) {
             action.invoke(it)
         }
     }
 
-    override fun addToWatchLater(phone: String, id: Int, name: String) {
-        firebase.addToWatchLater(phone, id, name)
+    override fun addToWatchLater(phone: String, film: List<Any?>) {
+        firebase.addToWatchLater(phone, film)
     }
 
-    override fun getWatchLater() {
-
+    override fun getWatchLater(phone: String, id: Int, action: (List<Int>?) -> Unit) {
+        firebase.getWatchLater(phone,id) {
+            action.invoke(it)
+        }
     }
 
-    override fun addToLibrary(phone: String, id: Int, name: String) {
-        firebase.addToLibrary(phone, id, name)
+    override fun addToLibrary(phone: String, film: List<Any?>) {
+        firebase.addToLibrary(phone, film)
     }
 
-    override fun getLibrary() {
-
+    override fun getLibrary(phone: String, action: (ArrayList<String>?) -> Unit) {
+        firebase.getLibrary(phone) {
+            action.invoke(it)
+        }
     }
 }

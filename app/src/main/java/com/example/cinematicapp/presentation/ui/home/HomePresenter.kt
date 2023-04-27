@@ -23,7 +23,7 @@ class HomePresenter @Inject constructor(
     fun getRandomFilms(film: Array<String>, call: String) {
             currentFilmArray = film
             currentCall = call
-            mDisposable.add(dataSource.getRandomFilm(film,false).subscribe {
+            mDisposable.add(dataSource.getRandomFilm(film,"random").subscribe {
                 viewState.submitList(it)
             })
     }
@@ -31,7 +31,7 @@ class HomePresenter @Inject constructor(
     fun getGenresFilms(film: Array<String>, call: String) {
             currentFilmArray = film
             currentCall = call
-            mDisposable.add(dataSource.getGenresFilms(film,true).subscribe {
+            mDisposable.add(dataSource.getGenresFilms(film,"genres").subscribe {
                 viewState.submitList(it)
             })
     }

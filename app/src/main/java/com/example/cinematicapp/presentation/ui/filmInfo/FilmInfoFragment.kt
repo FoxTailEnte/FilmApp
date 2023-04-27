@@ -36,15 +36,21 @@ class FilmInfoFragment : BaseFragment<FragmentFilmInfoBinding, FilmInfoView, Fil
             navigateBack()
         }
         btLibrary.setOnClickListener {
-            presenter.checkLibraryItem(args.id) {
-                if(it) presenter.addToLibrary(args.id, binding.tvTitle.text.toString())
-                else Toast.makeText(this@FilmInfoFragment.context, "Давно лошком был?", Toast.LENGTH_LONG).show()
+            presenter.checkLibraryItem(args.id) { result ->
+                if(result){
+                    Toast.makeText(this@FilmInfoFragment.context, "Давно лошком был?", Toast.LENGTH_LONG).show()
+                } else {
+                    presenter.addToLibrary(args.id)
+                }
             }
         }
         btWatchLater.setOnClickListener {
-            presenter.checkWatchLaterItem(args.id) {
-                if(it) presenter.addToWatchLater(args.id, binding.tvTitle.text.toString())
-                else Toast.makeText(this@FilmInfoFragment.context, "Давно лошком был?", Toast.LENGTH_LONG).show()
+            presenter.checkWatchLaterItem(args.id) { result ->
+                if(result){
+                    Toast.makeText(this@FilmInfoFragment.context, "Давно лошком был?", Toast.LENGTH_LONG).show()
+                } else {
+                    presenter.addToWatchLater(args.id)
+                }
             }
         }
     }
@@ -78,7 +84,7 @@ class FilmInfoFragment : BaseFragment<FragmentFilmInfoBinding, FilmInfoView, Fil
     }
 
     override fun setFilmInfo(info: BaseIdFilmResponse) = with(binding) {
-        if (info.poster.url != null) {
+        if (info.backdrop.url != null) {
             Glide.with(this@FilmInfoFragment)
                 .load(info.backdrop.url)
                 .listener(object : RequestListener<Drawable> {
