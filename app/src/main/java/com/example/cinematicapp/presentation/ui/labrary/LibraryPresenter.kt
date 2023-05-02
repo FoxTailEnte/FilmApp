@@ -19,6 +19,7 @@ class LibraryPresenter @Inject constructor(
     private val mDisposable = CompositeDisposable()
     private var currentCall = ""
     private var currentFilmArray = arrayOf<String>()
+    private var libraryList: HashMap<String, Int>? = null
     private lateinit var phone: String
 
     private fun getUserPhone(): String {
@@ -27,9 +28,22 @@ class LibraryPresenter @Inject constructor(
     }
 
     fun getLibraryList() {
-        fireStore.getLibrary(getUserPhone()) {
-            val list = it?.toTypedArray()
-            if (list != null) getRandomLibraryFilms(list, Constants.ID)
+        fireStore.getLibrary(getUserPhone()) { filmList ->
+            libraryList = filmList
+            val currentList:List<Int>? = filmList?.values?.toList()?.let { ArrayList(it) }
+            if (currentList != null) {
+                val array = currentList.map { it.toString() }
+                getRandomLibraryFilms(array.toTypedArray(), Constants.ID)
+            }
+        }
+    }
+
+    fun getSearchList(name: String, type: String) {
+        if(libraryList != null) {
+            val searchList = libraryList!!.filter { it.key.lowercase().startsWith(name.lowercase()) }
+            val idSearch: List<Int> = searchList.values.toList().let { ArrayList(it) }
+            val array = idSearch.map { it.toString() }
+             getRandomLibraryFilms(array.toTypedArray(), type)
         }
     }
 

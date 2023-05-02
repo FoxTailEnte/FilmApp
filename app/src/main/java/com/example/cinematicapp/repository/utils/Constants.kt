@@ -16,6 +16,7 @@ object Constants {
 
     const val SEARCH = "Search"
     const val GENRES = "Genres"
+    const val GENRES_LIBRARY = "GenresLibrary"
     const val BASE = "Base"
     const val ID = "id"
 }

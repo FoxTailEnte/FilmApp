@@ -15,8 +15,9 @@ class FilmInfoPresenter @Inject constructor(
 ) : BasePresenter<FilmInfoView>() {
 
     private lateinit var phone: String
-    private var libraryList = mutableListOf<Int>()
-    private var watchLaterList = mutableListOf<Int>()
+    private var libraryList = hashMapOf<String,Int>()
+    private var watchLaterList = hashMapOf<String,Int>()
+    private var title = ""
     fun getUserPhone(): String {
         phone = pref.getUserPhone()
         return phone
@@ -25,49 +26,44 @@ class FilmInfoPresenter @Inject constructor(
     fun getIdFilms(film: String?) {
         if (film != null) {
             getHomeFilmsUseCase.getIdFilms(film).singleRequest { response ->
+                title = response.name
                 viewState.setFilmInfo(response)
                 viewState.submitList(response.persons)
             }
         }
     }
 
-    fun checkLibraryItem(id: Int, action: (Boolean) -> Unit) {
-        firebase.checkLibraryItem(phone, id) {
-            if (it == null) {
-                libraryList.clear()
+    fun checkLibraryItem(filmId: Int, action: (Boolean) -> Unit) {
+        firebase.checkLibraryItem(phone, filmId) { filmList ->
+            if (filmList == null) {
+                libraryList[title] = filmId
                 action.invoke(false)
             } else {
-                libraryList.clear()
-                it.forEach { film ->
-                    libraryList.add(film)
-                }
-                action.invoke(it.toString().contains(id.toString()))
+                libraryList = filmList
+                action.invoke(filmList.values.toString().contains(filmId.toString()))
             }
         }
     }
 
-    fun checkWatchLaterItem(id: Int, action: (Boolean) -> Unit) {
-        firebase.checkWatchLaterItem(phone, id) {
-            if (it == null) {
-                watchLaterList.clear()
+    fun checkWatchLaterItem(filmId: Int, action: (Boolean) -> Unit) {
+        firebase.checkWatchLaterItem(phone, filmId) { filmList ->
+            if (filmList == null) {
+                watchLaterList[title] = filmId
                 action.invoke(false)
             } else {
-                watchLaterList.clear()
-                it.forEach { film ->
-                    watchLaterList.add(film)
-                }
-                action.invoke(it.toString().contains(id.toString()))
+                watchLaterList = filmList
+                action.invoke(filmList.values.toString().contains(filmId.toString()))
             }
         }
     }
 
     fun addToLibrary(film: Int) {
-        libraryList.add(film)
+        libraryList[title] = film
         firebase.addToLibrary(phone, libraryList)
     }
 
     fun addToWatchLater(film: Int) {
-        watchLaterList.add(film)
+        watchLaterList[title] = film
         firebase.addToWatchLater(phone, watchLaterList)
     }
 

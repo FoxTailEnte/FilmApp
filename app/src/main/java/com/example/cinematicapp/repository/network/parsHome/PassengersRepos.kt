@@ -1,11 +1,11 @@
 package com.example.cinematicapp.repository.network.parsHome
 
-import android.util.Log
 import androidx.paging.PagingState
 import androidx.paging.rxjava2.RxPagingSource
 import com.example.cinematicapp.domain.apiUseCase.GetHomeFilmsUseCase
 import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmInfoResponse
 import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmResponse
+import com.example.cinematicapp.repository.utils.Constants
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
@@ -34,7 +34,7 @@ class PassengersRepos(
     override fun loadSingle(params: LoadParams<Int>): Single<LoadResult<Int, BaseFilmInfoResponse>> {
         val nextPageNumber = params.key ?: 1
         when (searchType) {
-            "genres" -> {
+            Constants.GENRES -> {
                 return getHomeFilmsUseCase.getGenresFilms(nextPageNumber, 12, film = filmList.toTypedArray())
                     .subscribeOn(Schedulers.io())
                     .map {
@@ -44,7 +44,7 @@ class PassengersRepos(
                         LoadResult.Error(it)
                     }
             }
-            "id" -> {
+            Constants.ID -> {
                 return getHomeFilmsUseCase.getFilmsByIds(nextPageNumber, 12, film = filmList.toTypedArray())
                     .subscribeOn(Schedulers.io())
                     .map {
@@ -54,15 +54,23 @@ class PassengersRepos(
                         LoadResult.Error(it)
                     }
             }
-            "GenresLibrary" -> {
-                return getHomeFilmsUseCase.getGenresLibraryFilms(nextPageNumber, 12, film = filmList.toTypedArray(), filmGenresList.toTypedArray())
+            Constants.SEARCH -> {
+                return getHomeFilmsUseCase.getFilmsByIds(nextPageNumber, 12, film = filmList.toTypedArray())
                     .subscribeOn(Schedulers.io())
                     .map {
-                        Log.d("MyLog", it.toString())
                         toResponseResult(nextPageNumber, it)
                     }
                     .onErrorReturn {
-                        Log.d("MyLog", it.stackTraceToString())
+                        LoadResult.Error(it)
+                    }
+            }
+            Constants.GENRES_LIBRARY -> {
+                return getHomeFilmsUseCase.getGenresLibraryFilms(nextPageNumber, 12, film = filmList.toTypedArray(), filmGenresList.toTypedArray())
+                    .subscribeOn(Schedulers.io())
+                    .map {
+                        toResponseResult(nextPageNumber, it)
+                    }
+                    .onErrorReturn {
                         LoadResult.Error(it)
                     }
             }

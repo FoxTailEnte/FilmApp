@@ -20,6 +20,8 @@ class WatchLaterPresenter @Inject constructor(
     private var currentCall = ""
     private var currentFilmArray = arrayOf<String>()
     private lateinit var phone: String
+    private var watchLaterList: HashMap<String, Int>? = null
+
 
     private fun getUserPhone(): String {
         phone = pref.getUserPhone()
@@ -27,9 +29,22 @@ class WatchLaterPresenter @Inject constructor(
     }
 
     fun getWatchLaterList() {
-        fireStore.getWatchLater(getUserPhone()) {
-            val list = it?.toTypedArray()
-            if (list != null) getRandomWatchLaterFilms(list, Constants.ID)
+        fireStore.getWatchLater(getUserPhone()) { filmList ->
+            watchLaterList = filmList
+            val currentList:List<Int>? = filmList?.values?.toList()?.let { ArrayList(it) }
+            if (currentList != null) {
+                val array = currentList.map { it.toString() }
+                getRandomWatchLaterFilms(array.toTypedArray(), Constants.ID)
+            }
+        }
+    }
+
+    fun getSearchList(name: String, type: String) {
+        if(watchLaterList != null) {
+            val searchList = watchLaterList!!.filter { it.key.lowercase().startsWith(name.lowercase()) }
+            val idSearch: List<Int> = searchList.values.toList().let { ArrayList(it) }
+            val array = idSearch.map { it.toString() }
+            getRandomWatchLaterFilms(array.toTypedArray(), type)
         }
     }
 

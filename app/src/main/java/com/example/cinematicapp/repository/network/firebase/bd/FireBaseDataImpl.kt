@@ -34,50 +34,40 @@ class FireBaseDataImpl : FireBaseData {
             }
     }
 
-    override fun checkLibraryItem(phone: String, id: Int, action: (List<Int>?) -> Unit) {
+    override fun checkLibraryItem(phone: String, id: Int, action: (HashMap<String,Int>?) -> Unit) {
         myDataBase.collection(Constants.USERS).document(phone).get().addOnSuccessListener {
-            val list: List<Int>? = it.data?.get(Constants.LIBRARY) as List<Int>?
-            action.invoke(list)
-
-        }
-    }
-
-    override fun checkWatchLaterItem(phone: String, id: Int, action: (List<Int>?) -> Unit) {
-        myDataBase.collection(Constants.USERS).document(phone).get().addOnSuccessListener {
-            val list: List<Int>? = it.data?.get(Constants.WATCH_LATER) as List<Int>?
+            val list: HashMap<String, Int>? = it.data?.get(Constants.LIBRARY) as HashMap<String, Int>?
             action.invoke(list)
         }
     }
 
-    override fun addToWatchLater(phone: String, film: List<Any?>) {
-        val currentList = film.filterIsInstance<Int>()
-        myDataBase.collection(Constants.USERS).document(phone).update(Constants.WATCH_LATER, currentList)
-    }
-
-    override fun getWatchLater(phone: String, action: (ArrayList<String>?) -> Unit) {
+    override fun checkWatchLaterItem(phone: String, id: Int, action: (HashMap<String, Int>?) -> Unit) {
         myDataBase.collection(Constants.USERS).document(phone).get().addOnSuccessListener {
-            val array = arrayListOf<String>()
-            val list: List<Int>? = it.data?.get(Constants.WATCH_LATER) as List<Int>?
-            list?.forEach {
-                array.add(it.toString())
-            }
-            action.invoke(array)
+            val list: HashMap<String, Int>? = it.data?.get(Constants.WATCH_LATER) as HashMap<String, Int>?
+            action.invoke(list)
         }
     }
 
-    override fun addToLibrary(phone: String, film: List<Any?>) {
-        val currentList = film.filterIsInstance<Int>()
-        myDataBase.collection(Constants.USERS).document(phone).update(Constants.LIBRARY, currentList)
+    override fun addToWatchLater(phone: String, film: HashMap<String, Int>) {
+        myDataBase.collection(Constants.USERS).document(phone).update(Constants.WATCH_LATER, film)
     }
 
-    override fun getLibrary(phone: String, action: (ArrayList<String>?) -> Unit) {
+    override fun getWatchLater(phone: String, action: (HashMap<String, Int>?) -> Unit) {
         myDataBase.collection(Constants.USERS).document(phone).get().addOnSuccessListener {
             val array = arrayListOf<String>()
-            val list: List<Int>? = it.data?.get(Constants.LIBRARY) as List<Int>?
-            list?.forEach {
-                array.add(it.toString())
-            }
-            action.invoke(array)
+            val list: HashMap<String, Int>? = it.data?.get(Constants.WATCH_LATER) as HashMap<String, Int>?
+            action.invoke(list)
+        }
+    }
+
+    override fun addToLibrary(phone: String, film: HashMap<String, Int>) {
+        myDataBase.collection(Constants.USERS).document(phone).update(Constants.LIBRARY, film)
+    }
+
+    override fun getLibrary(phone: String, action: (HashMap<String, Int>?) -> Unit) {
+        myDataBase.collection(Constants.USERS).document(phone).get().addOnSuccessListener {
+            val list: HashMap<String, Int>? = it.data?.get(Constants.LIBRARY) as HashMap<String, Int>?
+            action.invoke(list)
         }
     }
 }

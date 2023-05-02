@@ -2,6 +2,7 @@ package com.example.cinematicapp.presentation.ui.labrary
 
 import android.os.Handler
 import android.os.Looper
+import android.view.inputmethod.EditorInfo
 import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -17,6 +18,7 @@ import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.presentation.ui.home.HomeFragmentDirections
 import com.example.cinematicapp.repository.utils.Constants
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
+import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
@@ -42,13 +44,13 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
     }
 
     override fun setupListener() = with(binding) {
-       /* edSearchText.setOnEditorActionListener { _, actionId, _ ->
+        edSearchText.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_SEARCH) {
-                presenter.getRandomFilms(arrayOf(edSearchText.text.toString()), Constants.SEARCH)
+                presenter.getSearchList(edSearchText.text.toString(), Constants.SEARCH)
                 requireActivity().setKeyboardVisibility(false)
             }
             true
-        }*/
+        }
         swipeLayout.setOnRefreshListener {
             presenter.getRefreshFilms()
             swipeLayout.isRefreshing = false
