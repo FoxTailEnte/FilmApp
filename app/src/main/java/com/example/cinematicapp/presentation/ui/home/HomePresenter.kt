@@ -1,6 +1,7 @@
 package com.example.cinematicapp.presentation.ui.home
 
 import com.example.cinematicapp.domain.sharedPrefUseCase.SharedPrefUseCase
+import com.example.cinematicapp.presentation.adapters.allFilterItems.CheckedItemModel
 import com.example.cinematicapp.presentation.base.BasePresenter
 import com.example.cinematicapp.repository.network.parsHome.PassengerSource
 import com.example.cinematicapp.repository.utils.Constants
@@ -17,8 +18,16 @@ class HomePresenter @Inject constructor(
     private val mDisposable = CompositeDisposable()
     private var currentCall = ""
     private var currentFilmArray = arrayOf<String>()
+    private val checkedItem = mutableListOf<String>()
 
     fun checkUserAuthStatus(): Boolean = pref.getSignInUserStatus()
+
+    fun saveFilters(item: CheckedItemModel) {
+        if(item.checked) checkedItem.add(item.item.toString())
+        else checkedItem.remove(item.item.toString())
+    }
+
+    fun getFilterItems() = checkedItem
 
     fun getRandomFilms(film: Array<String>, call: String) {
             currentFilmArray = film

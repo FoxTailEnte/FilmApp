@@ -54,7 +54,6 @@ class FireBaseDataImpl : FireBaseData {
 
     override fun getWatchLater(phone: String, action: (HashMap<String, Int>?) -> Unit) {
         myDataBase.collection(Constants.USERS).document(phone).get().addOnSuccessListener {
-            val array = arrayListOf<String>()
             val list: HashMap<String, Int>? = it.data?.get(Constants.WATCH_LATER) as HashMap<String, Int>?
             action.invoke(list)
         }

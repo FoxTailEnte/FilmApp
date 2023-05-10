@@ -9,4 +9,8 @@ import moxy.viewstate.strategy.StateStrategyType
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface WatchLaterView : BaseView {
     fun submitList(items: PagingData<BaseFilmInfoResponse>)
+
+    fun getSearchText()
+
+    fun scrollRcMain(position: Int)
 }

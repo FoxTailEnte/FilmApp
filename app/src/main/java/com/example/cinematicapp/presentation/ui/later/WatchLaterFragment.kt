@@ -16,7 +16,6 @@ import com.example.cinematicapp.presentation.adapters.libraryFilm.LibraryFilmAda
 import com.example.cinematicapp.presentation.adapters.mainRcView.MainRcViewAdapter
 import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.presentation.ui.home.HomeFragmentDirections
-import com.example.cinematicapp.repository.utils.Constants
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
 import moxy.presenter.InjectPresenter
@@ -40,18 +39,19 @@ class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding, WatchLaterVie
         initRc()
         initRcMain()
         getFilmsList()
+        presenter.getRcMainPosition()
     }
 
     override fun setupListener() = with(binding) {
         edSearchText.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_SEARCH) {
-                presenter.getSearchList(edSearchText.text.toString(), Constants.SEARCH)
+                presenter.getSearchList(edSearchText.text.toString())
                 requireActivity().setKeyboardVisibility(false)
             }
             true
         }
         swipeLayout.setOnRefreshListener {
-            presenter.getRefreshFilms()
+            presenter.getCurrentFilmList()
             swipeLayout.isRefreshing = false
         }
     }
@@ -71,7 +71,11 @@ class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding, WatchLaterVie
             footer = footerAdapter
         )
         adapter.addLoadStateListener { loadState ->
-            if (loadState.refresh is LoadState.Loading) setLoadingState(true) else setLoadingState(false)
+            if (loadState.refresh !is LoadState.Loading) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    setLoadingState(false)
+                }, 200)
+            }
         }
         filmLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
@@ -83,24 +87,41 @@ class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding, WatchLaterVie
     }
 
     private fun initRcMain() {
-        adapterMain = MainRcViewAdapter {
-            if(getString(it.name) != getString(R.string.all)) {
-                 presenter.getGenresWatchLaterFilms(arrayOf(getString(it.name).lowercase()), Constants.GENRES)
-            } else {
-                 presenter.getRandomWatchLaterFilms(arrayOf(""), Constants.BASE)
-            }
+        adapterMain = MainRcViewAdapter({
+            genresListener(getString(it.name))
+        }) {
+            presenter.setRcMainPosition(it)
         }
         binding.recyclerViewMain.adapter = adapterMain
     }
 
     private fun getFilmsList() {
-       presenter.getWatchLaterList()
+        setLoadingState(true)
+       presenter.getAllWatchLaterList()
+    }
+
+    private fun genresListener(genre: String) {
+        if (genre != getString(R.string.all)) {
+            presenter.getGenresWatchLaterFilms(arrayOf(genre.lowercase()))
+        } else {
+            presenter.getAllWatchLaterList()
+        }
     }
 
     override fun submitList(items: PagingData<BaseFilmInfoResponse>) {
         adapter.submitData(lifecycle,items)
         Handler(Looper.getMainLooper()).postDelayed({
             binding.rcWatchLater.scrollToPosition(0)
+        }, 200)
+    }
+
+    override fun getSearchText() {
+        presenter.getSearchList(binding.edSearchText.text.toString())
+    }
+
+    override fun scrollRcMain(position: Int) {
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.recyclerViewMain.scrollToPosition(position)
         }, 200)
     }
 

@@ -17,37 +17,51 @@ class LibraryPresenter @Inject constructor(
 ) : BasePresenter<LibraryView>() {
 
     private val mDisposable = CompositeDisposable()
-    private var currentCall = ""
+    private var currentCall = Constants.ID
     private var currentFilmArray = arrayOf<String>()
+    private lateinit var genresList: Array<String>
     private var libraryList: HashMap<String, Int>? = null
     private lateinit var phone: String
+    private var rcPosition = 0
 
     private fun getUserPhone(): String {
         phone = pref.getUserPhone()
         return phone
     }
 
-    fun getLibraryList() {
+    fun getAllLibraryList() {
         fireStore.getLibrary(getUserPhone()) { filmList ->
+            currentCall = ID
             libraryList = filmList
-            val currentList:List<Int>? = filmList?.values?.toList()?.let { ArrayList(it) }
-            if (currentList != null) {
-                val array = currentList.map { it.toString() }
-                getRandomLibraryFilms(array.toTypedArray(), Constants.ID)
-            }
+            getRandomLibraryFilms(getArrayList(filmList), currentCall)
         }
     }
 
-    fun getSearchList(name: String, type: String) {
+    fun getSearchList(name: String) {
+        currentCall = SEARCH
         if(libraryList != null) {
             val searchList = libraryList!!.filter { it.key.lowercase().startsWith(name.lowercase()) }
-            val idSearch: List<Int> = searchList.values.toList().let { ArrayList(it) }
-            val array = idSearch.map { it.toString() }
-             getRandomLibraryFilms(array.toTypedArray(), type)
+            getRandomLibraryFilms(getGenresArray(searchList), currentCall)
         }
     }
 
-    fun getRandomLibraryFilms(film: Array<String>, call: String) {
+    fun getGenresLibraryFilms(genres: Array<String>) {
+        currentCall = GENRES_LIBRARY
+        genresList = genres
+        mDisposable.add(dataSource.getGenresLibraryFilms(currentFilmArray, genresList, currentCall, currentFilmArray.size).subscribe {
+            viewState.submitList(it)
+        })
+    }
+
+    fun setRcMainPosition(position: Int) {
+        rcPosition = position
+    }
+
+    fun getRcMainPosition() {
+        viewState.scrollRcMain(rcPosition)
+    }
+
+    private fun getRandomLibraryFilms(film: Array<String>, call: String) {
         currentFilmArray = film
         currentCall = call
         mDisposable.add(dataSource.getFilmsById(film, currentCall, film.size).subscribe {
@@ -55,19 +69,33 @@ class LibraryPresenter @Inject constructor(
         })
     }
 
-    fun getGenresLibraryFilms(genres: Array<String>, call: String) {
-        currentCall = call
-        mDisposable.add(dataSource.getGenresLibraryFilms(currentFilmArray, genres, call, currentFilmArray.size).subscribe {
-            viewState.submitList(it)
-        })
+    private fun getArrayList(map: HashMap<String, Int>?): Array<String> {
+        var array: Array<String>? = null
+        val currentList: List<Int>? = map?.values?.toList()?.let { ArrayList(it) }
+        if (currentList != null) {
+            val list = currentList.map { it.toString() }
+            array = list.toTypedArray()
+        }
+        return array ?: arrayOf("")
     }
 
+    private fun getGenresArray(map: Map<String, Int>): Array<String> {
+        val idSearch: List<Int> = map.values.toList().let { ArrayList(it) }
+        val array = idSearch.map { it.toString() }
+        return array.toTypedArray()
+    }
 
-     fun getRefreshFilms() {
-         when (currentCall) {
-             Constants.BASE -> getRandomLibraryFilms(currentFilmArray,currentCall)
-             //Constants.SEARCH -> getRandomFilms(currentFilmArray,currentCall)
-             Constants.GENRES -> getGenresLibraryFilms(currentFilmArray,currentCall)
-         }
-     }
+    fun getCurrentFilmList() {
+        when(currentCall) {
+            ID -> getAllLibraryList()
+            SEARCH -> viewState.getSearchText()
+            GENRES_LIBRARY -> getGenresLibraryFilms(genresList)
+        }
+    }
+
+    companion object {
+        const val ID = "Id"
+        const val SEARCH = "Search"
+        const val GENRES_LIBRARY = "GenresLibrary"
+    }
 }

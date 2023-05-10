@@ -16,7 +16,6 @@ import com.example.cinematicapp.presentation.adapters.libraryFilm.LibraryFilmAda
 import com.example.cinematicapp.presentation.adapters.mainRcView.MainRcViewAdapter
 import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.presentation.ui.home.HomeFragmentDirections
-import com.example.cinematicapp.repository.utils.Constants
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
 import moxy.presenter.InjectPresenter
@@ -32,33 +31,8 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
     private val footerAdapter = FilmsLoaderStateAdapter()
     private val headerAdapter = FilmsLoaderStateAdapter()
 
-    @ProvidePresenter
-    fun provideLibraryPresenter() = CinematicApplication.appComponent.provideLibraryPresenter()
-
-    override fun initializeBinding() = FragmentLibraryBinding.inflate(layoutInflater)
-
-    override fun setupUi() {
-        initRc()
-        initRcMain()
-        getFilmsList()
-    }
-
-    override fun setupListener() = with(binding) {
-        edSearchText.setOnEditorActionListener { _, actionId, _ ->
-            if(actionId == EditorInfo.IME_ACTION_SEARCH) {
-                presenter.getSearchList(edSearchText.text.toString(), Constants.SEARCH)
-                requireActivity().setKeyboardVisibility(false)
-            }
-            true
-        }
-        swipeLayout.setOnRefreshListener {
-            presenter.getRefreshFilms()
-            swipeLayout.isRefreshing = false
-        }
-    }
-
     private fun initRc() = with(binding) {
-        val filmLayoutManager = GridLayoutManager(requireContext(),3)
+        val filmLayoutManager = GridLayoutManager(requireContext(), 3)
         rcLib.layoutManager = filmLayoutManager
         adapter = LibraryFilmAdapter {
             navigateTo(HomeFragmentDirections.actionHomeFragmentToFilmInfoFragment(it.id))
@@ -72,7 +46,11 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
             footer = footerAdapter
         )
         adapter.addLoadStateListener { loadState ->
-            if (loadState.refresh is LoadState.Loading) setLoadingState(true) else setLoadingState(false)
+            if (loadState.refresh !is LoadState.Loading) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    setLoadingState(false)
+                }, 200)
+            }
         }
         filmLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
@@ -84,29 +62,80 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
     }
 
     private fun initRcMain() {
-        adapterMain = MainRcViewAdapter {
-            if(getString(it.name) != getString(R.string.all)) {
-                presenter.getGenresLibraryFilms(arrayOf(getString(it.name).lowercase()), Constants.GENRES)
-            } else {
-                presenter.getRandomLibraryFilms(arrayOf(""), Constants.ID)
-            }
+        adapterMain = MainRcViewAdapter({
+            genresListener(getString(it.name))
+        }) {
+           // presenter.setRcMainPosition(it)
         }
         binding.recyclerViewMain.adapter = adapterMain
     }
 
-    private fun getFilmsList() {
-        presenter.getLibraryList()
+    private fun genresListener(genre: String) {
+        if (genre != getString(R.string.all)) {
+            presenter.getGenresLibraryFilms(arrayOf(genre.lowercase()))
+        } else {
+            presenter.getAllLibraryList()
+        }
     }
 
-    override fun submitList(items: PagingData<BaseFilmInfoResponse>) {
-        adapter.submitData(lifecycle,items)
+    private fun getLibraryList() {
+        setLoadingState(true)
+        presenter.getCurrentFilmList()
+    }
+
+    private fun hideKeyBoard() {
+        requireActivity().setKeyboardVisibility(false)
+    }
+
+    private fun scrollList() {
         Handler(Looper.getMainLooper()).postDelayed({
             binding.rcLib.scrollToPosition(0)
         }, 200)
     }
 
+    @ProvidePresenter
+    fun provideLibraryPresenter() = CinematicApplication.appComponent.provideLibraryPresenter()
+
+    override fun initializeBinding() = FragmentLibraryBinding.inflate(layoutInflater)
+
+    override fun setupUi() {
+        initRc()
+        initRcMain()
+        getLibraryList()
+        //presenter.getRcMainPosition()
+    }
+
+    override fun setupListener() = with(binding) {
+        edSearchText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                presenter.getSearchList(edSearchText.text.toString().trim())
+                hideKeyBoard()
+            }
+            true
+        }
+        swipeLayout.setOnRefreshListener {
+            presenter.getCurrentFilmList()
+            swipeLayout.isRefreshing = false
+        }
+    }
+
+    override fun getSearchText() {
+        presenter.getSearchList(binding.edSearchText.text.toString())
+    }
+
+    override fun scrollRcMain(position: Int) {
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.recyclerViewMain.scrollToPosition(position)
+        }, 200)
+    }
+
+    override fun submitList(items: PagingData<BaseFilmInfoResponse>) {
+        adapter.submitData(lifecycle, items)
+        scrollList()
+    }
+
     override fun setLoadingState(isLoading: Boolean) = with(binding) {
-        rcLib.isVisible = !isLoading
         pBar.isVisible = isLoading
+        rcLib.isVisible = !isLoading
     }
 }

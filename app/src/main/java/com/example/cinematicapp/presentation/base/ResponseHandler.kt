@@ -16,8 +16,7 @@ interface ResponseHandler<out T : BaseView> {
 
     fun Single<PagingData<BaseFilmInfoResponse>>.regularRequest(
         successAction: ((PagingData<BaseFilmInfoResponse>) -> Unit)?,
-    ) =
-        subscribeOn(Schedulers.io())
+    ) = subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 successAction?.invoke(it)
@@ -27,8 +26,7 @@ interface ResponseHandler<out T : BaseView> {
 
     fun Single<BaseIdFilmResponse>.singleRequest(
         successAction: ((BaseIdFilmResponse) -> Unit)?,
-    ) =
-        subscribeOn(Schedulers.io())
+    ) = subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 successAction?.invoke(it)
@@ -38,8 +36,7 @@ interface ResponseHandler<out T : BaseView> {
 
     fun Single<BaseFilmResponse>.singlerRequest(
         successAction: ((BaseFilmResponse) -> Unit)?,
-    ) =
-        subscribeOn(Schedulers.io())
+    ) = subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
             }

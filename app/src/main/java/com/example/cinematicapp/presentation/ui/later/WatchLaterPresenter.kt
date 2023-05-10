@@ -4,7 +4,6 @@ import com.example.cinematicapp.domain.firebaseUseCase.FireBaseDataUseCase
 import com.example.cinematicapp.domain.sharedPrefUseCase.SharedPrefUseCase
 import com.example.cinematicapp.presentation.base.BasePresenter
 import com.example.cinematicapp.repository.network.parsHome.PassengerSource
-import com.example.cinematicapp.repository.utils.Constants
 import io.reactivex.disposables.CompositeDisposable
 import moxy.InjectViewState
 import javax.inject.Inject
@@ -20,7 +19,9 @@ class WatchLaterPresenter @Inject constructor(
     private var currentCall = ""
     private var currentFilmArray = arrayOf<String>()
     private lateinit var phone: String
+    private lateinit var genresList: Array<String>
     private var watchLaterList: HashMap<String, Int>? = null
+    private var rcPosition = 0
 
 
     private fun getUserPhone(): String {
@@ -28,27 +29,31 @@ class WatchLaterPresenter @Inject constructor(
         return phone
     }
 
-    fun getWatchLaterList() {
+    fun getAllWatchLaterList() {
         fireStore.getWatchLater(getUserPhone()) { filmList ->
+            currentCall = ID
             watchLaterList = filmList
-            val currentList:List<Int>? = filmList?.values?.toList()?.let { ArrayList(it) }
-            if (currentList != null) {
-                val array = currentList.map { it.toString() }
-                getRandomWatchLaterFilms(array.toTypedArray(), Constants.ID)
-            }
+            getRandomWatchLaterFilms(getArrayList(filmList), currentCall)
         }
     }
 
-    fun getSearchList(name: String, type: String) {
+    fun getSearchList(name: String) {
+        currentCall = SEARCH
         if(watchLaterList != null) {
             val searchList = watchLaterList!!.filter { it.key.lowercase().startsWith(name.lowercase()) }
-            val idSearch: List<Int> = searchList.values.toList().let { ArrayList(it) }
-            val array = idSearch.map { it.toString() }
-            getRandomWatchLaterFilms(array.toTypedArray(), type)
+            getRandomWatchLaterFilms(getGenresArray(searchList), currentCall)
         }
     }
 
-    fun getRandomWatchLaterFilms(film: Array<String>, call: String) {
+    fun getGenresWatchLaterFilms(genres: Array<String>) {
+        currentCall = GENRES_LIBRARY
+        genresList = genres
+        mDisposable.add(dataSource.getGenresLibraryFilms(currentFilmArray, genresList, currentCall, currentFilmArray.size).subscribe {
+            viewState.submitList(it)
+        })
+    }
+
+    private fun getRandomWatchLaterFilms(film: Array<String>, call: String) {
         currentFilmArray = film
         currentCall = call
         mDisposable.add(dataSource.getFilmsById(film, currentCall, film.size).subscribe {
@@ -56,20 +61,41 @@ class WatchLaterPresenter @Inject constructor(
         })
     }
 
-    fun getGenresWatchLaterFilms(film: Array<String>, call: String) {
-        currentFilmArray = film
-        currentCall = call
-        mDisposable.add(dataSource.getFilmsById(film, currentCall, film.size).subscribe {
-            viewState.submitList(it)
-        })
+    private fun getArrayList(map: HashMap<String, Int>?): Array<String> {
+        var array: Array<String>? = null
+        val currentList: List<Int>? = map?.values?.toList()?.let { ArrayList(it) }
+        if (currentList != null) {
+            val list = currentList.map { it.toString() }
+            array = list.toTypedArray()
+        }
+        return array ?: arrayOf("")
     }
 
+    private fun getGenresArray(map: Map<String, Int>): Array<String> {
+        val idSearch: List<Int> = map.values.toList().let { ArrayList(it) }
+        val array = idSearch.map { it.toString() }
+        return array.toTypedArray()
+    }
 
-     fun getRefreshFilms() {
-         when (currentCall) {
-             Constants.BASE -> getRandomWatchLaterFilms(currentFilmArray,currentCall)
-             //Constants.SEARCH -> getRandomFilms(currentFilmArray,currentCall)
-             Constants.GENRES -> getGenresWatchLaterFilms(currentFilmArray,currentCall)
-         }
-     }
+    fun setRcMainPosition(position: Int) {
+        rcPosition = position
+    }
+
+    fun getRcMainPosition() {
+        viewState.scrollRcMain(rcPosition)
+    }
+
+    fun getCurrentFilmList() {
+        when(currentCall) {
+            ID -> getAllWatchLaterList()
+            SEARCH -> viewState.getSearchText()
+            GENRES_LIBRARY -> getGenresWatchLaterFilms(genresList)
+        }
+    }
+
+    companion object {
+        const val ID = "Id"
+        const val SEARCH = "Search"
+        const val GENRES_LIBRARY = "GenresLibrary"
+    }
 }

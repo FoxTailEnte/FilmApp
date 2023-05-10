@@ -15,6 +15,8 @@ class LibraryFilmAdapter(
     )
 
     override fun onBindViewHolder(holder: LibraryFilmHolder, position: Int) {
-        holder.bind(getItem(position)!!)
+        holder.bind(getItem(position)!!) {
+            callBack.invoke(it)
+        }
     }
 }
