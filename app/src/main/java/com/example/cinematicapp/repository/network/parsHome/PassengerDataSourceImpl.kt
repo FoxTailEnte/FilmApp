@@ -33,4 +33,15 @@ class PassengerDataSourceImpl(
         pagingSourceFactory = {dataSource.apply {
             submitFilmList(film, genres, type, listSize)
         }}).observable.cachedIn(CoroutineScope(Dispatchers.Main)))
+
+    override fun getFilmsWithFilters(name: Array<String>,
+                                     genres: Array<String>,
+                                     years: Array<String>,
+                                     rating: Array<String>,
+                                     country: Array<String>,
+                                     type: String) = (Pager(
+        config = PagingConfig(12),
+        pagingSourceFactory = {dataSource.apply {
+            submitFilmList(name, genres, years, rating, country, type, 100 )
+        }}).observable.cachedIn(CoroutineScope(Dispatchers.Main)))
 }

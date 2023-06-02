@@ -14,8 +14,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
 class BottomFragment(
-    private var item: List<String>,
-    private var checkedItem: (CheckedItemModel) -> Unit,
+    private var beCheckedListItem: Map<String, MutableList<String>>,
+    private var clearListener: () -> Unit,
+    private var saveFiltersParam: (CheckedItemModel) -> Unit,
+    private var getFilm: () -> Unit,
 ) : BottomSheetDialogFragment() {
 
     lateinit var binding: FragmentBottomFilterSheetBinding
@@ -29,8 +31,23 @@ class BottomFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = FilterAdapter(item){
-            checkedItem.invoke(it)
+        initAdapter()
+        setupListener()
+    }
+
+    private fun setupListener() = with(binding) {
+        btSave.setOnClickListener {
+            dialog?.dismiss()
+        }
+        btClear.setOnClickListener {
+            clearListener.invoke()
+            initAdapter()
+        }
+    }
+
+    private fun initAdapter() {
+        adapter = FilterAdapter(beCheckedListItem){
+            saveFiltersParam.invoke(it)
         }
         binding.rcFilter.adapter = adapter
     }
@@ -42,5 +59,10 @@ class BottomFragment(
             val behavior = BottomSheetBehavior.from(bottomSheet)
             behavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
+    }
+
+    override fun onDestroy() {
+        getFilm.invoke()
+        super.onDestroy()
     }
 }

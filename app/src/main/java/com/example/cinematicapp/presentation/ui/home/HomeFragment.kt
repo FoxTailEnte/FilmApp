@@ -69,14 +69,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
     }
 
     private fun showSearchFilterDialog() {
-        BottomFragment(presenter.getFilterItems()) {
+        BottomFragment(presenter.getFilterItems(), {
+            presenter.clearFilter()
+        },{
             presenter.saveFilters(it)
+        }) {
+            presenter.getFilmWithFilters()
         }.show(childFragmentManager,"tag")
-        /*val dialogView = layoutInflater.inflate(R.layout.fragment_bottom_filter_sheet, null)
-        filterDialog = BottomSheetDialog(this.requireActivity(), R.style.BottomSheetTheme)
-        filterDialog.setContentView(dialogView)
-        filterDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        filterDialog.show()*/
     }
 
     private fun initRc() = with(binding) {
