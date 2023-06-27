@@ -18,62 +18,52 @@ class HomePresenter @Inject constructor(
     private val mDisposable = CompositeDisposable()
     private var currentCall = ""
     private var currentFilmArray = arrayOf<String>()
-    private val checkedItemGenre = mutableListOf<String>()
-    private val checkedItemYears = mutableListOf<String>()
-    private val checkedItemRating = mutableListOf<String>()
-    private val checkedItemCountry = mutableListOf<String>()
+    private var filterList = listOf<CheckedItemModel>()
+    private var viewAttach = true
     fun checkUserAuthStatus(): Boolean = pref.getSignInUserStatus()
 
-    fun saveFilters(item: CheckedItemModel) {
-        when(item.type) {
-            Constants.GENRES_FILTER -> {
-                if(item.checked) checkedItemGenre.add(item.item)
-                else checkedItemGenre.remove(item.item)
-            }
-            Constants.YEARS_FILTER -> {
-                if(item.checked) checkedItemYears.add(item.item)
-                else checkedItemYears.remove(item.item)
-            }
-            Constants.RATING_FILTER -> {
-                if(item.checked) checkedItemRating.add(item.item)
-                else checkedItemRating.remove(item.item)
-            }
-            Constants.COUNTRY_FILTER -> {
-                if(item.checked) checkedItemCountry.add(item.item)
-                else checkedItemCountry.remove(item.item)
-            }
-            else -> Unit
+    fun saveFilters(filterItems: List<CheckedItemModel>) {
+        filterList = filterItems
+        if(filterItems.isNotEmpty()) {
+            viewState.initRcMain(true)
+        } else {
+            viewState.initRcMain(false)
         }
     }
 
-    fun clearFilter() {
-        checkedItemGenre.clear()
-        checkedItemYears.clear()
-        checkedItemRating.clear()
-        checkedItemCountry.clear()
+    fun getFilterItems(): List<CheckedItemModel> {
+        return filterList
     }
 
-    fun getFilterItems(): MutableMap<String, MutableList<String>> {
-        return mutableMapOf(
-            Constants.GENRES_FILTER to checkedItemGenre,
-            Constants.YEARS_FILTER to checkedItemYears,
-            Constants.RATING_FILTER to checkedItemRating,
-            Constants.COUNTRY_FILTER to checkedItemCountry
-        )
+    fun getFilmWithFilters(searchText: String?) {
+       /* mDisposable.add(dataSource.getFilmsWithFilters(
+            arrayOf(searchText ?: ""),
+            filterList[Constants.GENRES_FILTER]?.toTypedArray() ?: arrayOf(),
+            filterList[Constants.YEARS_FILTER]?.toTypedArray() ?: arrayOf(),
+            filterList[Constants.RATING_FILTER]?.toTypedArray() ?: arrayOf(),
+            filterList[Constants.COUNTRY_FILTER]?.toTypedArray() ?: arrayOf(),
+            "Filters").subscribe {
+            viewState.submitList(it)
+        })*/
     }
 
-    fun getFilmWithFilters() {
-        mDisposable.add(dataSource.getFilmsWithFilters(arrayOf(""), checkedItemGenre.toTypedArray(), checkedItemYears.toTypedArray(), checkedItemRating.toTypedArray(), checkedItemCountry.toTypedArray(), "Filters").subscribe {
+    fun getRandomFilms(film: Array<String>, call: String) {
+        currentFilmArray = film
+        currentCall = call
+        mDisposable.add(dataSource.getRandomFilm(film, "random").subscribe {
             viewState.submitList(it)
         })
     }
 
-    fun getRandomFilms(film: Array<String>, call: String) {
+    fun getFirsRandomFilms(film: Array<String>, call: String) {
+        if(viewAttach) {
             currentFilmArray = film
             currentCall = call
-            mDisposable.add(dataSource.getRandomFilm(film,"random").subscribe {
+            mDisposable.add(dataSource.getRandomFilm(film, "random").subscribe {
                 viewState.submitList(it)
+                viewAttach = false
             })
+        }
     }
 
     fun getGenresFilms(film: Array<String>, call: String) {

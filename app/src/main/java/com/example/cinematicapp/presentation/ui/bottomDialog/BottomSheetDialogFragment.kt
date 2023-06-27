@@ -1,4 +1,4 @@
-package com.example.cinematicapp.presentation.ui
+package com.example.cinematicapp.presentation.ui.bottomDialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,14 +14,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
 class BottomFragment(
-    private var beCheckedListItem: Map<String, MutableList<String>>,
-    private var clearListener: () -> Unit,
-    private var saveFiltersParam: (CheckedItemModel) -> Unit,
-    private var getFilm: () -> Unit,
+    private var beCheckedListItem: List<CheckedItemModel>,
+    private var saveListener: (List<CheckedItemModel>) -> Unit
 ) : BottomSheetDialogFragment() {
 
     lateinit var binding: FragmentBottomFilterSheetBinding
     private lateinit var adapter: FilterAdapter
+    private var presenter = BottomSheetDialogPresenter()
+
     override fun getTheme() = R.style.AppBottomSheetDialogTheme
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -31,25 +31,42 @@ class BottomFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.parseCheckedList(beCheckedListItem)
         initAdapter()
-        setupListener()
-    }
-
-    private fun setupListener() = with(binding) {
-        btSave.setOnClickListener {
-            dialog?.dismiss()
-        }
-        btClear.setOnClickListener {
-            clearListener.invoke()
-            initAdapter()
-        }
     }
 
     private fun initAdapter() {
-        adapter = FilterAdapter(beCheckedListItem){
-            saveFiltersParam.invoke(it)
+        adapter = FilterAdapter(
+            presenter.checkItemLive, presenter.visibilityItemLive,
+            viewLifecycleOwner, presenter.getFilterItems()
+        ) {
+            when (it) {
+                is FilterAdapter.CallBack.CheckedItem -> {
+                    presenter.saveFilters(it.checkedItem)
+                }
+
+                is FilterAdapter.CallBack.VisibilityState -> {
+                    presenter.saveVisibilityState(it.state)
+                }
+
+                is FilterAdapter.CallBack.SaveListener -> {
+                    returnFilterList()
+                    dialog?.dismiss()
+                }
+
+                is FilterAdapter.CallBack.ClearListener -> {
+                    presenter.clearList()
+                    returnFilterList()
+                    dialog?.dismiss()
+                }
+            }
         }
         binding.rcFilter.adapter = adapter
+    }
+
+    private fun returnFilterList() {
+        saveListener.invoke(presenter.getFilterItems())
+        dialog?.dismiss()
     }
 
     override fun onStart() {
@@ -59,10 +76,5 @@ class BottomFragment(
             val behavior = BottomSheetBehavior.from(bottomSheet)
             behavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
-    }
-
-    override fun onDestroy() {
-        getFilm.invoke()
-        super.onDestroy()
     }
 }

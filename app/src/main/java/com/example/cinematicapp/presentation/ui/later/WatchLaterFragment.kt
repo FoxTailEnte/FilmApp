@@ -87,7 +87,7 @@ class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding, WatchLaterVie
     }
 
     private fun initRcMain() {
-        adapterMain = MainRcViewAdapter({
+        adapterMain = MainRcViewAdapter(false, {
             genresListener(getString(it.name))
         }) {
             presenter.setRcMainPosition(it)

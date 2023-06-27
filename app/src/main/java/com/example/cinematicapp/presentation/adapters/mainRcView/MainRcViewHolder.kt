@@ -10,9 +10,12 @@ class MainRcViewHolder(
     private val selectPosition: (Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: MainRcViewModel, newPos: Int, oldPos: Int) = with(binding) {
+    fun bind(item: MainRcViewModel, newPos: Int, oldPos: Int, colorState: Boolean) = with(binding) {
         when (layoutPosition) {
-            newPos -> tvGenre.setTextColor(binding.root.context.resources.getColor(R.color.white))
+            newPos -> {
+                if(!colorState) tvGenre.setTextColor(binding.root.context.resources.getColor(R.color.white))
+                else tvGenre.setTextColor(binding.root.context.resources.getColor(R.color.main_text))
+            }
             oldPos -> tvGenre.setTextColor(binding.root.context.resources.getColor(R.color.main_text))
             else -> tvGenre.setTextColor(binding.root.context.resources.getColor(R.color.main_text))
         }

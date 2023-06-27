@@ -1,33 +1,48 @@
 package com.example.cinematicapp.presentation.adapters.filterRc
 
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.ItemSearchFilterBinding
+import com.example.cinematicapp.presentation.adapters.BaseViewHolder
 import com.example.cinematicapp.presentation.adapters.allFilterItems.AllFilterItemsAdapter
 import com.example.cinematicapp.presentation.adapters.allFilterItems.CheckedItemModel
 
 class FilterHolder(
     private val binding: ItemSearchFilterBinding,
-) : RecyclerView.ViewHolder(binding.root) {
+    private val callBack: (CallBack) -> Unit
+) : BaseViewHolder(binding) {
 
-    fun bind(item: FilterRvViewModel,
-             newPosition: Int?,
-             beCheckedListItem: Map<String, MutableList<String>>,
-             positionListener: (Int) -> Unit,
-             checkedItem: (CheckedItemModel) -> Unit) = with(binding) {
+    fun bind(
+        item: FilterRvViewModel,
+        filterPosition: Int,
+        checkedListItem: List<CheckedItemModel>,
+        visibilityItemLive: MutableLiveData<Int>,
+        owner: LifecycleOwner
+    ) = with(binding) {
         val title = root.context.getString(item.name)
         filterTitle.text = title
-        if(!beCheckedListItem[title].isNullOrEmpty()) filterTitle.setTextColor(root.context.resources.getColor(R.color.white))
-        rcFullFilters.isVisible = layoutPosition == newPosition
-        viewFull.isVisible = layoutPosition == newPosition
-        viewMainFilter.isVisible = layoutPosition != newPosition
+        val positionState = checkedListItem.find { it.filterPosition == filterPosition }
+        visibilityItemLive.observe(owner) {
+            rcFullFilters.isVisible = layoutPosition == it
+            viewFull.isVisible = layoutPosition == it
+        }
+        if (positionState != null) filterTitle.setTextColor(root.context.resources.getColor(R.color.white))
+        else filterTitle.setTextColor(root.context.resources.getColor(R.color.main_text))
         itemView.setOnClickListener {
-            positionListener.invoke(layoutPosition)
+            callBack.invoke(CallBack.VisibilityState(layoutPosition))
         }
-        val allItemsAdapter = AllFilterItemsAdapter(beCheckedListItem,root.context.getString(item.name)) {
-            checkedItem.invoke(it)
-        }
+        val allItemsAdapter =
+            AllFilterItemsAdapter(checkedListItem, layoutPosition) {
+                callBack.invoke(CallBack.CheckedItem(it))
+            }
         rcFullFilters.adapter = allItemsAdapter
+        allItemsAdapter.submitList(layoutPosition)
+    }
+
+    sealed class CallBack {
+        class CheckedItem(val checkItem: CheckedItemModel) : CallBack()
+        class VisibilityState(val state: Int) : CallBack()
     }
 }

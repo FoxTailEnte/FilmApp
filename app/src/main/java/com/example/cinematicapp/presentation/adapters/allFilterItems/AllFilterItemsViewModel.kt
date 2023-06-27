@@ -4,9 +4,5 @@ import androidx.annotation.StringRes
 
 data class AllFilterItemsViewModel(
     @StringRes
-    var genre: Int,
-    var years: Int,
-    var rating: Int?,
-    var country: Int?,
-    //var isChecked: Boolean = false
+    var item: Int,
 )

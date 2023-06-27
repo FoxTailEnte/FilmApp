@@ -62,7 +62,7 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
     }
 
     private fun initRcMain() {
-        adapterMain = MainRcViewAdapter({
+        adapterMain = MainRcViewAdapter(false, {
             genresListener(getString(it.name))
         }) {
            // presenter.setRcMainPosition(it)

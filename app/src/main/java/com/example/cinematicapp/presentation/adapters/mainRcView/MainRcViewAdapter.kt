@@ -7,6 +7,7 @@ import com.example.cinematicapp.databinding.ItemRcViewMainBinding
 import com.example.cinematicapp.repository.data.mainRcViewListSubmit
 
 class MainRcViewAdapter(
+    private val colorState: Boolean,
     private val callBack: (item: MainRcViewModel) -> Unit,
     private val positionCallBack: (Int) -> Unit,
 ) : RecyclerView.Adapter<MainRcViewHolder>() {
@@ -23,11 +24,10 @@ class MainRcViewAdapter(
     }
 
     override fun onBindViewHolder(holder: MainRcViewHolder, position: Int) {
-        holder.bind(list[position], newPosition, oldPosition)
+        holder.bind(list[position], newPosition, oldPosition, colorState)
     }
 
-    private
-    fun updateSelectItem(pos: Int) {
+    private fun updateSelectItem(pos: Int) {
        notifyItemChanged(pos)
        notifyItemChanged(oldPosition)
         oldPosition = pos

@@ -1,6 +1,7 @@
 package com.example.cinematicapp.presentation.ui.home
 
 
+import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
 import android.view.inputmethod.EditorInfo
@@ -16,12 +17,11 @@ import com.example.cinematicapp.presentation.adapters.homeFilm.HomeFilmAdapter
 import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmInfoResponse
 import com.example.cinematicapp.presentation.adapters.mainRcView.MainRcViewAdapter
 import com.example.cinematicapp.presentation.base.BaseFragment
-import com.example.cinematicapp.presentation.ui.BottomFragment
+import com.example.cinematicapp.presentation.ui.bottomDialog.BottomFragment
 import com.example.cinematicapp.repository.utils.Constants
 import com.example.cinematicapp.repository.utils.Extensions.getMainActivityView
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
@@ -33,7 +33,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
     private lateinit var adapterMain: MainRcViewAdapter
     private val footerAdapter = FilmsLoaderStateAdapter()
     private val headerAdapter = FilmsLoaderStateAdapter()
-    private lateinit var filterDialog: BottomSheetDialog
 
     @ProvidePresenter
     fun provideHomePresenter() = CinematicApplication.appComponent.provideHomePresenter()
@@ -63,19 +62,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
 
     override fun setupUi() {
         initRc()
-        initRcMain()
-        getRandomFilms()
+        initRcMain(false)
+        getFirstRandomFilms()
         getMainActivityView()?.hideBottomMenu(true)
     }
 
     private fun showSearchFilterDialog() {
-        BottomFragment(presenter.getFilterItems(), {
-            presenter.clearFilter()
-        },{
+        BottomFragment(presenter.getFilterItems()) {
             presenter.saveFilters(it)
-        }) {
-            presenter.getFilmWithFilters()
-        }.show(childFragmentManager,"tag")
+            presenter.getFilmWithFilters(binding.edSearchText.text.toString())
+            if (it.isNotEmpty()) binding.ivSearchFilters.setColorFilter(Color.argb(255, 255, 255, 255))
+            else binding.ivSearchFilters.setColorFilter(Color.argb(255, 107, 102, 102))
+        }.show(childFragmentManager, "tag")
     }
 
     private fun initRc() = with(binding) {
@@ -105,8 +103,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
         }
     }
 
-    private fun initRcMain() {
-        adapterMain = MainRcViewAdapter({
+    override fun initRcMain(state:Boolean) {
+        adapterMain = MainRcViewAdapter(state,{
             if(getString(it.name) != getString(R.string.all)) {
                 presenter.getGenresFilms(arrayOf(getString(it.name).lowercase()), Constants.GENRES)
             } else {
@@ -118,15 +116,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
         binding.recyclerViewMain.adapter = adapterMain
     }
 
-    private fun getRandomFilms() {
-        presenter.getRandomFilms(arrayOf(""), Constants.BASE)
+    private fun getFirstRandomFilms() {
+        presenter.getFirsRandomFilms(arrayOf(""), Constants.BASE)
     }
 
     override fun submitList(items: PagingData<BaseFilmInfoResponse>) {
         adapter.submitData(lifecycle,items)
         Handler(Looper.getMainLooper()).postDelayed({
             binding.rcHome.scrollToPosition(0)
-        }, 200)
+        }, 500)
     }
 
     override fun setLoadingState(isLoading: Boolean) = with(binding) {
