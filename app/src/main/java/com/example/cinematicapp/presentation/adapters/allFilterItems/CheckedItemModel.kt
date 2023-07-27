@@ -1,7 +1,7 @@
 package com.example.cinematicapp.presentation.adapters.allFilterItems
 
 data class CheckedItemModel(
-    val filterPosition: Int,
-    val itemPosition: Int,
+    val mainFilter: String,
+    val fullFilter: String,
     var checked: Boolean = false
 )

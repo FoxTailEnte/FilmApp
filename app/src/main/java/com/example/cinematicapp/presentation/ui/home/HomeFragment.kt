@@ -2,8 +2,11 @@ package com.example.cinematicapp.presentation.ui.home
 
 
 import android.graphics.Color
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.core.view.isVisible
 import androidx.paging.LoadState
@@ -18,7 +21,6 @@ import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmIn
 import com.example.cinematicapp.presentation.adapters.mainRcView.MainRcViewAdapter
 import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.presentation.ui.bottomDialog.BottomFragment
-import com.example.cinematicapp.repository.utils.Constants
 import com.example.cinematicapp.repository.utils.Extensions.getMainActivityView
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
@@ -43,46 +45,66 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
         if (!presenter.checkUserAuthStatus()) navigateTo(HomeFragmentDirections.actionHomeFragmentToGraphAuthorization())
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initRc()
+        initRcMain(true)
+        presenter.getFilmWithFilters()
+    }
+
     override fun setupListener() = with(binding) {
         ivSearchFilters.setOnClickListener {
             showSearchFilterDialog()
         }
         edSearchText.setOnEditorActionListener { _, actionId, _ ->
-            if(actionId == EditorInfo.IME_ACTION_SEARCH) {
-                presenter.getRandomFilms(arrayOf(edSearchText.text.toString()),Constants.SEARCH)
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                presenter.getFilmsWithText(text = listOf(edSearchText.text.toString()))
                 requireActivity().setKeyboardVisibility(false)
             }
             true
         }
         swipeLayout.setOnRefreshListener {
-            presenter.getRefreshFilms()
+            presenter.getFilmWithFilters()
             swipeLayout.isRefreshing = false
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        rcOptions()
+        rcMainOption()
+    }
+
     override fun setupUi() {
-        initRc()
-        initRcMain(false)
-        getFirstRandomFilms()
         getMainActivityView()?.hideBottomMenu(true)
     }
 
-    private fun showSearchFilterDialog() {
-        BottomFragment(presenter.getFilterItems()) {
-            presenter.saveFilters(it)
-            presenter.getFilmWithFilters(binding.edSearchText.text.toString())
-            if (it.isNotEmpty()) binding.ivSearchFilters.setColorFilter(Color.argb(255, 255, 255, 255))
-            else binding.ivSearchFilters.setColorFilter(Color.argb(255, 107, 102, 102))
-        }.show(childFragmentManager, "tag")
+    override fun initRcMain(state: Boolean) {
+        adapterMain = MainRcViewAdapter(state) {
+            if (getString(it.name) != getString(R.string.all)) {
+                presenter.getFilmsWithGenres(genres = listOf(getString(it.name).lowercase()))
+            } else {
+                presenter.getFilmsWithGenres()
+            }
+        }
+        rcMainOption()
+        //adapterMain.submitList()
     }
 
-    private fun initRc() = with(binding) {
-        val filmLayoutManager = GridLayoutManager(requireContext(),3)
-        binding.rcHome.layoutManager = filmLayoutManager
+    private fun rcMainOption() {
+        binding.recyclerViewMain.adapter = adapterMain
+        adapterMain.submitList()
+    }
+
+    private fun initRc() {
         adapter = HomeFilmAdapter {
             navigateTo(HomeFragmentDirections.actionHomeFragmentToFilmInfoFragment(it.id))
-
         }
+    }
+
+    private fun rcOptions() = with(binding) {
+        val filmLayoutManager =  GridLayoutManager(requireContext(), 3)
+        rcHome.layoutManager = filmLayoutManager
         rcHome.adapter = adapter.withLoadStateHeaderAndFooter(
             header = FilmsLoaderStateAdapter(),
             footer = FilmsLoaderStateAdapter()
@@ -103,33 +125,27 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
         }
     }
 
-    override fun initRcMain(state:Boolean) {
-        adapterMain = MainRcViewAdapter(state,{
-            if(getString(it.name) != getString(R.string.all)) {
-                presenter.getGenresFilms(arrayOf(getString(it.name).lowercase()), Constants.GENRES)
-            } else {
-                presenter.getRandomFilms(arrayOf(""), Constants.BASE)
-            }
-        }) {
-
-        }
-        binding.recyclerViewMain.adapter = adapterMain
-    }
-
-    private fun getFirstRandomFilms() {
-        presenter.getFirsRandomFilms(arrayOf(""), Constants.BASE)
-    }
-
     override fun submitList(items: PagingData<BaseFilmInfoResponse>) {
-        adapter.submitData(lifecycle,items)
+        adapter.submitData(lifecycle, items)
         Handler(Looper.getMainLooper()).postDelayed({
             binding.rcHome.scrollToPosition(0)
         }, 500)
+    }
+
+    private fun showSearchFilterDialog() {
+        BottomFragment(presenter.getFilterItems()) {
+            presenter.saveFullFilters(it)
+            presenter.getFilmWithFilters()
+        }.show(childFragmentManager, "tag")
+    }
+
+    override fun setFullFilterColor(state: Boolean) {
+        if (state) binding.ivSearchFilters.setColorFilter(Color.argb(255, 255, 255, 255))
+        else binding.ivSearchFilters.setColorFilter(Color.argb(255, 107, 102, 102))
     }
 
     override fun setLoadingState(isLoading: Boolean) = with(binding) {
         rcHome.isVisible = !isLoading
         pBar.isVisible = isLoading
     }
-
 }

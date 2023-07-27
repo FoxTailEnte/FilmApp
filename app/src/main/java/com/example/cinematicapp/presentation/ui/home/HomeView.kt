@@ -9,5 +9,6 @@ import moxy.viewstate.strategy.StateStrategyType
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface HomeView: BaseView {
     fun submitList(items: PagingData<BaseFilmInfoResponse>)
-    fun initRcMain(state:Boolean)
+    fun initRcMain(state: Boolean)
+    fun setFullFilterColor(state:Boolean)
 }

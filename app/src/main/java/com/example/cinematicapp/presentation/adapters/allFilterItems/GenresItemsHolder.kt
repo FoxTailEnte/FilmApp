@@ -2,6 +2,7 @@ package com.example.cinematicapp.presentation.adapters.allFilterItems
 
 import com.example.cinematicapp.databinding.ItemFullFiltersBinding
 import com.example.cinematicapp.presentation.adapters.BaseViewHolder
+import com.example.cinematicapp.repository.utils.Constants
 
 class GenresItemsHolder(
     private val binding: ItemFullFiltersBinding,
@@ -10,20 +11,18 @@ class GenresItemsHolder(
 
     fun bind(
         item: AllFilterItemsViewModel,
-        filterPosition: Int,
+        mainFilter: String,
         checkedListItem: List<CheckedItemModel>
     ) = with(binding) {
         val genreTitle = root.context.getString(item.item)
         filterTitle.text = genreTitle
-        if (filterPosition == 0) {
-            val positionState = checkedListItem.find { it.itemPosition == layoutPosition }
-            checkBox.isChecked = positionState != null
-        }
+        val positionState = checkedListItem.find { it.fullFilter == genreTitle && it.mainFilter == Constants.GENRES_FILTER}
+        checkBox.isChecked = positionState != null
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             checkedItem.invoke(
                 CheckedItemModel(
-                    filterPosition,
-                    layoutPosition,
+                    mainFilter,
+                    genreTitle,
                     isChecked
                 )
             )

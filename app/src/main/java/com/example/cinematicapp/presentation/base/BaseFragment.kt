@@ -1,6 +1,7 @@
 package com.example.cinematicapp.presentation.base
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,10 +33,6 @@ abstract class BaseFragment<
         checkUserAuth()
         setupListener()
         onBackPress()
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

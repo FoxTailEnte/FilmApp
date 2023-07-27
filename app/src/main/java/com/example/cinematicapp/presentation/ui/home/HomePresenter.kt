@@ -16,69 +16,101 @@ class HomePresenter @Inject constructor(
 ) : BasePresenter<HomeView>() {
 
     private val mDisposable = CompositeDisposable()
-    private var currentCall = ""
-    private var currentFilmArray = arrayOf<String>()
     private var filterList = listOf<CheckedItemModel>()
     private var viewAttach = true
+    var mainFilterPosition = 0
+    private var topRcState: Boolean = false
+    private val searchTextList = mutableListOf<String>()
+    private val genresList = mutableListOf<String>()
+    private val yearsList = mutableListOf<String>()
+    private val ratingList = mutableListOf<String>()
+    private val countryList = mutableListOf<String>()
+
+    init {
+        viewState.initRcMain(false)
+    }
+
     fun checkUserAuthStatus(): Boolean = pref.getSignInUserStatus()
 
-    fun saveFilters(filterItems: List<CheckedItemModel>) {
+    fun getFilmWithFilters() {
+        mDisposable.add(dataSource.getRandomFilm(getFiltersForRequest()).subscribe {
+            viewState.submitList(it)
+            viewAttach = false
+        })
+    }
+
+    private fun getFiltersForRequest(): MutableMap<String, Array<String>> {
+        return mutableMapOf(
+            Constants.SEARCH to searchTextList.toTypedArray(),
+            Constants.GENRES_FILTER to genresList.toTypedArray(),
+            Constants.YEARS_FILTER to yearsList.toTypedArray(),
+            Constants.RATING_FILTER to ratingList.toTypedArray(),
+            Constants.COUNTRY_FILTER to countryList.toTypedArray()
+        )
+    }
+
+    fun saveFullFilters(filterItems: List<CheckedItemModel>) {
+        clearAllFilters()
         filterList = filterItems
-        if(filterItems.isNotEmpty()) {
-            viewState.initRcMain(true)
-        } else {
-            viewState.initRcMain(false)
+        val prepareRatingList = mutableListOf<String>()
+        filterItems.forEach {
+            when (it.mainFilter) {
+                Constants.GENRES_FILTER -> genresList.add(it.fullFilter.lowercase())
+                Constants.YEARS_FILTER -> yearsList.add(it.fullFilter.lowercase())
+                Constants.COUNTRY_FILTER -> countryList.add(it.fullFilter)
+                Constants.RATING_FILTER -> {
+                    when (it.fullFilter) {
+                        FIVE_RATING -> prepareRatingList.add("5.0-9.9")
+                        SIX_RATING -> prepareRatingList.add("6.0-9.9")
+                        SEVEN_RATING -> prepareRatingList.add("7.0-9.9")
+                        EIGHT_RATING -> prepareRatingList.add("8.0-9.9")
+                        NINE_RATING -> prepareRatingList.add("9.0-9.9")
+                        else -> Unit
+                    }
+                    ratingList.clear()
+                    ratingList.add(prepareRatingList.minOrNull().toString())
+                }
+            }
         }
+        if (filterItems.isNotEmpty()) {
+            setTopRcViewState(true)
+        } else {
+            setTopRcViewState(false)
+        }
+    }
+
+    fun getFilmsWithGenres(genres: List<String> = listOf()) {
+        clearAllFilters()
+        genresList.addAll(genres)
+        setTopRcViewState(false)
+        getFilmWithFilters()
+    }
+
+    fun getFilmsWithText(text: List<String> = listOf()) {
+        searchTextList.clear()
+        searchTextList.addAll(text)
+        getFilmWithFilters()
     }
 
     fun getFilterItems(): List<CheckedItemModel> {
         return filterList
     }
 
-    fun getFilmWithFilters(searchText: String?) {
-       /* mDisposable.add(dataSource.getFilmsWithFilters(
-            arrayOf(searchText ?: ""),
-            filterList[Constants.GENRES_FILTER]?.toTypedArray() ?: arrayOf(),
-            filterList[Constants.YEARS_FILTER]?.toTypedArray() ?: arrayOf(),
-            filterList[Constants.RATING_FILTER]?.toTypedArray() ?: arrayOf(),
-            filterList[Constants.COUNTRY_FILTER]?.toTypedArray() ?: arrayOf(),
-            "Filters").subscribe {
-            viewState.submitList(it)
-        })*/
+    private fun clearAllFilters() {
+        filterList = listOf()
     }
 
-    fun getRandomFilms(film: Array<String>, call: String) {
-        currentFilmArray = film
-        currentCall = call
-        mDisposable.add(dataSource.getRandomFilm(film, "random").subscribe {
-            viewState.submitList(it)
-        })
+    private fun setTopRcViewState(state: Boolean) {
+        topRcState = state
+        viewState.setFullFilterColor(topRcState)
+        viewState.initRcMain(!topRcState)
     }
 
-    fun getFirsRandomFilms(film: Array<String>, call: String) {
-        if(viewAttach) {
-            currentFilmArray = film
-            currentCall = call
-            mDisposable.add(dataSource.getRandomFilm(film, "random").subscribe {
-                viewState.submitList(it)
-                viewAttach = false
-            })
-        }
-    }
-
-    fun getGenresFilms(film: Array<String>, call: String) {
-            currentFilmArray = film
-            currentCall = call
-            mDisposable.add(dataSource.getGenresFilms(film,"genres").subscribe {
-                viewState.submitList(it)
-            })
-    }
-
-    fun getRefreshFilms() {
-        when (currentCall) {
-            Constants.BASE -> getRandomFilms(currentFilmArray,currentCall)
-            Constants.SEARCH -> getRandomFilms(currentFilmArray,currentCall)
-            Constants.GENRES -> getGenresFilms(currentFilmArray,currentCall)
-        }
+    companion object {
+        const val NINE_RATING = "Больше 9"
+        const val EIGHT_RATING = "Больше 8"
+        const val SEVEN_RATING = "Больше 7"
+        const val SIX_RATING = "Больше 6"
+        const val FIVE_RATING = "Больше 5"
     }
 }

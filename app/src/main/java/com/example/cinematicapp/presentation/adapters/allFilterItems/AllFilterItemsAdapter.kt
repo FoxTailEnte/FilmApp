@@ -12,16 +12,17 @@ import com.example.cinematicapp.repository.data.allFilterYearsListSubmit
 
 class AllFilterItemsAdapter(
     private var checkedListItem: List<CheckedItemModel>,
-    private var filterPosition: Int,
+    private var mainFilter: String,
     private val checkedItem: (CheckedItemModel) -> Unit
 ) : RecyclerView.Adapter<BaseViewHolder>() {
     private val list = mutableListOf<AllFilterItemsViewModel>()
 
     override fun getItemViewType(position: Int): Int =
-        when (filterPosition) {
-            0 -> FilterViewTypes.GENRES_TYPE.ordinal
-            1 -> FilterViewTypes.YEARS_TYPE.ordinal
-            2 -> FilterViewTypes.RATING_TYPE.ordinal
+        when (mainFilter) {
+            GENRES_FILTER -> FilterViewTypes.GENRES_TYPE.ordinal
+            YEARS_FILTER -> FilterViewTypes.YEARS_TYPE.ordinal
+            RATING_FILTER -> FilterViewTypes.RATING_TYPE.ordinal
+            COUNTRY_FILTER -> FilterViewTypes.COUNTRY_TYPE.ordinal
             else -> FilterViewTypes.COUNTRY_TYPE.ordinal
         }
 
@@ -73,10 +74,10 @@ class AllFilterItemsAdapter(
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         when (holder) {
-            is GenresItemsHolder -> holder.bind(list[position], filterPosition, checkedListItem)
-            is YearsItemsHolder -> holder.bind(list[position], filterPosition, checkedListItem)
-            is RatingItemsHolder -> holder.bind(list[position], filterPosition, checkedListItem)
-            is CountryItemsHolder -> holder.bind(list[position], filterPosition, checkedListItem)
+            is GenresItemsHolder -> holder.bind(list[position], mainFilter, checkedListItem)
+            is YearsItemsHolder -> holder.bind(list[position], mainFilter, checkedListItem)
+            is RatingItemsHolder -> holder.bind(list[position], mainFilter, checkedListItem)
+            is CountryItemsHolder -> holder.bind(list[position], mainFilter, checkedListItem)
         }
     }
 
@@ -96,5 +97,12 @@ class AllFilterItemsAdapter(
         YEARS_TYPE,
         RATING_TYPE,
         COUNTRY_TYPE
+    }
+
+    companion object {
+        const val GENRES_FILTER = "Жанры"
+        const val YEARS_FILTER = "Год"
+        const val RATING_FILTER = "Рейтинг"
+        const val COUNTRY_FILTER = "Страна"
     }
 }

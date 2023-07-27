@@ -62,12 +62,10 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
     }
 
     private fun initRcMain() {
-        adapterMain = MainRcViewAdapter(false, {
+       /* adapterMain = MainRcViewAdapter(false, {
             genresListener(getString(it.name))
-        }) {
-           // presenter.setRcMainPosition(it)
-        }
-        binding.recyclerViewMain.adapter = adapterMain
+        })*/
+       // binding.recyclerViewMain.adapter = adapterMain
     }
 
     private fun genresListener(genre: String) {

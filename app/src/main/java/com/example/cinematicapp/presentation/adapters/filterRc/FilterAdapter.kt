@@ -19,7 +19,6 @@ class FilterAdapter(
     private var callBack: (CallBack) -> Unit
     ): RecyclerView.Adapter<BaseViewHolder>() {
     private val list: List<FilterRvViewModel> by lazy { filterRcViewListSubmit() }
-
     init {
         checkedItemLiveDate.observe(owner) {
            notifyItemChanged(it)
@@ -39,15 +38,14 @@ class FilterAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when(position) {
-            FilterViewTypes.FILTER_TYPE.adapterPosition -> FilterViewTypes.FILTER_TYPE.ordinal
-            FilterViewTypes.BUTTON.adapterPosition -> FilterViewTypes.BUTTON.ordinal
+            4 -> FilterViewTypes.BUTTON.ordinal
             else -> FilterViewTypes.FILTER_TYPE.ordinal
         }
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         when(holder) {
-            is FilterHolder -> holder.bind(list[position], position, checkedListItem,visibilityLiveData, owner)
+            is FilterHolder -> holder.bind(list[position], checkedListItem,visibilityLiveData, owner)
             is FilterButtonHolder -> holder.bind(list[position])
         }
     }
@@ -75,8 +73,8 @@ class FilterAdapter(
         object ClearListener : CallBack()
     }
 
-    enum class FilterViewTypes(val adapterPosition: Int) {
-        FILTER_TYPE(1),
-        BUTTON(2)
+    enum class FilterViewTypes {
+        FILTER_TYPE,
+        BUTTON
     }
 }

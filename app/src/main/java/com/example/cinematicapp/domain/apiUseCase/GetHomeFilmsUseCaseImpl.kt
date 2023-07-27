@@ -4,13 +4,23 @@ import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmRe
 import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseIdFilmResponse
 import com.example.cinematicapp.repository.network.api.GetHomeFilms
 import io.reactivex.Single
+import retrofit2.Response
 import javax.inject.Inject
 
 class GetHomeFilmsUseCaseImpl @Inject constructor(
     private val homeFilms: GetHomeFilms,
 ) : GetHomeFilmsUseCase {
 
-    override fun getRandomFilms(page: Int, size: Int, film: Array<String>,): Single<BaseFilmResponse> = homeFilms.getRandomFilms(page, size, film)
+    override fun getFilms(
+        page: Int,
+        size: Int,
+        name: Array<String>,
+        genre: Array<String>,
+        years:Array<String>,
+        rating: Array<String>,
+        country: Array<String>,
+        id: Array<String>
+    ): Single<Response<BaseFilmResponse>> = homeFilms.getFilms(page, size, name, genre, years, rating, country, id)
 
     override fun getFilmsByIds(page: Int, size: Int,film: Array<String>,): Single<BaseFilmResponse> = homeFilms.getFilmsByIds(page, size, film)
 

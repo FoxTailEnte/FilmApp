@@ -46,19 +46,19 @@ class WatchLaterPresenter @Inject constructor(
     }
 
     fun getGenresWatchLaterFilms(genres: Array<String>) {
-        currentCall = GENRES_LIBRARY
+        /*currentCall = GENRES_LIBRARY
         genresList = genres
         mDisposable.add(dataSource.getGenresLibraryFilms(currentFilmArray, genresList, currentCall, currentFilmArray.size).subscribe {
             viewState.submitList(it)
-        })
+        })*/
     }
 
     private fun getRandomWatchLaterFilms(film: Array<String>, call: String) {
-        currentFilmArray = film
+       /* currentFilmArray = film
         currentCall = call
         mDisposable.add(dataSource.getFilmsById(film, currentCall, film.size).subscribe {
             viewState.submitList(it)
-        })
+        })*/
     }
 
     private fun getArrayList(map: HashMap<String, Int>?): Array<String> {

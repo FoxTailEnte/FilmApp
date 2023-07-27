@@ -6,17 +6,5 @@ import io.reactivex.Observable
 
 interface PassengerSource {
 
-    fun getRandomFilm(film: Array<String>, type: String): Observable<PagingData<BaseFilmInfoResponse>>
-
-    fun getFilmsById(film: Array<String>, type: String, listSize: Int): Observable<PagingData<BaseFilmInfoResponse>>
-
-    fun getGenresFilms(film: Array<String>, type: String): Observable<PagingData<BaseFilmInfoResponse>>
-
-    fun getGenresLibraryFilms(film: Array<String>, genres: Array<String>, type: String, listSize: Int): Observable<PagingData<BaseFilmInfoResponse>>
-    fun getFilmsWithFilters(name: Array<String>,
-                            genres: Array<String>,
-                            years: Array<String>,
-                            rating: Array<String>,
-                            country: Array<String>,
-                            type: String): Observable<PagingData<BaseFilmInfoResponse>>
+    fun getRandomFilm(film: MutableMap<String, Array<String>>): Observable<PagingData<BaseFilmInfoResponse>>
 }

@@ -14,6 +14,8 @@ data class BaseFilmInfoResponse(
     val name: String,
     @SerializedName("poster")
     val poster: UrlPoster? = null,
+    @SerializedName("rating")
+    val rating: FilmRating,
 )
 
 data class UrlPoster(
@@ -21,4 +23,9 @@ data class UrlPoster(
     val url: String,
     @SerializedName("previewUrl")
     val previewUrl: String
+)
+
+data class FilmRating(
+    @SerializedName("kp")
+    val kp: Float,
 )

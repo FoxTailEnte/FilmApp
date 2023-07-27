@@ -16,14 +16,13 @@ class FilterHolder(
 
     fun bind(
         item: FilterRvViewModel,
-        filterPosition: Int,
         checkedListItem: List<CheckedItemModel>,
         visibilityItemLive: MutableLiveData<Int>,
         owner: LifecycleOwner
     ) = with(binding) {
         val title = root.context.getString(item.name)
         filterTitle.text = title
-        val positionState = checkedListItem.find { it.filterPosition == filterPosition }
+        val positionState = checkedListItem.find { it.mainFilter == title }
         visibilityItemLive.observe(owner) {
             rcFullFilters.isVisible = layoutPosition == it
             viewFull.isVisible = layoutPosition == it
@@ -34,7 +33,7 @@ class FilterHolder(
             callBack.invoke(CallBack.VisibilityState(layoutPosition))
         }
         val allItemsAdapter =
-            AllFilterItemsAdapter(checkedListItem, layoutPosition) {
+            AllFilterItemsAdapter(checkedListItem, title) {
                 callBack.invoke(CallBack.CheckedItem(it))
             }
         rcFullFilters.adapter = allItemsAdapter
