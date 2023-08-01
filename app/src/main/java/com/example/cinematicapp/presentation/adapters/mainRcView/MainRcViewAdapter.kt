@@ -9,10 +9,12 @@ import com.example.cinematicapp.repository.data.mainRcViewListSubmit
 class MainRcViewAdapter(
     private val callBack: (item: MainRcViewModel) -> Unit
 ) : RecyclerView.Adapter<MainRcViewHolder>() {
+
     private val list: MutableList<MainRcViewModel> = mutableListOf()
     private var colorState: Boolean = true
     private var newPosition: Int = 0
     private var oldPosition: Int = 0
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MainRcViewHolder(
         ItemRcViewMainBinding.inflate(LayoutInflater.from(parent.context), parent, false),{
