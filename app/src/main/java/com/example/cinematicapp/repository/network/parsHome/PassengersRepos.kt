@@ -40,10 +40,8 @@ class PassengersRepos(
             .map {
                 if (it.code() != 200) {
                     Log.d("MyLog", "Error number is - " + it.code().toString())
-                } else {
-                    Log.d("MyLog", "code " + it.toString())
                 }
-                toResponseResult(nextPageNumber, it.body(), it.code() == 200)
+                toResponseResult(nextPageNumber, it.body(), it.body()?.docs?.size != 0)
             }
             .onErrorReturn {
                 LoadResult.Error(it)
@@ -54,7 +52,7 @@ class PassengersRepos(
         val data = response?.docs
         val nextPageKey = if (isSuccessful && position < size) position + 1 else null
         return LoadResult.Page(
-            data = data ?: emptyList(),
+            data = data ?: emptyList() ,
             prevKey = if (position == 1) null else position - 1,
             nextKey = nextPageKey
         )

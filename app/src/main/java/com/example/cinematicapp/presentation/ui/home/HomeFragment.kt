@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.core.view.isVisible
@@ -29,12 +28,25 @@ import moxy.presenter.ProvidePresenter
 
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(), HomeView {
 
-    @InjectPresenter
-    lateinit var presenter: HomePresenter
-    private lateinit var adapter: HomeFilmAdapter
-    private lateinit var adapterMain: MainRcViewAdapter
     private val footerAdapter = FilmsLoaderStateAdapter()
     private val headerAdapter = FilmsLoaderStateAdapter()
+    private val adapter by lazy {
+        HomeFilmAdapter {
+            navigateTo(HomeFragmentDirections.actionHomeFragmentToFilmInfoFragment(it.id))
+        }
+    }
+    private val adapterMain by lazy {
+        MainRcViewAdapter {
+            if (getString(it.name) != getString(R.string.all)) {
+                presenter.getFilmsWithGenres(genres = listOf(getString(it.name).lowercase()))
+            } else {
+                presenter.getFilmsWithGenres()
+            }
+        }
+    }
+
+    @InjectPresenter
+    lateinit var presenter: HomePresenter
 
     @ProvidePresenter
     fun provideHomePresenter() = CinematicApplication.appComponent.provideHomePresenter()
@@ -47,9 +59,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initRc()
-        initRcMain(true)
         presenter.getFilmWithFilters()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        presenter.initAdapters()
     }
 
     override fun setupListener() = with(binding) {
@@ -69,40 +84,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        rcOptions()
-        rcMainOption()
-    }
-
     override fun setupUi() {
         getMainActivityView()?.hideBottomMenu(true)
     }
 
     override fun initRcMain(state: Boolean) {
-        adapterMain = MainRcViewAdapter(state) {
-            if (getString(it.name) != getString(R.string.all)) {
-                presenter.getFilmsWithGenres(genres = listOf(getString(it.name).lowercase()))
-            } else {
-                presenter.getFilmsWithGenres()
-            }
-        }
-        rcMainOption()
-        //adapterMain.submitList()
-    }
-
-    private fun rcMainOption() {
         binding.recyclerViewMain.adapter = adapterMain
-        adapterMain.submitList()
+        adapterMain.submitList(state)
     }
 
-    private fun initRc() {
-        adapter = HomeFilmAdapter {
-            navigateTo(HomeFragmentDirections.actionHomeFragmentToFilmInfoFragment(it.id))
-        }
-    }
-
-    private fun rcOptions() = with(binding) {
+    override fun initRc() = with(binding) {
         val filmLayoutManager =  GridLayoutManager(requireContext(), 3)
         rcHome.layoutManager = filmLayoutManager
         rcHome.adapter = adapter.withLoadStateHeaderAndFooter(
@@ -133,14 +124,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
     }
 
     private fun showSearchFilterDialog() {
-        BottomFragment(presenter.getFilterItems()) {
+        BottomFragment(presenter.getFilterItemsForDialogFragment()) {
             presenter.saveFullFilters(it)
             presenter.getFilmWithFilters()
         }.show(childFragmentManager, "tag")
     }
 
     override fun setFullFilterColor(state: Boolean) {
-        if (state) binding.ivSearchFilters.setColorFilter(Color.argb(255, 255, 255, 255))
+        if (!state) binding.ivSearchFilters.setColorFilter(Color.argb(255, 255, 255, 255))
         else binding.ivSearchFilters.setColorFilter(Color.argb(255, 107, 102, 102))
     }
 

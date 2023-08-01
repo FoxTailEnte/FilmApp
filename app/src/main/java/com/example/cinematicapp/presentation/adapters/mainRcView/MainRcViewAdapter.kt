@@ -1,6 +1,5 @@
 package com.example.cinematicapp.presentation.adapters.mainRcView
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,10 +7,10 @@ import com.example.cinematicapp.databinding.ItemRcViewMainBinding
 import com.example.cinematicapp.repository.data.mainRcViewListSubmit
 
 class MainRcViewAdapter(
-    private val colorState: Boolean,
     private val callBack: (item: MainRcViewModel) -> Unit
 ) : RecyclerView.Adapter<MainRcViewHolder>() {
     private val list: MutableList<MainRcViewModel> = mutableListOf()
+    private var colorState: Boolean = true
     private var newPosition: Int = 0
     private var oldPosition: Int = 0
 
@@ -20,11 +19,11 @@ class MainRcViewAdapter(
             callBack.invoke(it)
         }) {
         newPosition = it
+        colorState = true
         updateSelectItem(it)
     }
 
     override fun onBindViewHolder(holder: MainRcViewHolder, position: Int) {
-
         holder.bind(list[position], newPosition, colorState)
     }
 
@@ -36,7 +35,10 @@ class MainRcViewAdapter(
 
     override fun getItemCount() = list.size
 
-    fun submitList() {
-         list.addAll(mainRcViewListSubmit())
+    fun submitList(state: Boolean) {
+        list.clear()
+        list.addAll(mainRcViewListSubmit())
+        colorState = state
+        notifyDataSetChanged()
     }
 }

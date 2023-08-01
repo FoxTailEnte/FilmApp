@@ -90,8 +90,8 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
 
     /*Android Jetpack Paging 3.0*/
-    implementation "androidx.paging:paging-runtime:3.1.1"
-    implementation "androidx.paging:paging-rxjava2:3.1.1"
+    implementation "androidx.paging:paging-runtime-ktx:3.2.0"
+    implementation "androidx.paging:paging-rxjava2-ktx:3.2.0"
 
     /*SwipeLayout*/
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"

@@ -1,6 +1,5 @@
 package com.example.cinematicapp.presentation.adapters.mainRcView
 
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.ItemRcViewMainBinding

@@ -17,25 +17,19 @@ class HomePresenter @Inject constructor(
 
     private val mDisposable = CompositeDisposable()
     private var filterList = listOf<CheckedItemModel>()
-    private var viewAttach = true
-    var mainFilterPosition = 0
-    private var topRcState: Boolean = false
+    private var rcColorState: Boolean = true
     private val searchTextList = mutableListOf<String>()
     private val genresList = mutableListOf<String>()
     private val yearsList = mutableListOf<String>()
     private val ratingList = mutableListOf<String>()
     private val countryList = mutableListOf<String>()
 
-    init {
-        viewState.initRcMain(false)
-    }
-
     fun checkUserAuthStatus(): Boolean = pref.getSignInUserStatus()
 
     fun getFilmWithFilters() {
-        mDisposable.add(dataSource.getRandomFilm(getFiltersForRequest()).subscribe {
+        mDisposable.add(dataSource.getRandomFilm(getFiltersForRequest())
+            .subscribe {
             viewState.submitList(it)
-            viewAttach = false
         })
     }
 
@@ -50,7 +44,8 @@ class HomePresenter @Inject constructor(
     }
 
     fun saveFullFilters(filterItems: List<CheckedItemModel>) {
-        clearAllFilters()
+        clearFilterForResponse()
+        clearAllFiltersForDialogFragment()
         filterList = filterItems
         val prepareRatingList = mutableListOf<String>()
         filterItems.forEach {
@@ -72,17 +67,16 @@ class HomePresenter @Inject constructor(
                 }
             }
         }
-        if (filterItems.isNotEmpty()) {
-            setTopRcViewState(true)
-        } else {
-            setTopRcViewState(false)
-        }
+        rcColorState = filterItems.isEmpty()
+        initAdapters()
     }
 
     fun getFilmsWithGenres(genres: List<String> = listOf()) {
-        clearAllFilters()
+        clearAllFiltersForDialogFragment()
+        clearFilterForResponse()
         genresList.addAll(genres)
-        setTopRcViewState(false)
+        rcColorState = true
+        setFullFilterState()
         getFilmWithFilters()
     }
 
@@ -92,18 +86,29 @@ class HomePresenter @Inject constructor(
         getFilmWithFilters()
     }
 
-    fun getFilterItems(): List<CheckedItemModel> {
+    fun getFilterItemsForDialogFragment(): List<CheckedItemModel> {
         return filterList
     }
 
-    private fun clearAllFilters() {
+    private fun clearFilterForResponse() {
+        genresList.clear()
+        yearsList.clear()
+        ratingList.clear()
+        countryList.clear()
+    }
+
+    private fun clearAllFiltersForDialogFragment() {
         filterList = listOf()
     }
 
-    private fun setTopRcViewState(state: Boolean) {
-        topRcState = state
-        viewState.setFullFilterColor(topRcState)
-        viewState.initRcMain(!topRcState)
+    fun initAdapters() {
+        viewState.initRcMain(rcColorState)
+        viewState.initRc()
+        setFullFilterState()
+    }
+
+    private fun setFullFilterState() {
+        viewState.setFullFilterColor(rcColorState)
     }
 
     companion object {
