@@ -18,19 +18,5 @@ interface GetHomeFilms {
         id: Array<String>
     ): Response<BaseFilmResponse>
 
-    fun getFilmsByIds(page: Int, size: Int,film: Array<String>): Single<BaseFilmResponse>
-
-    fun getGenresFilms(page: Int, size: Int, film: Array<String>): Single<BaseFilmResponse>
-
-    fun getGenresLibraryFilms(page: Int, size: Int, film: Array<String>, genres: Array<String>): Single<BaseFilmResponse>
-
-    fun getFilmsWithFilters(page: Int,
-                            size: Int,
-                            film: Array<String>,
-                            genres: Array<String>,
-                            years: Array<String>,
-                            rating: Array<String>,
-                            country: Array<String>): Single<BaseFilmResponse>
-
     fun getIdFilms(film: String): Single<BaseIdFilmResponse>
 }

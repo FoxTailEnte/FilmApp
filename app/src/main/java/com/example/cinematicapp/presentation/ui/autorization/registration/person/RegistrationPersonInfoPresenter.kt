@@ -3,8 +3,9 @@ package com.example.cinematicapp.presentation.ui.autorization.registration.perso
 import com.example.cinematicapp.domain.firebaseUseCase.FireBaseDataUseCase
 import com.example.cinematicapp.presentation.base.BasePresenter
 import com.example.cinematicapp.repository.network.firebase.models.UserModel
+import com.example.cinematicapp.repository.utils.ViewUtils.validate
+import com.google.android.material.textfield.TextInputLayout
 import moxy.InjectViewState
-import moxy.MvpPresenter
 import javax.inject.Inject
 
 
@@ -17,4 +18,6 @@ class RegistrationPersonInfoPresenter @Inject constructor(
         firebase.addNewUser(userModel, phone)
         viewState.completeRegistration()
     }
+
+    fun validateText(view: TextInputLayout, text: String) = view.validate(text)
 }

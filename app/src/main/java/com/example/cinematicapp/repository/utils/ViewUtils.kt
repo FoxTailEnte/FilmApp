@@ -6,11 +6,11 @@ object ViewUtils {
 
     fun TextInputLayout.validatePhone(edText: String): Boolean {
         return if (edText.trim().isEmpty()) {
-            this.error = Constants.ERROR_EMPTY_EDIT_TEXT
+            this.error = Constants.Validate.ERROR_EMPTY_EDIT_TEXT
             false
         } else {
-            if (edText.length != 12 || !edText.startsWith(Constants.VALIDATE_NUMBER)) {
-                this.error = Constants.ERROR_VALIDATE_NUMBER_SIZE
+            if (edText.length != 12 || !edText.startsWith(Constants.Validate.VALIDATE_NUMBER)) {
+                this.error = Constants.Validate.ERROR_VALIDATE_NUMBER_SIZE
                 false
             } else {
                 this.isErrorEnabled = false
@@ -21,7 +21,7 @@ object ViewUtils {
 
     fun TextInputLayout.validatePass(edText: String): Boolean {
         return if (edText.trim().isEmpty()) {
-            this.error = Constants.ERROR_EMPTY_EDIT_TEXT
+            this.error = Constants.Validate.ERROR_EMPTY_EDIT_TEXT
             false
         } else {
             this.isErrorEnabled = false
@@ -31,7 +31,7 @@ object ViewUtils {
 
     fun TextInputLayout.validate(edText: String): Boolean {
         return if (edText.trim().isEmpty()) {
-            this.error = Constants.ERROR_EMPTY_EDIT_TEXT
+            this.error = Constants.Validate.ERROR_EMPTY_EDIT_TEXT
             false
         } else {
             this.isErrorEnabled = false

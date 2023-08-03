@@ -1,4 +1,4 @@
-package com.example.cinematicapp.presentation.ui.labrary
+package com.example.cinematicapp.presentation.ui.library
 
 import androidx.paging.PagingData
 import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmInfoResponse

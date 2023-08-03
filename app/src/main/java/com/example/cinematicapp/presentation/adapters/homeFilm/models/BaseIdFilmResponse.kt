@@ -19,8 +19,8 @@ data class BaseIdFilmResponse(
 )
 
 data class BigPoster(
-    val url: String,
-    val previewUrl: String
+    val url: String? = null,
+    val previewUrl: String? = null
 )
 
 data class Budget(

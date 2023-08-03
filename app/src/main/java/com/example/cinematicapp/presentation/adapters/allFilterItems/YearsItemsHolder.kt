@@ -16,7 +16,9 @@ class YearsItemsHolder(
     ) = with(binding) {
         val yearsTitle = root.context.getString(item.item)
         filterTitle.text = yearsTitle
-        val positionState = checkedListItem.find { it.fullFilter == yearsTitle && it.mainFilter == Constants.YEARS_FILTER }
+        val positionState = checkedListItem.find {
+            it.fullFilter == yearsTitle && it.mainFilter == Constants.Request.YEARS_FILTER
+        }
         checkBox.isChecked = positionState != null
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             checkedItem.invoke(

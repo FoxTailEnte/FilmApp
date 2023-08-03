@@ -16,7 +16,9 @@ class CountryItemsHolder(
     ) = with(binding) {
         val countryTitle = root.context.getString(item.item)
         filterTitle.text = countryTitle
-        val positionState = checkedListItem.find { it.fullFilter == countryTitle && it.mainFilter == Constants.COUNTRY_FILTER }
+        val positionState = checkedListItem.find {
+            it.fullFilter == countryTitle && it.mainFilter == Constants.Request.COUNTRY_FILTER
+        }
         checkBox.isChecked = positionState != null
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             checkedItem.invoke(

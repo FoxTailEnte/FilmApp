@@ -11,43 +11,15 @@ import com.example.cinematicapp.databinding.FragmentRegistrationNumberBinding
 import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
-import com.example.cinematicapp.repository.utils.ViewUtils.validatePhone
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
 class RegistrationNumberFragment :BaseFragment<FragmentRegistrationNumberBinding, RegistrationNumberView, RegistrationNumberPresenter>(), RegistrationNumberView {
 
+
     @InjectPresenter
     lateinit var presenter: RegistrationNumberPresenter
-
-    private fun validateNumber() = with(binding) {
-        val status = edPhone.validatePhone(edPhoneText.text.toString())
-        if(status) {
-            setLoadingState(true)
-            hideKeyBoard()
-            presenter.checkUserPhone(edPhoneText.text.toString())
-        }
-    }
-
-    private fun hideKeyBoard() {
-        requireActivity().setKeyboardVisibility(false)
-    }
-
-    override fun setLoadingState(state: Boolean) = with(binding) {
-        if (state) {
-            btSendCode.isEnabled = false
-            tvSendCode.visibility = View.GONE
-            pbSendCode.visibility = View.VISIBLE
-        } else {
-            btSendCode.isEnabled = true
-            tvSendCode.visibility = View.VISIBLE
-            pbSendCode.visibility = View.GONE
-        }
-    }
-
-    @ProvidePresenter
-    fun provideRegistrationNumberPresenter() = appComponent.provideRegistrationNumberPresenter()
 
     override fun initializeBinding() = FragmentRegistrationNumberBinding.inflate(layoutInflater)
 
@@ -65,9 +37,7 @@ class RegistrationNumberFragment :BaseFragment<FragmentRegistrationNumberBinding
 
     override fun checkInputNumber() = with(binding.edPhoneText) {
         addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                Unit
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (text.toString().length == 1 && !text!!.startsWith("+")) {
@@ -78,9 +48,7 @@ class RegistrationNumberFragment :BaseFragment<FragmentRegistrationNumberBinding
                 }
             }
 
-            override fun afterTextChanged(s: Editable?) {
-                Unit
-            }
+            override fun afterTextChanged(s: Editable?) {}
         })
     }
 
@@ -102,5 +70,36 @@ class RegistrationNumberFragment :BaseFragment<FragmentRegistrationNumberBinding
     override fun userBeRegister() {
         Toast.makeText(requireContext(), getString(R.string.error_user_be_register), Toast.LENGTH_SHORT).show()
         setLoadingState(false)
+    }
+
+    override fun setLoadingState(isLoading: Boolean) = with(binding) {
+        if (isLoading) {
+            btSendCode.isEnabled = false
+            tvSendCode.visibility = View.GONE
+            pbSendCode.visibility = View.VISIBLE
+        } else {
+            btSendCode.isEnabled = true
+            tvSendCode.visibility = View.VISIBLE
+            pbSendCode.visibility = View.GONE
+        }
+    }
+
+    @ProvidePresenter
+    fun provideRegistrationNumberPresenter() = appComponent.provideRegistrationNumberPresenter()
+
+    private fun validateNumber() = with(binding) {
+        if(presenter.validateText(edPhone, edPhoneText.text.toString())) {
+            checkUserPhone()
+            hideKeyBoard()
+        }
+    }
+
+    private fun checkUserPhone() {
+        setLoadingState(true)
+        presenter.checkUserPhone(binding.edPhoneText.text.toString())
+    }
+
+    private fun hideKeyBoard() {
+        requireActivity().setKeyboardVisibility(false)
     }
 }

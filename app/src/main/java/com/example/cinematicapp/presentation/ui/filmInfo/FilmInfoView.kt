@@ -10,6 +10,7 @@ import moxy.viewstate.strategy.StateStrategyType
 interface FilmInfoView: BaseView {
 
     fun setFilmInfo(info: BaseIdFilmResponse)
-
     fun submitList(items: List<Persons>)
+    fun addToLibraryError()
+    fun addToWatchLaterError()
 }

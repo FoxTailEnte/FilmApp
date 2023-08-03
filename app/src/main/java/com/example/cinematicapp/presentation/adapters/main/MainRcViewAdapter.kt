@@ -16,8 +16,9 @@ class MainRcViewAdapter(
     private var oldPosition: Int = 0
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MainRcViewHolder(
-        ItemRcViewMainBinding.inflate(LayoutInflater.from(parent.context), parent, false),{
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        MainRcViewHolder(ItemRcViewMainBinding.inflate(LayoutInflater.from(parent.context),
+            parent, false),{
             callBack.invoke(CallBack.ModelCallBack(it))
         }) {
         newPosition = it

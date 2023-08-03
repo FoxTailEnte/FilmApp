@@ -11,19 +11,13 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
-class ProfileFragment: BaseFragment<FragmentProfileBinding, ProfileView, ProfilePresenter>(), ProfileView {
+class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileView,
+        ProfilePresenter>(), ProfileView {
     private lateinit var adapter: ProfileAdapter
+
 
     @InjectPresenter
     lateinit var presenter: ProfilePresenter
-
-    private fun initRc() {
-        adapter = ProfileAdapter { presenter.singOutUser(it) }
-        binding.rcProfile.adapter = adapter
-    }
-
-    @ProvidePresenter
-    fun providePresenter() = appComponent.provideProfilePresenter()
 
     override fun initializeBinding() = FragmentProfileBinding.inflate(layoutInflater)
 
@@ -58,7 +52,13 @@ class ProfileFragment: BaseFragment<FragmentProfileBinding, ProfileView, Profile
         navigateTo(ProfileFragmentDirections.actionProfileFragmentToNotificationsFragment())
     }
 
-    override fun setLoadingState(isLoading: Boolean) {
-        TODO("Not yet implemented")
+    override fun setLoadingState(isLoading: Boolean) {}
+
+    @ProvidePresenter
+    fun providePresenter() = appComponent.provideProfilePresenter()
+
+    private fun initRc() {
+        adapter = ProfileAdapter { presenter.singOutUser(it) }
+        binding.rcProfile.adapter = adapter
     }
 }

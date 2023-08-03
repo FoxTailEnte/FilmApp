@@ -19,17 +19,22 @@ class FireBaseDataUseCaseImpl @Inject constructor(
         firebase.addNewUserName(phone, name, secondName)
     }
 
-    override fun getUserName(phone: String, action: (String?) -> Unit) = firebase.getUserName(phone) {
-        action.invoke(it)
-    }
+    override fun getUserName(phone: String, action: (String?) -> Unit) =
+        firebase.getUserName(phone) {
+            action.invoke(it)
+        }
 
-    override fun checkLibraryItem(phone:String, id: Int, action:(HashMap<String, Int>?) -> Unit) {
+    override fun checkLibraryItem(phone: String, id: Int, action: (HashMap<String, Int>?) -> Unit) {
         firebase.checkLibraryItem(phone, id) {
             action.invoke(it)
         }
     }
 
-    override fun checkWatchLaterItem(phone:String, id: Int, action:(HashMap<String, Int>?) -> Unit) {
+    override fun checkWatchLaterItem(
+        phone: String,
+        id: Int,
+        action: (HashMap<String, Int>?) -> Unit
+    ) {
         firebase.checkWatchLaterItem(phone, id) {
             action.invoke(it)
         }
@@ -45,8 +50,8 @@ class FireBaseDataUseCaseImpl @Inject constructor(
         }
     }
 
-    override fun addToLibrary(phone: String, film: HashMap<String, Int>) {
-        firebase.addToLibrary(phone, film)
+    override fun addToLibrary(phone: String, filmList: HashMap<String, Int>) {
+        firebase.addToLibrary(phone, filmList)
     }
 
     override fun getLibrary(phone: String, action: (HashMap<String, Int>?) -> Unit) {

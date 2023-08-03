@@ -13,28 +13,58 @@ import com.example.cinematicapp.databinding.FragmentRegistrationCodeBinding
 import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.repository.utils.Extensions.getColor
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
-import com.example.cinematicapp.repository.utils.ViewUtils.validate
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
-class RegistrationCodeFragment : BaseFragment<FragmentRegistrationCodeBinding, RegistrationCodeView, RegistrationCodePresenter>(), RegistrationCodeView {
+class RegistrationCodeFragment : BaseFragment<FragmentRegistrationCodeBinding, RegistrationCodeView,
+        RegistrationCodePresenter>(), RegistrationCodeView {
     private val args: RegistrationCodeFragmentArgs by navArgs()
+    private lateinit var timer: CountDownTimer
+
 
     @InjectPresenter
     lateinit var presenter: RegistrationCodePresenter
-    private lateinit var timer: CountDownTimer
 
-    private fun validateCode() = with(binding) {
-       val status = edConfirmCode.validate(edConfirmCodeText.text.toString())
-        if (status) {
-            setLoadingState(true)
-            presenter.enterCode(args.id, edConfirmCodeText.text.toString())
-        }
+    override fun initializeBinding() = FragmentRegistrationCodeBinding.inflate(layoutInflater)
+
+    override fun setupListener() = with(binding) {
+        tvReSentCode.setOnClickListener { presenter.authUser(args.phone, requireActivity()) }
+        btConfirmCode.setOnClickListener { validateCode() }
+        btBackPress.setOnClickListener { navigateTo(R.id.registrationNumberFragment) }
     }
 
-    override fun setLoadingState(loading: Boolean) = with(binding) {
-        if (loading) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        startCountDownTimer()
+    }
+
+    override fun onDetach() {
+        timer.cancel()
+        super.onDetach()
+    }
+
+    override fun confirmCodeSuccess() {
+        navigateTo(RegistrationCodeFragmentDirections
+            .actionRegistrationCodeFragmentToRegistrationPersonInfoFragment(args.phone))
+        setLoadingState(false)
+    }
+
+    override fun confirmCodeFailToast() {
+        Toast.makeText(requireContext(), getString(R.string.error_confirm_code_fail), Toast.LENGTH_SHORT).show()
+        setLoadingState(false)
+    }
+
+    override fun verificationFailed() {
+        Toast.makeText(requireContext(), getString(R.string.error_verify), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun sentCodeSuccess(phone: String, id: String) {
+        Toast.makeText(requireContext(), getString(R.string.registration_send_repeat_code), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun setLoadingState(isLoading: Boolean) = with(binding) {
+        if (isLoading) {
             btConfirmCode.isEnabled = false
             tvConfirmCode.isVisible = false
             pbConfirmCode.isVisible = true
@@ -43,6 +73,20 @@ class RegistrationCodeFragment : BaseFragment<FragmentRegistrationCodeBinding, R
             tvConfirmCode.isVisible = true
             pbConfirmCode.isVisible = false
         }
+    }
+
+    @ProvidePresenter
+    fun provideRegistrationCodePresenter() = appComponent.provideRegistrationCodePresenter()
+
+    private fun validateCode() = with(binding) {
+        if (presenter.validateText(edConfirmCode, edConfirmCodeText.text.toString())) {
+            enterCode()
+        }
+    }
+
+    private fun enterCode() {
+        setLoadingState(true)
+        presenter.enterCode(args.id, binding.edConfirmCodeText.text.toString())
     }
 
     @SuppressLint("SetTextI18n")
@@ -66,46 +110,6 @@ class RegistrationCodeFragment : BaseFragment<FragmentRegistrationCodeBinding, R
             }
 
         }.start()
-    }
-
-    @ProvidePresenter
-    fun provideRegistrationCodePresenter() = appComponent.provideRegistrationCodePresenter()
-
-    override fun initializeBinding() = FragmentRegistrationCodeBinding.inflate(layoutInflater)
-
-    override fun setupListener() = with(binding) {
-        tvReSentCode.setOnClickListener { presenter.authUser(args.phone, requireActivity()) }
-        btConfirmCode.setOnClickListener { validateCode() }
-        btBackPress.setOnClickListener { navigateTo(R.id.registrationNumberFragment) }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        startCountDownTimer()
-    }
-
-    override fun onDetach() {
-        timer.cancel()
-        super.onDetach()
-    }
-
-    override fun confirmCodeSuccess() {
-        navigateTo(RegistrationCodeFragmentDirections
-                .actionRegistrationCodeFragmentToRegistrationPersonInfoFragment(args.phone))
-        setLoadingState(false)
-    }
-
-    override fun confirmCodeFailToast() {
-        Toast.makeText(requireContext(), getString(R.string.error_confirm_code_fail), Toast.LENGTH_SHORT).show()
-        setLoadingState(false)
-    }
-
-    override fun verificationFailed() {
-        Toast.makeText(requireContext(), getString(R.string.error_verify), Toast.LENGTH_SHORT).show()
-    }
-
-    override fun sentCodeSuccess(phone: String, id: String) {
-        Toast.makeText(requireContext(), getString(R.string.registration_send_repeat_code), Toast.LENGTH_SHORT).show()
     }
 
     companion object {

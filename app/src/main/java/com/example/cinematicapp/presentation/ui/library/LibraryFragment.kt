@@ -1,4 +1,4 @@
-package com.example.cinematicapp.presentation.ui.labrary
+package com.example.cinematicapp.presentation.ui.library
 
 import android.graphics.Color
 import android.os.Bundle
@@ -55,6 +55,7 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
             }
         }
     }
+
 
     @InjectPresenter
     lateinit var presenter: LibraryPresenter

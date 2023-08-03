@@ -1,5 +1,6 @@
 package com.example.cinematicapp.presentation.adapters.personFilmInfoAdapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +20,7 @@ class PersonFilmInfoAdapter : RecyclerView.Adapter<PersonFilmInfoHolder>() {
 
     override fun getItemCount() = list.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setСomposedData(newData: List<Persons>) {
         list = newData
         this.notifyDataSetChanged()

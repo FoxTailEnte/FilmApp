@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.ItemErrorBinding
 import com.example.cinematicapp.databinding.ItemProgressBinding
 
-class FilmsLoaderStateAdapter() : LoadStateAdapter<FilmsLoaderStateAdapter.ItemViewHolder>() {
+class FilmsLoaderStateAdapter : LoadStateAdapter<FilmsLoaderStateAdapter.ItemViewHolder>() {
 
     override fun getStateViewType(loadState: LoadState) = when (loadState) {
         is LoadState.NotLoading -> error("Not supported")
@@ -41,12 +42,10 @@ class FilmsLoaderStateAdapter() : LoadStateAdapter<FilmsLoaderStateAdapter.ItemV
     }
 
     class ProgressViewHolder internal constructor(
-        private val binding: ItemProgressBinding
+        binding: ItemProgressBinding
     ) : ItemViewHolder(binding.root) {
 
-        override fun bind(loadState: LoadState) {
-            // Do nothing
-        }
+        override fun bind(loadState: LoadState) {}
 
         companion object {
 
@@ -72,7 +71,8 @@ class FilmsLoaderStateAdapter() : LoadStateAdapter<FilmsLoaderStateAdapter.ItemV
 
         override fun bind(loadState: LoadState) {
             require(loadState is LoadState.Error)
-            binding.errorMessage.text = "Проверьте интернет соединение"
+            binding.errorMessage.text = binding.root.context
+                .resources.getText(R.string.paging_error)
         }
 
         companion object {

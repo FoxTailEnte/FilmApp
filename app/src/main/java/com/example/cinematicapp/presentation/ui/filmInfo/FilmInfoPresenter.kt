@@ -15,9 +15,11 @@ class FilmInfoPresenter @Inject constructor(
 ) : BasePresenter<FilmInfoView>() {
 
     private lateinit var phone: String
-    private var libraryList = hashMapOf<String,Int>()
-    private var watchLaterList = hashMapOf<String,Int>()
+    private var libraryList = hashMapOf<String, Int>()
+    private var watchLaterList = hashMapOf<String, Int>()
     private var title = ""
+
+
     fun getUserPhone(): String {
         phone = pref.getUserPhone()
         return phone
@@ -33,38 +35,82 @@ class FilmInfoPresenter @Inject constructor(
         }
     }
 
-    fun checkLibraryItem(filmId: Int, action: (Boolean) -> Unit) {
+    fun checkLibraryItem(filmId: Int) {
         firebase.checkLibraryItem(phone, filmId) { filmList ->
             if (filmList == null) {
                 libraryList[title] = filmId
-                action.invoke(false)
+                checkFilmState(false, Type.LIBRARY, filmId)
             } else {
                 libraryList = filmList
-                action.invoke(filmList.values.toString().contains(filmId.toString()))
+                checkFilmState(
+                    filmList.values.toString().contains(filmId.toString()), Type.LIBRARY, filmId
+                )
             }
         }
     }
 
-    fun checkWatchLaterItem(filmId: Int, action: (Boolean) -> Unit) {
+    fun checkWatchLaterItem(filmId: Int) {
         firebase.checkWatchLaterItem(phone, filmId) { filmList ->
             if (filmList == null) {
                 watchLaterList[title] = filmId
-                action.invoke(false)
+                checkFilmState(false, Type.WATCH, filmId)
             } else {
                 watchLaterList = filmList
-                action.invoke(filmList.values.toString().contains(filmId.toString()))
+                checkFilmState(
+                    filmList.values.toString().contains(filmId.toString()), Type.WATCH, filmId
+                )
             }
         }
     }
 
-    fun addToLibrary(film: Int) {
+    fun convertTime(time: Int): String {
+        val hours = (time / 60)
+        val minutes = time - hours * 60
+        return when (hours) {
+            0 -> "$hours $HOURS $minutes $MINUTES"
+            1 -> "$hours $HOUR $minutes $MINUTES"
+            2 -> "$hours $OTHER_HOUSE $minutes $MINUTES"
+            3 -> "$hours $OTHER_HOUSE $minutes $MINUTES"
+            4 -> "$hours $OTHER_HOUSE $minutes $MINUTES"
+            5 -> "$hours $HOURS $minutes $MINUTES"
+            else -> "$hours $HOURS $minutes $MINUTES"
+        }
+    }
+
+    private fun checkFilmState(state: Boolean, type: Type, filmId: Int) {
+        when(type) {
+            Type.WATCH -> {
+                if(state) addToWatchLater(filmId)
+                else viewState.addToWatchLaterError()
+            }
+                Type.LIBRARY -> {
+                    if(state) addToLibrary(filmId)
+                    else viewState.addToLibraryError()
+                }
+        }
+
+    }
+
+    private fun addToLibrary(film: Int) {
         libraryList[title] = film
         firebase.addToLibrary(phone, libraryList)
     }
 
-    fun addToWatchLater(film: Int) {
+    private fun addToWatchLater(film: Int) {
         watchLaterList[title] = film
         firebase.addToWatchLater(phone, watchLaterList)
     }
 
+
+    enum class Type {
+        LIBRARY,
+        WATCH
+    }
+
+    companion object {
+        const val HOURS = "Часов"
+        const val HOUR = "Час"
+        const val OTHER_HOUSE = "часа"
+        const val MINUTES = "Минут"
+    }
 }

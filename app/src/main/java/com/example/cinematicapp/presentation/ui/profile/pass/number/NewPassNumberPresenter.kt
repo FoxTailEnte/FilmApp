@@ -26,7 +26,7 @@ class NewPassNumberPresenter @Inject constructor(
     fun sentSms(phone: String, activity: Activity) {
         firebase.sentSms(phone, activity) {
             when (it) {
-                Constants.FAIL -> viewState.verificationFailed()
+                Constants.FireBase.FAIL -> viewState.verificationFailed()
                 else -> viewState.sentCodeSuccess(phone, it)
             }
 

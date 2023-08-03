@@ -57,10 +57,10 @@ class WatchLaterPresenter @Inject constructor(
         val prepareRatingList = mutableListOf<String>()
         filterItems.forEach {
             when (it.mainFilter) {
-                Constants.GENRES_FILTER -> genresList.add(it.fullFilter.lowercase())
-                Constants.YEARS_FILTER -> yearsList.add(it.fullFilter.lowercase())
-                Constants.COUNTRY_FILTER -> countryList.add(it.fullFilter)
-                Constants.RATING_FILTER -> {
+                Constants.Request.GENRES_FILTER -> genresList.add(it.fullFilter.lowercase())
+                Constants.Request.YEARS_FILTER -> yearsList.add(it.fullFilter.lowercase())
+                Constants.Request.COUNTRY_FILTER -> countryList.add(it.fullFilter)
+                Constants.Request.RATING_FILTER -> {
                     when (it.fullFilter) {
                         HomePresenter.FIVE_RATING -> prepareRatingList.add("5.0-9.9")
                         HomePresenter.SIX_RATING -> prepareRatingList.add("6.0-9.9")
@@ -107,12 +107,12 @@ class WatchLaterPresenter @Inject constructor(
 
     private fun setSearchFilterMap(): MutableMap<String, Array<String>> {
         return mutableMapOf(
-            Constants.ID to currentList.toTypedArray(),
-            Constants.SEARCH to searchTextList.toTypedArray(),
-            Constants.GENRES_FILTER to genresList.toTypedArray(),
-            Constants.YEARS_FILTER to yearsList.toTypedArray(),
-            Constants.RATING_FILTER to ratingList.toTypedArray(),
-            Constants.COUNTRY_FILTER to countryList.toTypedArray()
+            Constants.Request.ID to currentList.toTypedArray(),
+            Constants.Request.SEARCH to searchTextList.toTypedArray(),
+            Constants.Request.GENRES_FILTER to genresList.toTypedArray(),
+            Constants.Request.YEARS_FILTER to yearsList.toTypedArray(),
+            Constants.Request.RATING_FILTER to ratingList.toTypedArray(),
+            Constants.Request.COUNTRY_FILTER to countryList.toTypedArray()
         )
     }
 

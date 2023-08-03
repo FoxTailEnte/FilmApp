@@ -8,7 +8,8 @@ import javax.inject.Inject
 class SaveUserAuthStatusImpl @Inject constructor(
     private val context: Context
 ): SaveUserAuthStatus {
-    private var pref: SharedPreferences = context.getSharedPreferences(Constants.SHARED_PREF, Context.MODE_PRIVATE)
+    private var pref: SharedPreferences = context.getSharedPreferences(Constants.Pref.SHARED_PREF,
+        Context.MODE_PRIVATE)
     private lateinit var editor:SharedPreferences.Editor
 
     override fun addSignInUserStatus(signIn: Boolean) {

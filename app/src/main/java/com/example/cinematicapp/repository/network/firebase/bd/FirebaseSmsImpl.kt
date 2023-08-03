@@ -19,9 +19,9 @@ class FirebaseSmsImpl : FireBaseSms {
 
     override fun authUser(phone: String, pass: String, action: (Boolean?) -> Unit) {
         var currentString: Boolean? = null
-        myDataBase.collection(Constants.USERS).document(phone).get().addOnSuccessListener {
+        myDataBase.collection(Constants.FireBase.USERS).document(phone).get().addOnSuccessListener {
             if (it != null) {
-                currentString = it.get(Constants.PASS).toString() == pass
+                currentString = it.get(Constants.FireBase.PASS).toString() == pass
             }
             action.invoke(currentString)
         }
@@ -29,7 +29,7 @@ class FirebaseSmsImpl : FireBaseSms {
 
     override fun authUser(phone: String, action: (Boolean) -> Unit) {
         var currentString = true
-        myDataBase.collection(Constants.USERS).get().addOnSuccessListener { it ->
+        myDataBase.collection(Constants.FireBase.USERS).get().addOnSuccessListener { it ->
             it.documents.forEach {
                 currentString = it.id != phone
             }
@@ -46,7 +46,7 @@ class FirebaseSmsImpl : FireBaseSms {
             }
 
             override fun onVerificationFailed(p0: FirebaseException) {
-                currentString = Constants.FAIL
+                currentString = Constants.FireBase.FAIL
                 action.invoke(currentString)
             }
 
@@ -66,7 +66,7 @@ class FirebaseSmsImpl : FireBaseSms {
         PhoneAuthProvider.verifyPhoneNumber(option)
     }
 
-    override fun enterCode(id: String, code:String, action: (Boolean) -> Unit) {
+    override fun enterCode(id: String, code: String, action: (Boolean) -> Unit) {
         var currentString: Boolean
         mAuth = FirebaseAuth.getInstance()
         val credential = PhoneAuthProvider.getCredential(id, code)

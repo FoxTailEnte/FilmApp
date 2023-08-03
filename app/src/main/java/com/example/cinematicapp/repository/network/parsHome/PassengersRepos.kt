@@ -23,12 +23,12 @@ class PassengersRepos(
 
     fun submitFilmList(film: MutableMap<String, Array<String>>, listSize: Int) {
         size = listSize
-        name = film.get(Constants.SEARCH) ?: arrayOf<String>()
-        genres = film.get(Constants.GENRES_FILTER) ?: arrayOf<String>()
-        years = film.get(Constants.YEARS_FILTER) ?: arrayOf<String>()
-        ratings = film.get(Constants.RATING_FILTER) ?: arrayOf<String>()
-        country = film.get(Constants.COUNTRY_FILTER) ?: arrayOf<String>()
-        id = film.get(Constants.ID) ?: arrayOf<String>()
+        name = film[Constants.Request.SEARCH] ?: arrayOf<String>()
+        genres = film[Constants.Request.GENRES_FILTER] ?: arrayOf<String>()
+        years = film[Constants.Request.YEARS_FILTER] ?: arrayOf<String>()
+        ratings = film[Constants.Request.RATING_FILTER] ?: arrayOf<String>()
+        country = film[Constants.Request.COUNTRY_FILTER] ?: arrayOf<String>()
+        id = film[Constants.Request.ID] ?: arrayOf<String>()
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BaseFilmInfoResponse> {

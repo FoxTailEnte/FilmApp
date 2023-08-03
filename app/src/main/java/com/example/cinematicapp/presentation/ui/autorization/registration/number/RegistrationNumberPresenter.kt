@@ -4,8 +4,9 @@ import android.app.Activity
 import com.example.cinematicapp.domain.firebaseUseCase.FireBaseSmsUseCase
 import com.example.cinematicapp.presentation.base.BasePresenter
 import com.example.cinematicapp.repository.utils.Constants
+import com.example.cinematicapp.repository.utils.ViewUtils.validate
+import com.google.android.material.textfield.TextInputLayout
 import moxy.InjectViewState
-import moxy.MvpPresenter
 import javax.inject.Inject
 
 
@@ -26,10 +27,12 @@ class RegistrationNumberPresenter @Inject constructor(
     fun sendSms(phone: String, activity: Activity) {
         firebase.sentSms(phone, activity) {
             when (it) {
-                Constants.FAIL -> viewState.verificationFailed()
-                else -> viewState.sentCodeSuccess(phone,it)
+                Constants.FireBase.FAIL -> viewState.verificationFailed()
+                else -> viewState.sentCodeSuccess(phone, it)
             }
         }
     }
+
+    fun validateText(view: TextInputLayout, text: String) = view.validate(text)
 }
 

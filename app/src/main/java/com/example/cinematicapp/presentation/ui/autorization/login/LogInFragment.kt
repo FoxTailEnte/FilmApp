@@ -17,51 +17,15 @@ import com.example.cinematicapp.repository.utils.Constants
 import com.example.cinematicapp.repository.utils.Extensions.getMainActivityView
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
-import com.example.cinematicapp.repository.utils.ViewUtils.validatePass
-import com.example.cinematicapp.repository.utils.ViewUtils.validatePhone
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
 class LogInFragment : BaseFragment<FragmentLogInBinding, LogInView, LogInPresenter>(), LogInView {
 
+
     @InjectPresenter
     lateinit var presenter: LogInPresenter
-
-    private fun validateNumber(): Boolean = with(binding) {
-        edNumber.validatePhone(edNumberText.text.toString())
-    }
-
-    private fun validatePass(): Boolean = with(binding) {
-        edPass.validatePass(edPassText.text.toString())
-    }
-
-    private fun finalValidate() = with(binding) {
-        if (validateNumber() && validatePass()) {
-            setLoadingState(true)
-            presenter.authUser(edNumberText.text.toString(), edPassText.text.toString())
-            presenter.savePhone(edNumberText.text.toString())
-        }
-    }
-
-    override fun setLoadingState(loading: Boolean) = with(binding) {
-        if (loading) {
-            btSignIn.isEnabled = false
-            tvSignIn.isVisible = false
-            pbSignIn.isVisible = true
-        } else {
-            btSignIn.isEnabled = true
-            tvSignIn.isVisible = true
-            pbSignIn.isVisible = false
-        }
-    }
-
-    private fun hideKeyBoard() {
-        requireActivity().setKeyboardVisibility(false)
-    }
-
-    @ProvidePresenter
-    fun provideLoginPresenter() = appComponent.provideLoginPresenter()
 
     override fun initializeBinding() = FragmentLogInBinding.inflate(layoutInflater)
 
@@ -70,17 +34,18 @@ class LogInFragment : BaseFragment<FragmentLogInBinding, LogInView, LogInPresent
     }
 
     override fun setupListener() {
-        with (binding) {
-            forgotPassword.setOnClickListener { navigateTo(LogInFragmentDirections.actionLogInFragmentToForgotPasswordFragment()) }
+        with(binding) {
+            forgotPassword.setOnClickListener {
+                navigateTo(LogInFragmentDirections.actionLogInFragmentToForgotPasswordFragment())
+            }
             btSignIn.setOnClickListener {
                 hideKeyBoard()
-                validateNumber()
-                validatePass()
-                finalValidate()
+                validate()
             }
             tvRegistration.setOnClickListener {
                 navigateTo(
-                    LogInFragmentDirections.actionLogInFragmentToRegistrationNumberFragment())
+                    LogInFragmentDirections.actionLogInFragmentToRegistrationNumberFragment()
+                )
             }
         }
     }
@@ -92,12 +57,11 @@ class LogInFragment : BaseFragment<FragmentLogInBinding, LogInView, LogInPresent
 
     override fun checkInputNumber() = with(binding) {
         edNumberText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                Unit
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (edNumberText.text.toString().length == 1 && !edNumberText.text!!.startsWith(Constants.PLUS)) {
+                if (edNumberText.text.toString().length == 1 &&
+                    !edNumberText.text!!.startsWith(Constants.Validate.PLUS)) {
                     edNumberText.removeTextChangedListener(this)
                     edNumberText.setText(getString(R.string.validate_number_start))
                     edNumberText.setSelection(edNumberText.text!!.lastIndex + 1)
@@ -105,9 +69,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding, LogInView, LogInPresent
                 }
             }
 
-            override fun afterTextChanged(s: Editable?) {
-                Unit
-            }
+            override fun afterTextChanged(s: Editable?) {}
         })
     }
 
@@ -118,20 +80,61 @@ class LogInFragment : BaseFragment<FragmentLogInBinding, LogInView, LogInPresent
     }
 
     override fun onBackPress() {
-        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                requireActivity().finish()
-            }
-        })
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requireActivity().finish()
+                }
+            })
     }
 
     override fun userNotFound() {
-        Toast.makeText(requireContext(), getString(R.string.error_unknown_user_data), Toast.LENGTH_LONG).show()
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.error_unknown_user_data),
+            Toast.LENGTH_LONG
+        ).show()
         setLoadingState(false)
     }
 
     override fun userDataError() {
-        Toast.makeText(requireContext(), getString(R.string.error_unknown_user_pass), Toast.LENGTH_LONG).show()
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.error_unknown_user_pass),
+            Toast.LENGTH_LONG
+        ).show()
         setLoadingState(false)
+    }
+
+    override fun setLoadingState(isLoading: Boolean) = with(binding) {
+        if (isLoading) {
+            btSignIn.isEnabled = false
+            tvSignIn.isVisible = false
+            pbSignIn.isVisible = true
+        } else {
+            btSignIn.isEnabled = true
+            tvSignIn.isVisible = true
+            pbSignIn.isVisible = false
+        }
+    }
+
+    @ProvidePresenter
+    fun provideLoginPresenter() = appComponent.provideLoginPresenter()
+
+    private fun validate() = with(binding) {
+        val numberBeValidate = presenter.validateNumber(edNumber, edNumberText.text.toString())
+        val passBeValidate = presenter.validatePass(edPass, edPassText.text.toString())
+        if (numberBeValidate && passBeValidate) authUser()
+    }
+
+    private fun authUser() = with(binding) {
+        setLoadingState(true)
+        presenter.authUser(edNumberText.text.toString(), edPassText.text.toString())
+        presenter.savePhone(edNumberText.text.toString())
+    }
+
+    private fun hideKeyBoard() {
+        requireActivity().setKeyboardVisibility(false)
     }
 }

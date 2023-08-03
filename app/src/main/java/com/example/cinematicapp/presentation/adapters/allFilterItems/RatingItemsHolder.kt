@@ -16,7 +16,9 @@ class RatingItemsHolder(
     ) = with(binding) {
         val ratingTitle = root.context.getString(item.item)
         filterTitle.text = ratingTitle
-        val positionState = checkedListItem.find { it.fullFilter == ratingTitle && it.mainFilter == Constants.RATING_FILTER }
+        val positionState = checkedListItem.find {
+            it.fullFilter == ratingTitle && it.mainFilter == Constants.Request.RATING_FILTER
+        }
         checkBox.isChecked = positionState != null
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             checkedItem.invoke(

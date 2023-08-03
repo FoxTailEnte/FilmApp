@@ -20,7 +20,7 @@ interface ResponseHandler<out T : BaseView> {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 successAction?.invoke(it)
-            }, { exception ->
+            }, {
 
             }).addTo(compositeDisposable)
 
@@ -30,8 +30,7 @@ interface ResponseHandler<out T : BaseView> {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 successAction?.invoke(it)
-            }, { exception ->
-
+            }, {
             }).addTo(compositeDisposable)
 
     fun Single<BaseFilmResponse>.singlerRequest(
@@ -42,6 +41,6 @@ interface ResponseHandler<out T : BaseView> {
             }
             .subscribe({
                 successAction?.invoke(it)
-            }, { exception ->
+            }, {
             }).addTo(compositeDisposable)
 }

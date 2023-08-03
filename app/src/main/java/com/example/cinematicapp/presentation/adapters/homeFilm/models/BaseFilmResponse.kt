@@ -27,5 +27,5 @@ data class UrlPoster(
 
 data class FilmRating(
     @SerializedName("kp")
-    val kp: Float,
+    val kp: Float
 )

@@ -25,7 +25,8 @@ class NewPassNumberFragment : BaseFragment<FragmentNewPassNumberBinding, NewPass
         if (edPhoneText.text.toString().trim().isEmpty()) {
             edPhone.error = getString(R.string.error_validate_number)
         } else {
-            if (edPhoneText.text.toString().length != 12 || !edPhoneText.text!!.startsWith(Constants.VALIDATE_NUMBER)) {
+            if (edPhoneText.text.toString().length != 12 ||
+                !edPhoneText.text!!.startsWith(Constants.Validate.VALIDATE_NUMBER)) {
                 edPhone.error = getString(R.string.error_validate_size_number)
             } else {
                 edPhone.isErrorEnabled = false

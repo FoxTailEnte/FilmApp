@@ -16,7 +16,9 @@ class GenresItemsHolder(
     ) = with(binding) {
         val genreTitle = root.context.getString(item.item)
         filterTitle.text = genreTitle
-        val positionState = checkedListItem.find { it.fullFilter == genreTitle && it.mainFilter == Constants.GENRES_FILTER}
+        val positionState = checkedListItem.find {
+            it.fullFilter == genreTitle && it.mainFilter == Constants.Request.GENRES_FILTER
+        }
         checkBox.isChecked = positionState != null
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             checkedItem.invoke(
