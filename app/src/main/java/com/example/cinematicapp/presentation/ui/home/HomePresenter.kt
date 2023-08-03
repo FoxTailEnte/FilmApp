@@ -2,6 +2,7 @@ package com.example.cinematicapp.presentation.ui.home
 
 import com.example.cinematicapp.domain.sharedPrefUseCase.SharedPrefUseCase
 import com.example.cinematicapp.presentation.adapters.allFilterItems.CheckedItemModel
+import com.example.cinematicapp.presentation.adapters.main.MainRcViewAdapter
 import com.example.cinematicapp.presentation.base.BasePresenter
 import com.example.cinematicapp.repository.network.parsHome.PassengerSource
 import com.example.cinematicapp.repository.utils.Constants
@@ -16,8 +17,10 @@ class HomePresenter @Inject constructor(
 ) : BasePresenter<HomeView>() {
 
     private val mDisposable = CompositeDisposable()
-    private var filterList = listOf<CheckedItemModel>()
+    private var newPosition: Int = 0
+    private var oldPosition: Int = 0
     private var rcColorState: Boolean = true
+    private var filterList = listOf<CheckedItemModel>()
     private val searchTextList = mutableListOf<String>()
     private val genresList = mutableListOf<String>()
     private val yearsList = mutableListOf<String>()
@@ -29,8 +32,9 @@ class HomePresenter @Inject constructor(
     fun getFilmWithFilters() {
         mDisposable.add(dataSource.getRandomFilm(getFiltersForRequest())
             .subscribe {
-            viewState.submitList(it)
-        })
+                viewState.submitList(it)
+                viewState.setPlaceHolder()
+            })
     }
 
     private fun getFiltersForRequest(): MutableMap<String, Array<String>> {
@@ -44,8 +48,6 @@ class HomePresenter @Inject constructor(
     }
 
     fun saveFullFilters(filterItems: List<CheckedItemModel>) {
-        clearFilterForResponse()
-        clearAllFiltersForDialogFragment()
         filterList = filterItems
         val prepareRatingList = mutableListOf<String>()
         filterItems.forEach {
@@ -62,18 +64,26 @@ class HomePresenter @Inject constructor(
                         NINE_RATING -> prepareRatingList.add("9.0-9.9")
                         else -> Unit
                     }
-                    ratingList.clear()
                     ratingList.add(prepareRatingList.minOrNull().toString())
                 }
             }
         }
-        rcColorState = filterItems.isEmpty()
-        initAdapters()
+    }
+
+    fun saveMainRcState(state: Boolean) {
+        rcColorState = state
+        newPosition = 0
+        oldPosition = 0
+    }
+
+    fun clearOldFilters() {
+        genresList.clear()
+        yearsList.clear()
+        ratingList.clear()
+        countryList.clear()
     }
 
     fun getFilmsWithGenres(genres: List<String> = listOf()) {
-        clearAllFiltersForDialogFragment()
-        clearFilterForResponse()
         genresList.addAll(genres)
         rcColorState = true
         setFullFilterState()
@@ -86,23 +96,24 @@ class HomePresenter @Inject constructor(
         getFilmWithFilters()
     }
 
+    fun saveMainPosition(position: MainRcViewAdapter.CallBack) {
+        when(position) {
+            is MainRcViewAdapter.CallBack.NewPosition -> {
+                newPosition = position.position
+            }
+            is MainRcViewAdapter.CallBack.OldPosition -> {
+                oldPosition = position.position
+            }
+            else -> Unit
+        }
+    }
+
     fun getFilterItemsForDialogFragment(): List<CheckedItemModel> {
         return filterList
     }
 
-    private fun clearFilterForResponse() {
-        genresList.clear()
-        yearsList.clear()
-        ratingList.clear()
-        countryList.clear()
-    }
-
-    private fun clearAllFiltersForDialogFragment() {
-        filterList = listOf()
-    }
-
     fun initAdapters() {
-        viewState.initRcMain(rcColorState)
+        viewState.initRcMain(rcColorState, newPosition, oldPosition)
         viewState.initRc()
         setFullFilterState()
     }

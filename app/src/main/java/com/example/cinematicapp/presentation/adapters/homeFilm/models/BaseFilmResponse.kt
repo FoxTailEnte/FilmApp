@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class BaseFilmResponse(
     @SerializedName("docs")
-    val docs: List<BaseFilmInfoResponse>? = null
+    val docs: List<BaseFilmInfoResponse>
 )
 
 data class BaseFilmInfoResponse(

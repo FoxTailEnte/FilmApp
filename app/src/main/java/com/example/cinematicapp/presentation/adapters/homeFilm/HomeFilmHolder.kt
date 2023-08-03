@@ -7,6 +7,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.ItemHomeFilmBinding
 import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmInfoResponse
 
@@ -19,6 +20,8 @@ class HomeFilmHolder(
         if(item.poster != null) {
             Glide.with(binding.root)
                 .load(item.poster.previewUrl)
+                .error(R.drawable.no_poster)
+                .timeout(20000)
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
                         e: GlideException?,
@@ -40,7 +43,7 @@ class HomeFilmHolder(
                     }
 
                 })
-                .into(imageView3)
+                .into(ivPoster)
         }
         tvTitle.text = item.name
         itemView.setOnClickListener {

@@ -14,7 +14,7 @@ interface Api {
     @Headers("X-API-KEY: ZZ81QVH-9604YYP-Q462SHP-Y74PR68")
     //@Headers("X-API-KEY: YE3YWPE-9K7M3VQ-HT5TP07-SKBYY2X")
     //@Headers("X-API-KEY: 0NFEGQ1-NBX4WWZ-NMZMKBY-6TDXH6Q")
-    fun getFilms(
+    suspend fun getFilms(
         @Query("page") page: Int,
         @Query("limit") size: Int = 10,
         @Query("name") name: Array<String>,
@@ -23,7 +23,7 @@ interface Api {
         @Query("rating.kp") rating: Array<String>,
         @Query("countries.name") country: Array<String>,
         @Query("id") id: Array<String>,
-    ): Single<Response<BaseFilmResponse>>
+    ): Response<BaseFilmResponse>
 
     @GET("movie")
     //@Headers("X-API-KEY: ZZ81QVH-9604YYP-Q462SHP-Y74PR68")

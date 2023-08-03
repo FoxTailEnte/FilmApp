@@ -1,24 +1,21 @@
 package com.example.cinematicapp.repository.network.parsHome
 
-import android.util.Log
+import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import androidx.paging.rxjava2.RxPagingSource
 import com.example.cinematicapp.domain.apiUseCase.GetHomeFilmsUseCase
 import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmInfoResponse
-import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmResponse
 import com.example.cinematicapp.repository.utils.Constants
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 
 class PassengersRepos(
     private val getHomeFilmsUseCase: GetHomeFilmsUseCase
-) : RxPagingSource<Int, BaseFilmInfoResponse>() {
+) : PagingSource<Int, BaseFilmInfoResponse>() {
     private var size = 0
     private var name = arrayOf<String>()
     private var genres = arrayOf<String>()
     private var years = arrayOf<String>()
     private var ratings = arrayOf<String>()
     private var country = arrayOf<String>()
+    private var id = arrayOf<String>()
 
     override fun getRefreshKey(state: PagingState<Int, BaseFilmInfoResponse>): Int? {
         return null
@@ -31,30 +28,24 @@ class PassengersRepos(
         years = film.get(Constants.YEARS_FILTER) ?: arrayOf<String>()
         ratings = film.get(Constants.RATING_FILTER) ?: arrayOf<String>()
         country = film.get(Constants.COUNTRY_FILTER) ?: arrayOf<String>()
+        id = film.get(Constants.ID) ?: arrayOf<String>()
     }
 
-    override fun loadSingle(params: LoadParams<Int>): Single<LoadResult<Int, BaseFilmInfoResponse>> {
-        val nextPageNumber = params.key ?: 1
-        return getHomeFilmsUseCase.getFilms(nextPageNumber, 12, name, genres, years, ratings, country)
-            .subscribeOn(Schedulers.io())
-            .map {
-                if (it.code() != 200) {
-                    Log.d("MyLog", "Error number is - " + it.code().toString())
-                }
-                toResponseResult(nextPageNumber, it.body(), it.body()?.docs?.size != 0)
-            }
-            .onErrorReturn {
-                LoadResult.Error(it)
-            }
-    }
-
-    private fun toResponseResult(position: Int, response: BaseFilmResponse?, isSuccessful: Boolean): LoadResult<Int, BaseFilmInfoResponse> {
-        val data = response?.docs
-        val nextPageKey = if (isSuccessful && position < size) position + 1 else null
-        return LoadResult.Page(
-            data = data ?: emptyList() ,
-            prevKey = if (position == 1) null else position - 1,
-            nextKey = nextPageKey
-        )
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BaseFilmInfoResponse> {
+        val page = params.key ?: 1
+        val pageSize = params.loadSize
+        val response = getHomeFilmsUseCase.getFilms(page, pageSize, name, genres, years, ratings, country, id)
+        return if(response.isSuccessful) {
+            val filmList = checkNotNull(response.body()).docs
+            val prevKey = if (page == 1) null else page - 1
+            val nextKey = if(response.body()?.docs!!.size < params.loadSize) null else page + 1
+            LoadResult.Page(
+                filmList,
+                prevKey,
+                nextKey
+            )
+        } else {
+            LoadResult.Error(Exception())
+        }
     }
 }

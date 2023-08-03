@@ -11,7 +11,7 @@ class GetHomeFilmsImpl @Inject constructor(
 ) : GetHomeFilms {
 
 
-    override fun getFilms(
+    override suspend fun getFilms(
         page: Int,
         size: Int,
         name: Array<String>,
@@ -20,7 +20,7 @@ class GetHomeFilmsImpl @Inject constructor(
         rating: Array<String>,
         country: Array<String>,
         id: Array<String>
-    ): Single<Response<BaseFilmResponse>> = api.getFilms(page, size, name, genre, years, rating, country, id)
+    ): Response<BaseFilmResponse> = api.getFilms(page, size, name, genre, years, rating, country, id)
 
     override fun getFilmsByIds(page: Int, size: Int,film: Array<String>): Single<BaseFilmResponse> = api.getFilmsByIds(page, size,film)
 

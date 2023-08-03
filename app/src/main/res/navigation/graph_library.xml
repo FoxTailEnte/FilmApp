@@ -9,5 +9,18 @@
         android:id="@+id/libraryFragment"
         android:name="com.example.cinematicapp.presentation.ui.labrary.LibraryFragment"
         android:label="LibraryFragment"
-        tools:layout="@layout/fragment_library"/>
+        tools:layout="@layout/fragment_library">
+        <action
+            android:id="@+id/action_libraryFragment_to_filmInfoFragment"
+            app:destination="@id/filmInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/filmInfoFragment"
+        android:name="com.example.cinematicapp.presentation.ui.filmInfo.FilmInfoFragment"
+        android:label="FilmInfoFragment"
+        tools:layout="@layout/fragment_film_info">
+        <argument
+            android:name="id"
+            app:argType="integer" />
+    </fragment>
 </navigation>

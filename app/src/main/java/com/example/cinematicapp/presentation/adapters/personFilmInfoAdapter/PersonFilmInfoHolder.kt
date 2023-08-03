@@ -1,5 +1,6 @@
 package com.example.cinematicapp.presentation.adapters.personFilmInfoAdapter
 
+import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cinematicapp.databinding.ItemActorFilmInfoBinding
@@ -14,5 +15,6 @@ class PersonFilmInfoHolder(
         if (item.photo != null) Glide.with(binding.root)
             .load(item.photo)
             .into(ivPhoto)
+        Log.d("MyLog", item.photo.toString())
     }
 }

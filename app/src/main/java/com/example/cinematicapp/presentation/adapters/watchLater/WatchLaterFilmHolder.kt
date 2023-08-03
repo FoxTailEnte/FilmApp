@@ -1,11 +1,11 @@
-package com.example.cinematicapp.presentation.adapters.libraryFilm
+package com.example.cinematicapp.presentation.adapters.watchLater
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cinematicapp.databinding.ItemHomeFilmBinding
 import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmInfoResponse
 
-class LibraryFilmHolder(
+class WatchLaterFilmHolder(
     private val binding: ItemHomeFilmBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
 

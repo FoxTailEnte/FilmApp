@@ -1,4 +1,4 @@
-package com.example.cinematicapp.presentation.adapters.mainRcView
+package com.example.cinematicapp.presentation.adapters.main
 
 import androidx.annotation.StringRes
 

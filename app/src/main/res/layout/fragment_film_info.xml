@@ -28,6 +28,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/backpress"
             tools:ignore="ContentDescription,KeyboardInaccessibleWidget" />
+
         <LinearLayout
             android:id="@+id/lPBar"
             android:layout_width="0dp"
@@ -77,6 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:gravity="center"
             android:text="США, Австралия, фантастика, боевик"
             android:textColor="@color/main_text"
             android:textSize="18sp"
@@ -112,6 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:gravity="center"
             android:text="Матрица: Воскрешение (2021)"
             android:textColor="@color/main_text"
             android:textSize="20sp"

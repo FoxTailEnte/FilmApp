@@ -9,8 +9,9 @@ import moxy.viewstate.strategy.StateStrategyType
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface LibraryView : BaseView {
     fun submitList(items: PagingData<BaseFilmInfoResponse>)
-
-    fun getSearchText()
-
-    fun scrollRcMain(position: Int)
+    fun setPlaceHolder()
+    fun initRcMain(state: Boolean, newPosition: Int, oldPosition: Int)
+    fun scrollToPosition()
+    fun initRc()
+    fun setFullFilterColor(state:Boolean)
 }

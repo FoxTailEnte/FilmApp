@@ -3,7 +3,7 @@ package com.example.cinematicapp.repository.data
 import com.example.cinematicapp.R
 import com.example.cinematicapp.presentation.adapters.allFilterItems.AllFilterItemsViewModel
 import com.example.cinematicapp.presentation.adapters.filterRc.FilterRvViewModel
-import com.example.cinematicapp.presentation.adapters.mainRcView.MainRcViewModel
+import com.example.cinematicapp.presentation.adapters.main.MainRcViewModel
 import com.example.cinematicapp.presentation.adapters.profile.ProfileModel
 
 fun profileListSubmit() = listOf(
@@ -57,6 +57,7 @@ fun mainRcViewListSubmit() = listOf(
         R.string.fantastic
     )
 )
+
 fun filterRcViewListSubmit() = listOf(
     FilterRvViewModel(
         R.string.filter_genres

@@ -9,5 +9,18 @@
         android:id="@+id/watchLaterFragment"
         android:name="com.example.cinematicapp.presentation.ui.later.WatchLaterFragment"
         android:label="WatchLaterFragment"
-        tools:layout="@layout/fragment_watch_later"/>
+        tools:layout="@layout/fragment_watch_later">
+        <action
+            android:id="@+id/action_watchLaterFragment_to_filmInfoFragment"
+            app:destination="@id/filmInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/filmInfoFragment"
+        android:name="com.example.cinematicapp.presentation.ui.filmInfo.FilmInfoFragment"
+        android:label="FilmInfoFragment"
+        tools:layout="@layout/fragment_film_info">
+        <argument
+            android:name="id"
+            app:argType="integer" />
+    </fragment>
 </navigation>

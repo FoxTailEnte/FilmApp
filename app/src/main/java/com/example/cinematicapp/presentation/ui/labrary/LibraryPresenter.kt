@@ -1,8 +1,12 @@
 package com.example.cinematicapp.presentation.ui.labrary
 
+import android.util.Log
 import com.example.cinematicapp.domain.firebaseUseCase.FireBaseDataUseCase
 import com.example.cinematicapp.domain.sharedPrefUseCase.SharedPrefUseCase
+import com.example.cinematicapp.presentation.adapters.allFilterItems.CheckedItemModel
+import com.example.cinematicapp.presentation.adapters.main.MainRcViewAdapter
 import com.example.cinematicapp.presentation.base.BasePresenter
+import com.example.cinematicapp.presentation.ui.home.HomePresenter
 import com.example.cinematicapp.repository.network.parsHome.PassengerSource
 import com.example.cinematicapp.repository.utils.Constants
 import io.reactivex.disposables.CompositeDisposable
@@ -17,85 +21,147 @@ class LibraryPresenter @Inject constructor(
 ) : BasePresenter<LibraryView>() {
 
     private val mDisposable = CompositeDisposable()
-    private var currentCall = Constants.ID
-    private var currentFilmArray = arrayOf<String>()
-    private lateinit var genresList: Array<String>
-    private var libraryList: HashMap<String, Int>? = null
+    private val currentList = mutableListOf<String>()
+    private var newPosition: Int = 0
+    private var oldPosition: Int = 0
+    private var rcColorState: Boolean = true
+    private var filterList = listOf<CheckedItemModel>()
+    private val searchTextList = mutableListOf<String>()
+    private val genresList = mutableListOf<String>()
+    private val yearsList = mutableListOf<String>()
+    private val ratingList = mutableListOf<String>()
+    private val countryList = mutableListOf<String>()
     private lateinit var phone: String
-    private var rcPosition = 0
 
     private fun getUserPhone(): String {
         phone = pref.getUserPhone()
         return phone
     }
 
-    fun getAllLibraryList() {
-        fireStore.getLibrary(getUserPhone()) { filmList ->
-            currentCall = ID
-            libraryList = filmList
-            getRandomLibraryFilms(getArrayList(filmList), currentCall)
+    fun getLibraryList() {
+        if(currentList.isEmpty()){
+            fireStore.getLibrary(getUserPhone()) { filmList ->
+                parseLibraryListToResponse(filmList)
+                getLibraryFilms()
+            }
         }
     }
 
-    fun getSearchList(name: String) {
-        currentCall = SEARCH
-        if(libraryList != null) {
-            val searchList = libraryList!!.filter { it.key.lowercase().startsWith(name.lowercase()) }
-            getRandomLibraryFilms(getGenresArray(searchList), currentCall)
+    fun saveFullFilters(filterItems: List<CheckedItemModel>) {
+        filterList = filterItems
+        val prepareRatingList = mutableListOf<String>()
+        filterItems.forEach {
+            when (it.mainFilter) {
+                Constants.GENRES_FILTER -> genresList.add(it.fullFilter.lowercase())
+                Constants.YEARS_FILTER -> yearsList.add(it.fullFilter.lowercase())
+                Constants.COUNTRY_FILTER -> countryList.add(it.fullFilter)
+                Constants.RATING_FILTER -> {
+                    when (it.fullFilter) {
+                        HomePresenter.FIVE_RATING -> prepareRatingList.add("5.0-9.9")
+                        HomePresenter.SIX_RATING -> prepareRatingList.add("6.0-9.9")
+                        HomePresenter.SEVEN_RATING -> prepareRatingList.add("7.0-9.9")
+                        HomePresenter.EIGHT_RATING -> prepareRatingList.add("8.0-9.9")
+                        HomePresenter.NINE_RATING -> prepareRatingList.add("9.0-9.9")
+                        else -> Unit
+                    }
+                    ratingList.add(prepareRatingList.minOrNull().toString())
+                }
+            }
+        }
+        viewState.scrollToPosition()
+    }
+
+    fun getFilterItemsForDialogFragment(): List<CheckedItemModel> {
+        return filterList
+    }
+
+    fun getFilmsWithText(text: List<String> = listOf()) {
+        searchTextList.clear()
+        searchTextList.addAll(text)
+        getLibraryFilms()
+        viewState.scrollToPosition()
+    }
+
+    private fun parseLibraryListToResponse(list: HashMap<String, Int>?) {
+        list?.forEach {
+            currentList.add(it.value.toString())
         }
     }
 
-    fun getGenresLibraryFilms(genres: Array<String>) {
-        /*currentCall = GENRES_LIBRARY
-        genresList = genres
-        mDisposable.add(dataSource.getGenresLibraryFilms(currentFilmArray, genresList, currentCall, currentFilmArray.size).subscribe {
+    private fun setSearchFilterMap(): MutableMap<String, Array<String>> {
+        return mutableMapOf(
+            Constants.ID to currentList.toTypedArray(),
+            Constants.SEARCH to searchTextList.toTypedArray(),
+            Constants.GENRES_FILTER to genresList.toTypedArray(),
+            Constants.YEARS_FILTER to yearsList.toTypedArray(),
+            Constants.RATING_FILTER to ratingList.toTypedArray(),
+            Constants.COUNTRY_FILTER to countryList.toTypedArray()
+        )
+    }
+
+    fun getLibraryFilms() {
+        mDisposable.add(dataSource.getRandomFilm(setSearchFilterMap()).subscribe({
             viewState.submitList(it)
-        })*/
+            viewState.setPlaceHolder()
+        }) {
+            Log.d("MyLog", "errrrrrrrrrr")
+
+        })
     }
 
-    fun setRcMainPosition(position: Int) {
-        rcPosition = position
+    fun getFilmsWithGenres(genres: List<String> = listOf()) {
+        clearAllFiltersForDialogFragment()
+        clearFilterForResponse()
+        genresList.addAll(genres)
+        rcColorState = true
+        setFullFilterState()
+        getLibraryFilms()
+        viewState.scrollToPosition()
     }
 
-    fun getRcMainPosition() {
-        viewState.scrollRcMain(rcPosition)
+    fun clearOldFilters() {
+        genresList.clear()
+        yearsList.clear()
+        ratingList.clear()
+        countryList.clear()
     }
 
-    private fun getRandomLibraryFilms(film: Array<String>, call: String) {
-       /* currentFilmArray = film
-        currentCall = call
-        mDisposable.add(dataSource.getFilmsById(film, currentCall, film.size).subscribe {
-            viewState.submitList(it)
-        })*/
-    }
-
-    private fun getArrayList(map: HashMap<String, Int>?): Array<String> {
-        var array: Array<String>? = null
-        val currentList: List<Int>? = map?.values?.toList()?.let { ArrayList(it) }
-        if (currentList != null) {
-            val list = currentList.map { it.toString() }
-            array = list.toTypedArray()
-        }
-        return array ?: arrayOf("")
-    }
-
-    private fun getGenresArray(map: Map<String, Int>): Array<String> {
-        val idSearch: List<Int> = map.values.toList().let { ArrayList(it) }
-        val array = idSearch.map { it.toString() }
-        return array.toTypedArray()
-    }
-
-    fun getCurrentFilmList() {
-        when(currentCall) {
-            ID -> getAllLibraryList()
-            SEARCH -> viewState.getSearchText()
-            GENRES_LIBRARY -> getGenresLibraryFilms(genresList)
+    fun saveMainPosition(position: MainRcViewAdapter.CallBack) {
+        when(position) {
+            is MainRcViewAdapter.CallBack.NewPosition -> {
+                newPosition = position.position
+            }
+            is MainRcViewAdapter.CallBack.OldPosition -> {
+                oldPosition = position.position
+            }
+            else -> Unit
         }
     }
 
-    companion object {
-        const val ID = "Id"
-        const val SEARCH = "Search"
-        const val GENRES_LIBRARY = "GenresLibrary"
+    fun saveMainRcState(state: Boolean) {
+        rcColorState = state
+        newPosition = 0
+        oldPosition = 0
+    }
+
+    private fun clearFilterForResponse() {
+        genresList.clear()
+        yearsList.clear()
+        ratingList.clear()
+        countryList.clear()
+    }
+
+    private fun clearAllFiltersForDialogFragment() {
+        filterList = listOf()
+    }
+
+    fun initAdapters() {
+        viewState.initRcMain(rcColorState, newPosition, oldPosition)
+        viewState.initRc()
+        setFullFilterState()
+    }
+
+    private fun setFullFilterState() {
+        viewState.setFullFilterColor(rcColorState)
     }
 }

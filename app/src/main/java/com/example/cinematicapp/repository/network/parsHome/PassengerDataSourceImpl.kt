@@ -18,8 +18,7 @@ class PassengerDataSourceImpl(
             Pager(
                 config = PagingConfig(12),
                 pagingSourceFactory = { dataSource.apply { submitFilmList(film, 100) } }
-            ).observable
-                .cachedIn(CoroutineScope(Dispatchers.Main))
+            ).observable.cachedIn(CoroutineScope(Dispatchers.Main))
         } catch (e: Exception) {
             Observable.error(e)
         }

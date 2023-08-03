@@ -8,6 +8,7 @@ import android.os.Looper
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
@@ -17,12 +18,14 @@ import com.example.cinematicapp.databinding.FragmentHomeBinding
 import com.example.cinematicapp.presentation.adapters.FilmsLoaderStateAdapter
 import com.example.cinematicapp.presentation.adapters.homeFilm.HomeFilmAdapter
 import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmInfoResponse
-import com.example.cinematicapp.presentation.adapters.mainRcView.MainRcViewAdapter
+import com.example.cinematicapp.presentation.adapters.main.MainRcViewAdapter
 import com.example.cinematicapp.presentation.base.BaseFragment
 import com.example.cinematicapp.presentation.ui.bottomDialog.BottomFragment
 import com.example.cinematicapp.repository.utils.Extensions.getMainActivityView
 import com.example.cinematicapp.repository.utils.Extensions.navigateTo
 import com.example.cinematicapp.repository.utils.Extensions.setKeyboardVisibility
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
@@ -37,19 +40,25 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
     }
     private val adapterMain by lazy {
         MainRcViewAdapter {
-            if (getString(it.name) != getString(R.string.all)) {
-                presenter.getFilmsWithGenres(genres = listOf(getString(it.name).lowercase()))
-            } else {
-                presenter.getFilmsWithGenres()
+            when (it) {
+                is MainRcViewAdapter.CallBack.ModelCallBack -> {
+                    if (getString(it.item.name) != getString(R.string.all)) {
+                        presenter.clearOldFilters()
+                        presenter.getFilmsWithGenres(genres = listOf(getString(it.item.name).lowercase()))
+                    } else {
+                        presenter.clearOldFilters()
+                        presenter.getFilmsWithGenres()
+                    }
+                } else -> {
+                    presenter.saveMainPosition(it)
+                }
             }
         }
     }
 
+
     @InjectPresenter
     lateinit var presenter: HomePresenter
-
-    @ProvidePresenter
-    fun provideHomePresenter() = CinematicApplication.appComponent.provideHomePresenter()
 
     override fun initializeBinding() = FragmentHomeBinding.inflate(layoutInflater)
 
@@ -88,12 +97,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
         getMainActivityView()?.hideBottomMenu(true)
     }
 
-    override fun initRcMain(state: Boolean) {
+    override fun initRcMain(state: Boolean, newPosition: Int, oldPosition: Int) {
         binding.recyclerViewMain.adapter = adapterMain
-        adapterMain.submitList(state)
+        adapterMain.setState(state, newPosition, oldPosition)
     }
 
     override fun initRc() = with(binding) {
+        adapter.addLoadStateListener { loadState ->
+            if (loadState.refresh is LoadState.Loading) setLoadingState(true) else {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    setLoadingState(false)
+                }, 200)
+            }
+        }
         val filmLayoutManager =  GridLayoutManager(requireContext(), 3)
         rcHome.layoutManager = filmLayoutManager
         rcHome.adapter = adapter.withLoadStateHeaderAndFooter(
@@ -111,9 +127,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
                 else 1
             }
         }
-        adapter.addLoadStateListener { loadState ->
-            if (loadState.refresh is LoadState.Loading) setLoadingState(true) else setLoadingState(false)
-        }
     }
 
     override fun submitList(items: PagingData<BaseFilmInfoResponse>) {
@@ -123,11 +136,24 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
         }, 500)
     }
 
-    private fun showSearchFilterDialog() {
-        BottomFragment(presenter.getFilterItemsForDialogFragment()) {
-            presenter.saveFullFilters(it)
-            presenter.getFilmWithFilters()
-        }.show(childFragmentManager, "tag")
+    override fun setPlaceHolder() {
+        lifecycleScope.launch {
+            adapter.loadStateFlow.collectLatest { state ->
+                when(state.refresh) {
+                    is LoadState.NotLoading -> {
+                        if(adapter.itemCount == 0) {
+                            binding.rcHome.isVisible = false
+                            binding.tvEmpty.isVisible = true
+                        }
+                    }
+                    is LoadState.Loading -> {
+                        binding.rcHome.isVisible = true
+                        binding.tvEmpty.isVisible = false
+                    }
+                    else -> Unit
+                }
+            }
+        }
     }
 
     override fun setFullFilterColor(state: Boolean) {
@@ -137,6 +163,23 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
 
     override fun setLoadingState(isLoading: Boolean) = with(binding) {
         rcHome.isVisible = !isLoading
-        pBar.isVisible = isLoading
+        lPBar.isVisible = isLoading
+    }
+
+    @ProvidePresenter
+    fun provideHomePresenter() = CinematicApplication.appComponent.provideHomePresenter()
+
+    private fun showSearchFilterDialog() {
+        BottomFragment(presenter.getFilterItemsForDialogFragment()) {
+            presenter.clearOldFilters()
+            presenter.saveFullFilters(it)
+            presenter.getFilmWithFilters()
+            presenter.saveMainRcState(it.isEmpty())
+            updateMainAdapter()
+        }.show(childFragmentManager, "tag")
+    }
+
+    private fun updateMainAdapter() {
+        presenter.initAdapters()
     }
 }

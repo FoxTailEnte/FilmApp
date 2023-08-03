@@ -90,6 +90,7 @@
         android:id="@+id/swipeLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -99,21 +100,22 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcHome"
             android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="3"
-            tools:listitem="@layout/item_home_film"
-            android:layout_height="0dp" />
+            tools:listitem="@layout/item_home_film" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/lPBar"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:background="@color/main_background"
         android:elevation="2dp"
-        android:gravity="bottom"
+        android:gravity="center"
         android:orientation="vertical"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/swipeLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -123,7 +125,24 @@
             android:id="@+id/pBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/ProgressBarStyle" />
+            android:theme="@style/ProgressBarStyle"
+            android:visibility="visible" />
     </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvEmpty"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center_horizontal"
+        android:text="@string/emptyList"
+        android:textColor="?colorError"
+        android:textSize="15sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/swipeLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

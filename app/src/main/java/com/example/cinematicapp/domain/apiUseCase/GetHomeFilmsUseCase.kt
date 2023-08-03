@@ -7,7 +7,7 @@ import retrofit2.Response
 
 interface GetHomeFilmsUseCase {
 
-    fun getFilms(page: Int,
+    suspend fun getFilms(page: Int,
                  size: Int,
                  name: Array<String> = arrayOf<String>(),
                  genre: Array<String> = arrayOf<String>(),
@@ -15,7 +15,7 @@ interface GetHomeFilmsUseCase {
                  rating: Array<String> = arrayOf<String>(),
                  country: Array<String> = arrayOf<String>(),
                  id: Array<String> = arrayOf<String>()
-    ): Single<Response<BaseFilmResponse>>
+    ): Response<BaseFilmResponse>
 
     fun getFilmsByIds(page: Int, size: Int, film: Array<String>): Single<BaseFilmResponse>
 

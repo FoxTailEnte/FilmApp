@@ -10,6 +10,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.cinematicapp.CinematicApplication
+import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentFilmInfoBinding
 import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseIdFilmResponse
 import com.example.cinematicapp.presentation.adapters.homeFilm.models.Persons
@@ -38,7 +39,7 @@ class FilmInfoFragment : BaseFragment<FragmentFilmInfoBinding, FilmInfoView, Fil
         btLibrary.setOnClickListener {
             presenter.checkLibraryItem(args.id) { result ->
                 if(result){
-                    Toast.makeText(this@FilmInfoFragment.context, "Давно лошком был?", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@FilmInfoFragment.context, requireActivity().getString(R.string.cant_add_to_lib), Toast.LENGTH_LONG).show()
                 } else {
                     presenter.addToLibrary(args.id)
                 }
@@ -47,7 +48,7 @@ class FilmInfoFragment : BaseFragment<FragmentFilmInfoBinding, FilmInfoView, Fil
         btWatchLater.setOnClickListener {
             presenter.checkWatchLaterItem(args.id) { result ->
                 if(result){
-                    Toast.makeText(this@FilmInfoFragment.context, "Давно лошком был?", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@FilmInfoFragment.context, requireActivity().getString(R.string.cant_add_to_later), Toast.LENGTH_LONG).show()
                 } else {
                     presenter.addToWatchLater(args.id)
                 }
@@ -112,11 +113,15 @@ class FilmInfoFragment : BaseFragment<FragmentFilmInfoBinding, FilmInfoView, Fil
                 })
                 .into(ivPoster)
         }
+        var currentGenresText = ""
+        info.genres.forEach {
+            currentGenresText = currentGenresText + it.name + ", "
+        }
         tvTitle.text = info.name
         tvDate.text = info.year.toString()
         tvTime.text = convertTime(info.movieLength.toInt())
         tvAgeRating.text = info.ageRating.toString() + "+"
-        tvGenre.text = info.countries.get(0).name + ", " + info.genres.get(0).name
+        tvGenre.text = info.countries.get(0).name + ", " + currentGenresText
         tvDesc.text = info.description
         info.persons.forEach {
             if (it.profession == "режиссеры") {
