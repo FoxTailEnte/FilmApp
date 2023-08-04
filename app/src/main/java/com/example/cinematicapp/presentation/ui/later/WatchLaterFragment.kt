@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -39,6 +40,7 @@ class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding, WatchLaterVie
     }
     private val adapterMain by lazy {
         MainRcViewAdapter {
+            setLoadingState(true)
             when (it) {
                 is MainRcViewAdapter.CallBack.ModelCallBack -> {
                     if (getString(it.item.name) != getString(R.string.all)) {
@@ -61,11 +63,11 @@ class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding, WatchLaterVie
 
     override fun initializeBinding() = FragmentWatchLaterBinding.inflate(layoutInflater)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initializeBinding()
-        presenter.initAdapters()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         presenter.getLibraryList()
+        presenter.initAdapters()
+        setLoadingState(true)
     }
 
     override fun setupListener() = with(binding) {
@@ -90,6 +92,13 @@ class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding, WatchLaterVie
     }
 
     override fun initRc() = with(binding) {
+        adapter.addLoadStateListener { loadState ->
+            if (loadState.append is LoadState.Loading) setLoadingState(true) else {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    setLoadingState(false)
+                }, 200)
+            }
+        }
         val filmLayoutManager = GridLayoutManager(requireContext(), 3)
         rcWatchLater.layoutManager = filmLayoutManager
         rcWatchLater.adapter = adapter.withLoadStateHeaderAndFooter(
@@ -107,13 +116,6 @@ class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding, WatchLaterVie
                 else 1
             }
         }
-        adapter.addLoadStateListener { loadState ->
-            if (loadState.refresh is LoadState.Loading) setLoadingState(true) else {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    setLoadingState(false)
-                }, 200)
-            }
-        }
     }
 
     override fun initRcMain(state: Boolean, newPosition: Int, oldPosition: Int) {
@@ -128,21 +130,31 @@ class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding, WatchLaterVie
     override fun setPlaceHolder() {
         lifecycleScope.launch {
             adapter.loadStateFlow.collectLatest { state ->
-                when(state.refresh) {
+                when(state.append) {
                     is LoadState.NotLoading -> {
                         if(adapter.itemCount == 0) {
-                            binding.rcWatchLater.isVisible = false
-                            binding.tvEmpty.isVisible = true
+                            binding.tvEmpty.text =
+                                this@WatchLaterFragment.getText(R.string.emptyList)
+                            binding.tvEmpty.visibility = View.VISIBLE
+                        } else {
+                            binding.tvEmpty.visibility = View.GONE
+                            setLoadingState(false)
                         }
                     }
                     is LoadState.Loading -> {
-                        binding.rcWatchLater.isVisible = true
-                        binding.tvEmpty.isVisible = false
+                        binding.tvEmpty.visibility = View.GONE
                     }
                     else -> Unit
                 }
             }
         }
+    }
+
+    override fun setPlaceHolderEmptyList() = with(binding) {
+        lPBar.isVisible = false
+        rcWatchLater.isVisible = false
+        tvEmpty.text = this@WatchLaterFragment.getText(R.string.emptyListWatch)
+        tvEmpty.isVisible = true
     }
 
     override fun scrollToPosition() {
@@ -156,9 +168,15 @@ class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding, WatchLaterVie
         else binding.ivFilters.setColorFilter(Color.argb(255, 107, 102, 102))
     }
 
-    override fun setLoadingState(isLoading: Boolean) = with(binding) {
-        rcWatchLater.isVisible = !isLoading
-        lPBar.isVisible = isLoading
+    override fun setLoadingState(isLoading: Boolean) {
+        binding.rcWatchLater.isVisible = !isLoading
+        if(!isLoading) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                binding.lPBar.isVisible = isLoading
+            }, 500)
+        } else {
+            binding.lPBar.isVisible = isLoading
+        }
     }
 
     @ProvidePresenter

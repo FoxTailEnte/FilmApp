@@ -102,6 +102,6 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
     /*Chucker*/
-    debugImplementation "com.github.chuckerteam.chucker:library:3.5.2"
-    releaseImplementation "com.github.chuckerteam.chucker:library-no-op:3.5.2"
+    /*debugImplementation "com.github.chuckerteam.chucker:library:3.5.2"
+    releaseImplementation "com.github.chuckerteam.chucker:library-no-op:3.5.2"*/
 }

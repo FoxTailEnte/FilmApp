@@ -38,5 +38,6 @@ object Constants {
         const val YEARS_FILTER = "Год"
         const val RATING_FILTER = "Рейтинг"
         const val COUNTRY_FILTER = "Страна"
+        const val SPACE_TEXT = " "
     }
 }

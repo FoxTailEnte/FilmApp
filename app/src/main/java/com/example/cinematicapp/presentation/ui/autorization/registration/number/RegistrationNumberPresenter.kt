@@ -4,7 +4,7 @@ import android.app.Activity
 import com.example.cinematicapp.domain.firebaseUseCase.FireBaseSmsUseCase
 import com.example.cinematicapp.presentation.base.BasePresenter
 import com.example.cinematicapp.repository.utils.Constants
-import com.example.cinematicapp.repository.utils.ViewUtils.validate
+import com.example.cinematicapp.repository.utils.ViewUtils.validatePhone
 import com.google.android.material.textfield.TextInputLayout
 import moxy.InjectViewState
 import javax.inject.Inject
@@ -18,7 +18,7 @@ class RegistrationNumberPresenter @Inject constructor(
     fun checkUserPhone(phone: String) {
         firebase.authUser(phone) {
             when (it) {
-                true -> viewState.sentSms(phone)
+                false -> viewState.sentSms(phone)
                 else -> viewState.userBeRegister()
             }
         }
@@ -33,6 +33,6 @@ class RegistrationNumberPresenter @Inject constructor(
         }
     }
 
-    fun validateText(view: TextInputLayout, text: String) = view.validate(text)
+    fun validatePhone(view: TextInputLayout, text: String) = view.validatePhone(text)
 }
 

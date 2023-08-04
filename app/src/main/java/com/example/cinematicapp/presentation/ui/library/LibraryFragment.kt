@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -39,6 +40,7 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
         }
     }
     private val adapterMain by lazy {
+        setLoadingState(true)
         MainRcViewAdapter {
             when (it) {
                 is MainRcViewAdapter.CallBack.ModelCallBack -> {
@@ -49,9 +51,11 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
                         presenter.clearOldFilters()
                         presenter.getFilmsWithGenres()
                     }
-                } else -> {
-                presenter.saveMainPosition(it)
-            }
+                }
+
+                else -> {
+                    presenter.saveMainPosition(it)
+                }
             }
         }
     }
@@ -62,11 +66,11 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
 
     override fun initializeBinding() = FragmentLibraryBinding.inflate(layoutInflater)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initializeBinding()
-        presenter.initAdapters()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         presenter.getLibraryList()
+        presenter.initAdapters()
+        setLoadingState(true)
     }
 
     override fun setupListener() = with(binding) {
@@ -91,6 +95,13 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
     }
 
     override fun initRc() = with(binding) {
+        adapter.addLoadStateListener { loadState ->
+            if (loadState.append is LoadState.Loading) setLoadingState(true) else {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    setLoadingState(false)
+                }, 200)
+            }
+        }
         val filmLayoutManager = GridLayoutManager(requireContext(), 3)
         rcLib.layoutManager = filmLayoutManager
         rcLib.adapter = adapter.withLoadStateHeaderAndFooter(
@@ -132,13 +143,16 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
                 when(state.refresh) {
                     is LoadState.NotLoading -> {
                         if(adapter.itemCount == 0) {
-                            binding.rcLib.isVisible = false
-                            binding.tvEmpty.isVisible = true
+                            binding.tvEmpty.text =
+                                this@LibraryFragment.getText(R.string.emptyList)
+                            binding.tvEmpty.visibility = View.VISIBLE
+                        } else {
+                            binding.tvEmpty.visibility = View.GONE
+                            setLoadingState(false)
                         }
                     }
                     is LoadState.Loading -> {
-                        binding.rcLib.isVisible = true
-                        binding.tvEmpty.isVisible = false
+                        binding.tvEmpty.visibility = View.GONE
                     }
                     else -> Unit
                 }
@@ -157,9 +171,22 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
         else binding.ivFilters.setColorFilter(Color.argb(255, 107, 102, 102))
     }
 
-    override fun setLoadingState(isLoading: Boolean) = with(binding) {
-        rcLib.isVisible = !isLoading
-        lPBar.isVisible = isLoading
+    override fun setPlaceHolderEmptyList() = with(binding) {
+        lPBar.isVisible = false
+        rcLib.isVisible = false
+        tvEmpty.text = this@LibraryFragment.getText(R.string.emptyListWatch)
+        tvEmpty.isVisible = true
+    }
+
+    override fun setLoadingState(isLoading: Boolean) {
+        binding.rcLib.isVisible = !isLoading
+        if(!isLoading) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                binding.lPBar.isVisible = isLoading
+            }, 500)
+        } else {
+            binding.lPBar.isVisible = isLoading
+        }
     }
 
     @ProvidePresenter

@@ -20,8 +20,6 @@ class HomeFilmHolder(
         if(item.poster != null) {
             Glide.with(binding.root)
                 .load(item.poster.previewUrl)
-                .error(R.drawable.no_poster)
-                .timeout(20000)
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
                         e: GlideException?,
@@ -43,6 +41,10 @@ class HomeFilmHolder(
                     }
 
                 })
+                .into(ivPoster)
+        } else {
+            Glide.with(binding.root)
+                .load(R.drawable.emty_photo_for_rc)
                 .into(ivPoster)
         }
         tvTitle.text = item.name

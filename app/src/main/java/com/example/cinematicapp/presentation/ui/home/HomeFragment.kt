@@ -49,7 +49,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
                         presenter.clearOldFilters()
                         presenter.getFilmsWithGenres()
                     }
-                } else -> {
+                }
+
+                else -> {
                     presenter.saveMainPosition(it)
                 }
             }

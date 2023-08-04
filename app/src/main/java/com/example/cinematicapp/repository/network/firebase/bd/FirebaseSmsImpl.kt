@@ -28,12 +28,15 @@ class FirebaseSmsImpl : FireBaseSms {
     }
 
     override fun authUser(phone: String, action: (Boolean) -> Unit) {
-        var currentString = true
+        var contains = false
         myDataBase.collection(Constants.FireBase.USERS).get().addOnSuccessListener { it ->
             it.documents.forEach {
-                currentString = it.id != phone
+                if(it.id == phone) {
+                    contains = true
+                }
             }
-            action.invoke(currentString)
+        }.addOnCompleteListener {
+            action.invoke(contains)
         }
     }
 
@@ -41,8 +44,7 @@ class FirebaseSmsImpl : FireBaseSms {
         var currentString: String
         mCallBack = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(p0: PhoneAuthCredential) {
-                mAuth.signInWithCredential(p0).addOnCompleteListener {
-                }
+
             }
 
             override fun onVerificationFailed(p0: FirebaseException) {

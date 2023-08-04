@@ -1,8 +1,6 @@
 package com.example.cinematicapp.repository.di.modules
 
-import android.app.Application
 import android.content.Context
-import com.chuckerteam.chucker.api.ChuckerInterceptor
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -16,7 +14,7 @@ class RetrofitModule {
     @Provides
     fun provideOkHttpClient(context: Context): OkHttpClient = OkHttpClient
         .Builder()
-        .addInterceptor(ChuckerInterceptor.Builder(context).build())
+       // .addInterceptor(ChuckerInterceptor.Builder(context).build())
         .build()
 
     @Provides

@@ -3,7 +3,7 @@ package com.example.cinematicapp.presentation.adapters.homeFilm.models
 data class BaseIdFilmResponse(
     val backdrop: BigPoster,
     val rating: Rating,
-    val movieLength: String,
+    val movieLength: String? = null,
     val spokenLanguages: List<Language>,
     val name: String,
     val slogan: String? = null,
@@ -11,7 +11,7 @@ data class BaseIdFilmResponse(
     val description: String,
     val year: Int,
     val poster: Poster,
-    val videos: YouTube,
+    val videos: YouTube? = null,
     val genres: List<Genres>,
     val persons: List<Persons>,
     val countries: List<Countries>,
@@ -42,11 +42,13 @@ data class Language(
 )
 
 data class YouTube(
-    val trailers: List<Trailer>
+    val trailers: List<Trailer>? = null
 )
 
 data class Trailer(
-    val url: String
+    val url: String,
+    val name: String,
+    val site: String,
 )
 
 data class Genres(
@@ -55,7 +57,7 @@ data class Genres(
 
 data class Persons(
     val photo: String? = null,
-    val name: String,
+    val name: String? = null,
     val profession: String
 )
 

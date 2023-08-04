@@ -171,6 +171,7 @@
     <string name="cant_add_to_lib">Фильм уже добавлен в избранное</string>
     <string name="cant_add_to_later">Фильм уже добавлен в Желаемое</string>
     <string name="emptyList">По выбранным фильтрам результатов не найдено</string>
+    <string name="emptyListWatch">В этом разделе ещё нет фильмов</string>
     <string name="paging_error">"Проверьте интернет соединение"</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>

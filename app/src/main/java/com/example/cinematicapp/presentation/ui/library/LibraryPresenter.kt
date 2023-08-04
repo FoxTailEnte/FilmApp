@@ -8,6 +8,7 @@ import com.example.cinematicapp.presentation.base.BasePresenter
 import com.example.cinematicapp.presentation.ui.home.HomePresenter
 import com.example.cinematicapp.repository.network.parsHome.PassengerSource
 import com.example.cinematicapp.repository.utils.Constants
+import com.example.cinematicapp.repository.utils.SearchUtils
 import io.reactivex.disposables.CompositeDisposable
 import moxy.InjectViewState
 import javax.inject.Inject
@@ -20,7 +21,7 @@ class LibraryPresenter @Inject constructor(
 ) : BasePresenter<LibraryView>() {
 
     private val mDisposable = CompositeDisposable()
-    private val currentList = mutableListOf<String>()
+    private val currentList = mutableSetOf<String>()
     private var newPosition: Int = 0
     private var oldPosition: Int = 0
     private var rcColorState: Boolean = true
@@ -38,8 +39,12 @@ class LibraryPresenter @Inject constructor(
     }
 
     fun getLibraryList() {
-        if(currentList.isEmpty()){
-            fireStore.getLibrary(getUserPhone()) { filmList ->
+        fireStore.getWatchLater(getUserPhone()) { filmList ->
+            if (filmList?.keys.isNullOrEmpty()) {
+                parseLibraryListToResponse(filmList)
+                viewState.setPlaceHolderEmptyList()
+            }
+            if (filmList?.size != currentList.size && !filmList?.keys.isNullOrEmpty()) {
                 parseLibraryListToResponse(filmList)
                 getLibraryFilms()
             }
@@ -52,8 +57,11 @@ class LibraryPresenter @Inject constructor(
         filterItems.forEach {
             when (it.mainFilter) {
                 Constants.Request.GENRES_FILTER -> genresList.add(it.fullFilter.lowercase())
-                Constants.Request.YEARS_FILTER -> yearsList.add(it.fullFilter.lowercase())
                 Constants.Request.COUNTRY_FILTER -> countryList.add(it.fullFilter)
+                Constants.Request.YEARS_FILTER -> {
+                    val years = SearchUtils.setYears(it.fullFilter)
+                    yearsList.addAll(years)
+                }
                 Constants.Request.RATING_FILTER -> {
                     when (it.fullFilter) {
                         HomePresenter.FIVE_RATING -> prepareRatingList.add("5.0-9.9")
@@ -63,10 +71,11 @@ class LibraryPresenter @Inject constructor(
                         HomePresenter.NINE_RATING -> prepareRatingList.add("9.0-9.9")
                         else -> Unit
                     }
-                    ratingList.add(prepareRatingList.minOrNull().toString())
                 }
             }
         }
+        val currentRating = SearchUtils.setRating(prepareRatingList)
+        ratingList.add(currentRating)
         viewState.scrollToPosition()
     }
 
@@ -82,6 +91,7 @@ class LibraryPresenter @Inject constructor(
     }
 
     private fun parseLibraryListToResponse(list: HashMap<String, Int>?) {
+        currentList.clear()
         list?.forEach {
             currentList.add(it.value.toString())
         }
@@ -123,13 +133,15 @@ class LibraryPresenter @Inject constructor(
     }
 
     fun saveMainPosition(position: MainRcViewAdapter.CallBack) {
-        when(position) {
+        when (position) {
             is MainRcViewAdapter.CallBack.NewPosition -> {
                 newPosition = position.position
             }
+
             is MainRcViewAdapter.CallBack.OldPosition -> {
                 oldPosition = position.position
             }
+
             else -> Unit
         }
     }

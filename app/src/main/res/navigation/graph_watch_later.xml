@@ -12,7 +12,8 @@
         tools:layout="@layout/fragment_watch_later">
         <action
             android:id="@+id/action_watchLaterFragment_to_filmInfoFragment"
-            app:destination="@id/filmInfoFragment" />
+            app:destination="@id/filmInfoFragment"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/filmInfoFragment"

@@ -88,7 +88,7 @@ class RegistrationNumberFragment :BaseFragment<FragmentRegistrationNumberBinding
     fun provideRegistrationNumberPresenter() = appComponent.provideRegistrationNumberPresenter()
 
     private fun validateNumber() = with(binding) {
-        if(presenter.validateText(edPhone, edPhoneText.text.toString())) {
+        if(presenter.validatePhone(edPhone, edPhoneText.text.toString())) {
             checkUserPhone()
             hideKeyBoard()
         }

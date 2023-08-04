@@ -12,5 +12,7 @@ interface FilmInfoView: BaseView {
     fun setFilmInfo(info: BaseIdFilmResponse)
     fun submitList(items: List<Persons>)
     fun addToLibraryError()
+    fun setFilmLibState(state: Boolean)
+    fun setFilmWatchState(state: Boolean)
     fun addToWatchLaterError()
 }

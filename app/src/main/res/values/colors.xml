@@ -2,7 +2,10 @@
 <resources>
     <color name="main_background">#040A1B</color>
     <color name="main_editText">#DE373131</color>
-    <color name="cart_person">#75292A2C</color>
+    <color name="backPress">#DE2E2929</color>
+    <color name="cart_person">#00FFFFFF</color>
+    <color name="top_bar">#75202022</color>
+    <color name="transparent">#00FFFFFF</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
@@ -12,6 +15,10 @@
     <color name="bottom_text">#7D838E</color>
     <color name="base_text">#B4B4B4</color>
     <color name="profile_background">#373131</color>
+    <color name="add_to_lib">#242020</color>
+    <color name="add_to_lib_dark">#1B1717</color>
+    <color name="rating">#299C00</color>
+    <color name="rating_corner">#FFFF</color>
     <color name="error_edText">#980000</color>
     <color name="main_text">#807E7E</color>
     <color name="main_bt">#694D4949</color>

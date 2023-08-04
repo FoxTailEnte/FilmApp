@@ -8,6 +8,7 @@ import com.example.cinematicapp.presentation.base.BasePresenter
 import com.example.cinematicapp.presentation.ui.home.HomePresenter
 import com.example.cinematicapp.repository.network.parsHome.PassengerSource
 import com.example.cinematicapp.repository.utils.Constants
+import com.example.cinematicapp.repository.utils.SearchUtils
 import io.reactivex.disposables.CompositeDisposable
 import moxy.InjectViewState
 import javax.inject.Inject
@@ -38,8 +39,12 @@ class WatchLaterPresenter @Inject constructor(
     }
 
     fun getLibraryList() {
-        if(currentList.isEmpty()) {
-            fireStore.getWatchLater(getUserPhone()) { filmList ->
+        fireStore.getWatchLater(getUserPhone()) { filmList ->
+            if(filmList?.keys.isNullOrEmpty()) {
+                parseLibraryListToResponse(filmList)
+                viewState.setPlaceHolderEmptyList()
+            }
+            if (filmList?.size != currentList.size && !filmList?.keys.isNullOrEmpty()) {
                 parseLibraryListToResponse(filmList)
                 getWatchLaterFilms()
             }
@@ -58,8 +63,11 @@ class WatchLaterPresenter @Inject constructor(
         filterItems.forEach {
             when (it.mainFilter) {
                 Constants.Request.GENRES_FILTER -> genresList.add(it.fullFilter.lowercase())
-                Constants.Request.YEARS_FILTER -> yearsList.add(it.fullFilter.lowercase())
                 Constants.Request.COUNTRY_FILTER -> countryList.add(it.fullFilter)
+                Constants.Request.YEARS_FILTER -> {
+                    val years = SearchUtils.setYears(it.fullFilter)
+                    yearsList.addAll(years)
+                }
                 Constants.Request.RATING_FILTER -> {
                     when (it.fullFilter) {
                         HomePresenter.FIVE_RATING -> prepareRatingList.add("5.0-9.9")
@@ -69,10 +77,11 @@ class WatchLaterPresenter @Inject constructor(
                         HomePresenter.NINE_RATING -> prepareRatingList.add("9.0-9.9")
                         else -> Unit
                     }
-                    ratingList.add(prepareRatingList.minOrNull().toString())
                 }
             }
         }
+        val currentRating = SearchUtils.setRating(prepareRatingList)
+        ratingList.add(currentRating)
         viewState.scrollToPosition()
     }
 
@@ -100,6 +109,7 @@ class WatchLaterPresenter @Inject constructor(
     }
 
     private fun parseLibraryListToResponse(list: HashMap<String, Int>?) {
+        currentList.clear()
         list?.forEach {
             currentList.add(it.value.toString())
         }
@@ -117,10 +127,12 @@ class WatchLaterPresenter @Inject constructor(
     }
 
     fun getWatchLaterFilms() {
-        mDisposable.add(dataSource.getRandomFilm(setSearchFilterMap()).subscribe {
-            viewState.submitList(it)
-            viewState.setPlaceHolder()
-        })
+        if(currentList.isNotEmpty()) {
+            mDisposable.add(dataSource.getRandomFilm(setSearchFilterMap()).subscribe {
+                viewState.submitList(it)
+                viewState.setPlaceHolder()
+            })
+        }
     }
 
     fun getFilmsWithGenres(genres: List<String> = listOf()) {

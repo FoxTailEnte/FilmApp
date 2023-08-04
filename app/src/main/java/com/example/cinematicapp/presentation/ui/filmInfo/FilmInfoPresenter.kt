@@ -3,7 +3,9 @@ package com.example.cinematicapp.presentation.ui.filmInfo
 import com.example.cinematicapp.domain.apiUseCase.GetHomeFilmsUseCase
 import com.example.cinematicapp.domain.firebaseUseCase.FireBaseDataUseCase
 import com.example.cinematicapp.domain.sharedPrefUseCase.SharedPrefUseCase
+import com.example.cinematicapp.presentation.adapters.homeFilm.models.Trailer
 import com.example.cinematicapp.presentation.base.BasePresenter
+import com.example.cinematicapp.repository.utils.Constants
 import moxy.InjectViewState
 import javax.inject.Inject
 
@@ -15,9 +17,13 @@ class FilmInfoPresenter @Inject constructor(
 ) : BasePresenter<FilmInfoView>() {
 
     private lateinit var phone: String
+    private var libState: Boolean = false
+    private var watchState: Boolean = false
     private var libraryList = hashMapOf<String, Int>()
     private var watchLaterList = hashMapOf<String, Int>()
-    private var title = ""
+    var trailer: List<Trailer> = listOf()
+    private var film: Int = 0
+    private var title = Constants.FilmInfo.EMPTY_TEXT
 
 
     fun getUserPhone(): String {
@@ -28,6 +34,7 @@ class FilmInfoPresenter @Inject constructor(
     fun getIdFilms(film: String?) {
         if (film != null) {
             getHomeFilmsUseCase.getIdFilms(film).singleRequest { response ->
+                trailer = response.videos?.trailers ?: emptyList()
                 title = response.name
                 viewState.setFilmInfo(response)
                 viewState.submitList(response.persons)
@@ -35,76 +42,121 @@ class FilmInfoPresenter @Inject constructor(
         }
     }
 
-    fun checkLibraryItem(filmId: Int) {
+    fun getLibraryItem(filmId: Int) {
+        film = filmId
         firebase.checkLibraryItem(phone, filmId) { filmList ->
             if (filmList == null) {
+                addLibrary()
                 libraryList[title] = filmId
-                checkFilmState(false, Type.LIBRARY, filmId)
+                viewState.setFilmLibState(false)
             } else {
                 libraryList = filmList
-                checkFilmState(
-                    filmList.values.toString().contains(filmId.toString()), Type.LIBRARY, filmId
+                checkFilmLibState(
+                    filmList.values.toString()
+                        .contains(film.toString())
                 )
             }
         }
     }
 
-    fun checkWatchLaterItem(filmId: Int) {
+    fun getWatchLaterItem(filmId: Int) {
+        film = filmId
         firebase.checkWatchLaterItem(phone, filmId) { filmList ->
             if (filmList == null) {
+                addWatchLater()
                 watchLaterList[title] = filmId
-                checkFilmState(false, Type.WATCH, filmId)
+                viewState.setFilmWatchState(false)
             } else {
                 watchLaterList = filmList
-                checkFilmState(
-                    filmList.values.toString().contains(filmId.toString()), Type.WATCH, filmId
+                checkFilmWatchState(
+                    filmList.values.toString()
+                        .contains(film.toString())
                 )
             }
         }
     }
 
-    fun convertTime(time: Int): String {
-        val hours = (time / 60)
-        val minutes = time - hours * 60
-        return when (hours) {
-            0 -> "$hours $HOURS $minutes $MINUTES"
-            1 -> "$hours $HOUR $minutes $MINUTES"
-            2 -> "$hours $OTHER_HOUSE $minutes $MINUTES"
-            3 -> "$hours $OTHER_HOUSE $minutes $MINUTES"
-            4 -> "$hours $OTHER_HOUSE $minutes $MINUTES"
-            5 -> "$hours $HOURS $minutes $MINUTES"
-            else -> "$hours $HOURS $minutes $MINUTES"
-        }
+    private fun checkFilmLibState(state: Boolean) {
+        libState = state
+        if (state) viewState.setFilmLibState(true)
+        else viewState.setFilmLibState(false)
     }
 
-    private fun checkFilmState(state: Boolean, type: Type, filmId: Int) {
-        when(type) {
-            Type.WATCH -> {
-                if(state) addToWatchLater(filmId)
-                else viewState.addToWatchLaterError()
+    private fun checkFilmWatchState(state: Boolean) {
+        watchState = state
+        if (state) viewState.setFilmWatchState(true)
+        else viewState.setFilmWatchState(false)
+    }
+
+    fun convertTime(time: Int?): String {
+        return if (time == null) {
+            "_ Часов _ Минут"
+        } else {
+            val hours = (time / 60).toInt()
+            val minutes = time - hours * 60
+            when (hours) {
+                0 -> "$hours $HOURS $minutes $MINUTES"
+                1 -> "$hours $HOUR $minutes $MINUTES"
+                2 -> "$hours $OTHER_HOUSE $minutes $MINUTES"
+                3 -> "$hours $OTHER_HOUSE $minutes $MINUTES"
+                4 -> "$hours $OTHER_HOUSE $minutes $MINUTES"
+                5 -> "$hours $HOURS $minutes $MINUTES"
+                else -> "$hours $HOURS $minutes $MINUTES"
             }
-                Type.LIBRARY -> {
-                    if(state) addToLibrary(filmId)
-                    else viewState.addToLibraryError()
-                }
+        }
+    }
+
+    fun addFilmToLib(title: String) {
+        if (libState) {
+            deleteLibItem()
+        } else {
+            updateLibrary(film, title)
         }
 
     }
 
-    private fun addToLibrary(film: Int) {
-        libraryList[title] = film
-        firebase.addToLibrary(phone, libraryList)
+    fun addFilmToWatch(title: String) {
+        if (watchState) {
+            deleteWatchItem()
+        } else {
+            updateWatchLater(film, title)
+        }
     }
 
-    private fun addToWatchLater(film: Int) {
-        watchLaterList[title] = film
-        firebase.addToWatchLater(phone, watchLaterList)
+    private fun addLibrary() {
+        firebase.addLibrary(phone,libraryList)
     }
 
+    private fun addWatchLater() {
+        firebase.addWatchLater(phone,watchLaterList)
+    }
 
-    enum class Type {
-        LIBRARY,
-        WATCH
+    private fun updateLibrary(film: Int, titleFilm: String) {
+        libraryList[titleFilm] = film
+        firebase.updateLibrary(phone, libraryList)
+        libState = true
+        viewState.setFilmLibState(true)
+    }
+
+    private fun updateWatchLater(film: Int, titleFilm: String) {
+        watchLaterList[titleFilm] = film
+        watchState = true
+        firebase.updateWatchLater(phone, watchLaterList)
+        viewState.setFilmWatchState(true)
+    }
+
+    private fun deleteLibItem() {
+        libraryList.remove(title)
+        firebase.deleteLibItem(phone, libraryList)
+        libState = false
+        viewState.setFilmLibState(false)
+    }
+
+    private fun deleteWatchItem() {
+        watchLaterList.remove(title)
+        firebase.deleteWatchItem(phone, watchLaterList)
+        watchState = false
+        viewState.setFilmWatchState(false)
     }
 
     companion object {

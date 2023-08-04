@@ -14,7 +14,9 @@
             app:destination="@id/graph_authorization" />
         <action
             android:id="@+id/action_homeFragment_to_filmInfoFragment"
-            app:destination="@id/filmInfoFragment" />
+            app:destination="@id/filmInfoFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <include app:graph="@navigation/graph_authorization" />
     <fragment

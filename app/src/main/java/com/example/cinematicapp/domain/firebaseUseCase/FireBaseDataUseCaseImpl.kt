@@ -40,8 +40,8 @@ class FireBaseDataUseCaseImpl @Inject constructor(
         }
     }
 
-    override fun addToWatchLater(phone: String, film: HashMap<String, Int>) {
-        firebase.addToWatchLater(phone, film)
+    override fun updateWatchLater(phone: String, film: HashMap<String, Int>) {
+        firebase.updateWatchLater(phone, film)
     }
 
     override fun getWatchLater(phone: String, action: (HashMap<String, Int>?) -> Unit) {
@@ -50,8 +50,24 @@ class FireBaseDataUseCaseImpl @Inject constructor(
         }
     }
 
-    override fun addToLibrary(phone: String, filmList: HashMap<String, Int>) {
-        firebase.addToLibrary(phone, filmList)
+    override fun addLibrary(phone: String, film: HashMap<String, Int>) {
+        firebase.addLibrary(phone, film)
+    }
+
+    override fun addWatchLater(phone: String, film: HashMap<String, Int>) {
+        firebase.addWatchLater(phone, film)
+    }
+
+    override fun updateLibrary(phone: String, filmList: HashMap<String, Int>) {
+        firebase.updateLibrary(phone, filmList)
+    }
+
+    override fun deleteLibItem(phone: String, filmList: HashMap<String, Int>) {
+        firebase.deleteLibItem(phone, filmList)
+    }
+
+    override fun deleteWatchItem(phone: String, filmList: HashMap<String, Int>) {
+        firebase.deleteWatchItem(phone, filmList)
     }
 
     override fun getLibrary(phone: String, action: (HashMap<String, Int>?) -> Unit) {

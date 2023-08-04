@@ -1,6 +1,8 @@
 package com.example.cinematicapp.presentation.ui.filmInfo
 
+import android.content.Intent
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -38,17 +40,26 @@ class FilmInfoFragment : BaseFragment<FragmentFilmInfoBinding, FilmInfoView, Fil
         super.onViewCreated(view, savedInstanceState)
         initRc()
         setLoadingState(true)
+        presenter.getLibraryItem(args.id)
+        presenter.getWatchLaterItem(args.id)
     }
 
     override fun setupListener() = with(binding) {
-        btBackPress.setOnClickListener {
+        ivLater.setOnClickListener {
+            presenter.addFilmToWatch(binding.tvTitle.text.toString())
+        }
+        ivFavorite.setOnClickListener {
+            presenter.addFilmToLib(binding.tvTitle.text.toString())
+        }
+        ivBack.setOnClickListener {
             navigateBack()
         }
-        btLibrary.setOnClickListener {
-            addFilm(args.id, Type.LIBRARY)
-        }
-        btWatchLater.setOnClickListener {
-            addFilm(args.id, Type.WATCH)
+        ivYouTube.setOnClickListener {
+            if (presenter.trailer.isNotEmpty()) {
+                val uri = Uri.parse(presenter.trailer[0].url)
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                startActivity(intent)
+            }
         }
     }
 
@@ -59,7 +70,7 @@ class FilmInfoFragment : BaseFragment<FragmentFilmInfoBinding, FilmInfoView, Fil
 
     override fun setFilmInfo(info: BaseIdFilmResponse) = with(binding) {
         if (info.backdrop.url != null) {
-            Glide.with(this@FilmInfoFragment)
+            Glide.with(requireContext())
                 .load(info.backdrop.url)
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
@@ -84,6 +95,11 @@ class FilmInfoFragment : BaseFragment<FragmentFilmInfoBinding, FilmInfoView, Fil
                     }
 
                 }).into(ivPoster)
+        } else {
+            Glide.with(requireContext())
+                .load(R.drawable.empty_photo)
+                .into(ivPoster)
+            setLoadingState(false)
         }
         var currentGenresText = Constants.FilmInfo.EMPTY_TEXT
         info.genres.forEach {
@@ -92,14 +108,18 @@ class FilmInfoFragment : BaseFragment<FragmentFilmInfoBinding, FilmInfoView, Fil
         val ageText = info.ageRating.toString() + Constants.FilmInfo.PLUS
         val genresText = info.countries[0].name + Constants.FilmInfo.COMMA + currentGenresText
         val budgetText = info.budget.value + Constants.FilmInfo.SPACE_TEXT + info.budget.currency
+        val timeText = presenter.convertTime(info.movieLength?.toInt())
         tvTitle.text = info.name
         tvDate.text = info.year.toString()
-        tvTime.text = presenter.convertTime(info.movieLength.toInt())
+        tvTime.text = timeText
         tvAgeRating.text = ageText
-        tvGenre.text = genresText
+        tvGenre.text = genresText.dropLast(2)
         tvDesc.text = info.description
         info.persons.forEach {
-            if (it.profession == Constants.FilmInfo.PRODUCERS) tvDirectorValue.text = it.name
+            if (it.profession == Constants.FilmInfo.PRODUCERS) {
+                if (it.name == null) tvDirectorValue.text = Constants.FilmInfo.EMPTY_FILM_INFO
+                else tvDirectorValue.text = it.name
+            }
         }
         if (info.slogan != null) tvSloganValue.text = info.slogan
         else tvSloganValue.text = Constants.FilmInfo.EMPTY_FILM_INFO
@@ -114,14 +134,29 @@ class FilmInfoFragment : BaseFragment<FragmentFilmInfoBinding, FilmInfoView, Fil
         adapter.setСomposedData(items)
     }
 
+    override fun setFilmLibState(state: Boolean) {
+        if (!state) binding.lAddToFavorit.setBackgroundResource(R.color.transparent)
+        else binding.lAddToFavorit.setBackgroundResource(R.drawable.other_custum_background)
+
+    }
+
+    override fun setFilmWatchState(state: Boolean) {
+        if (!state) binding.lAddToLater.setBackgroundResource(R.color.transparent)
+        else binding.lAddToLater.setBackgroundResource(R.drawable.other_custum_background)
+    }
+
     override fun addToLibraryError() {
-        Toast.makeText(requireContext(), requireActivity().getString(R.string.cant_add_to_lib),
-            Toast.LENGTH_LONG).show()
+        Toast.makeText(
+            requireContext(), requireActivity().getString(R.string.cant_add_to_lib),
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     override fun addToWatchLaterError() {
-        Toast.makeText(requireContext(), requireActivity().getString(R.string.cant_add_to_lib),
-            Toast.LENGTH_LONG).show()
+        Toast.makeText(
+            requireContext(), requireActivity().getString(R.string.cant_add_to_later),
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     override fun setLoadingState(isLoading: Boolean) {
@@ -133,15 +168,5 @@ class FilmInfoFragment : BaseFragment<FragmentFilmInfoBinding, FilmInfoView, Fil
 
     private fun initRc() {
         binding.RcPerson.adapter = adapter
-    }
-
-    private fun addFilm(filmId: Int, type: Type) {
-        if (type == Type.LIBRARY) presenter.checkLibraryItem(filmId)
-        else presenter.checkWatchLaterItem(filmId)
-    }
-
-    enum class Type {
-        LIBRARY,
-        WATCH
     }
 }

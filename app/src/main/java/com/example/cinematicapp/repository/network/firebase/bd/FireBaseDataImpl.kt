@@ -62,7 +62,7 @@ class FireBaseDataImpl : FireBaseData {
         }
     }
 
-    override fun addToWatchLater(phone: String, film: HashMap<String, Int>) {
+    override fun updateWatchLater(phone: String, film: HashMap<String, Int>) {
         myDataBase.collection(Constants.FireBase.USERS).document(phone)
             .update(Constants.FireBase.WATCH_LATER, film)
     }
@@ -75,9 +75,29 @@ class FireBaseDataImpl : FireBaseData {
         }
     }
 
-    override fun addToLibrary(phone: String, film: HashMap<String, Int>) {
+    override fun updateLibrary(phone: String, film: HashMap<String, Int>) {
         myDataBase.collection(Constants.FireBase.USERS).document(phone)
             .update(Constants.FireBase.LIBRARY, film)
+    }
+
+    override fun addLibrary(phone: String, film: HashMap<String, Int>) {
+        myDataBase.collection(Constants.FireBase.USERS).document(phone)
+            .update(Constants.FireBase.LIBRARY, film)
+    }
+
+    override fun addWatchLater(phone: String, film: HashMap<String, Int>) {
+        myDataBase.collection(Constants.FireBase.USERS).document(phone)
+            .update(Constants.FireBase.WATCH_LATER, film)
+    }
+
+    override fun deleteLibItem(phone: String, filmList: HashMap<String, Int>) {
+        myDataBase.collection(Constants.FireBase.USERS).document(phone)
+            .update(Constants.FireBase.LIBRARY, filmList)
+    }
+
+    override fun deleteWatchItem(phone: String, filmList: HashMap<String, Int>) {
+        myDataBase.collection(Constants.FireBase.USERS).document(phone)
+            .update(Constants.FireBase.WATCH_LATER, filmList)
     }
 
     override fun getLibrary(phone: String, action: (HashMap<String, Int>?) -> Unit) {

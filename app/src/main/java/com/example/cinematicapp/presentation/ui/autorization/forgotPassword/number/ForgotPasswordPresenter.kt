@@ -17,7 +17,7 @@ class ForgotPasswordPresenter @Inject constructor(
     fun checkUserPhone(phone: String) {
         firebase.authUser(phone) {
             when (it) {
-                false -> viewState.sentSms(phone)
+                true -> viewState.sentSms(phone)
                 else -> viewState.userNotRegister()
             }
         }

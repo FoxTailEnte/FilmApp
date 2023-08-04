@@ -10,6 +10,7 @@ import moxy.viewstate.strategy.StateStrategyType
 interface WatchLaterView : BaseView {
     fun submitList(items: PagingData<BaseFilmInfoResponse>)
     fun setPlaceHolder()
+    fun setPlaceHolderEmptyList()
     fun initRcMain(state: Boolean, newPosition: Int, oldPosition: Int)
     fun scrollToPosition()
     fun initRc()
