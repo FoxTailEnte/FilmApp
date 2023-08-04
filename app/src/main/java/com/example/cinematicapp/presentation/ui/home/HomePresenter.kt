@@ -6,6 +6,7 @@ import com.example.cinematicapp.presentation.adapters.main.MainRcViewAdapter
 import com.example.cinematicapp.presentation.base.BasePresenter
 import com.example.cinematicapp.repository.network.parsHome.PassengerSource
 import com.example.cinematicapp.repository.utils.Constants
+import com.example.cinematicapp.repository.utils.SearchUtils
 import io.reactivex.disposables.CompositeDisposable
 import moxy.InjectViewState
 import javax.inject.Inject
@@ -53,8 +54,11 @@ class HomePresenter @Inject constructor(
         filterItems.forEach {
             when (it.mainFilter) {
                 Constants.Request.GENRES_FILTER -> genresList.add(it.fullFilter.lowercase())
-                Constants.Request.YEARS_FILTER -> yearsList.add(it.fullFilter.lowercase())
                 Constants.Request.COUNTRY_FILTER -> countryList.add(it.fullFilter)
+                Constants.Request.YEARS_FILTER -> {
+                    val years = SearchUtils.setYears(it.fullFilter)
+                    yearsList.addAll(years)
+                }
                 Constants.Request.RATING_FILTER -> {
                     when (it.fullFilter) {
                         FIVE_RATING -> prepareRatingList.add("5.0-9.9")
@@ -64,10 +68,11 @@ class HomePresenter @Inject constructor(
                         NINE_RATING -> prepareRatingList.add("9.0-9.9")
                         else -> Unit
                     }
-                    ratingList.add(prepareRatingList.minOrNull().toString())
                 }
             }
         }
+        val currentRating = SearchUtils.setRating(prepareRatingList)
+        ratingList.add(currentRating)
     }
 
     fun saveMainRcState(state: Boolean) {
