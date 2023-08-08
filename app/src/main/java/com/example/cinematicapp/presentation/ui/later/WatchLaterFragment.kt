@@ -29,7 +29,8 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
-class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding, WatchLaterView, WatchLaterPresenter>(), WatchLaterView {
+class WatchLaterFragment :
+    BaseFragment<FragmentWatchLaterBinding, WatchLaterView, WatchLaterPresenter>(), WatchLaterView {
 
     private val footerAdapter = FilmsLoaderStateAdapter()
     private val headerAdapter = FilmsLoaderStateAdapter()
@@ -50,9 +51,11 @@ class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding, WatchLaterVie
                         presenter.clearOldFilters()
                         presenter.getFilmsWithGenres()
                     }
-                } else -> {
-                presenter.saveMainPosition(it)
-            }
+                }
+
+                else -> {
+                    presenter.saveMainPosition(it)
+                }
             }
         }
     }
@@ -65,9 +68,14 @@ class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding, WatchLaterVie
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setLoadingState(true)
         presenter.getLibraryList()
         presenter.initAdapters()
-        setLoadingState(true)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.edSearchText.setText(presenter.searchText)
     }
 
     override fun setupListener() = with(binding) {
@@ -77,6 +85,7 @@ class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding, WatchLaterVie
         edSearchText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 presenter.getFilmsWithText(text = listOf(edSearchText.text.toString()))
+                presenter.searchText = edSearchText.text.toString()
                 requireActivity().setKeyboardVisibility(false)
             }
             true
@@ -130,20 +139,23 @@ class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding, WatchLaterVie
     override fun setPlaceHolder() {
         lifecycleScope.launch {
             adapter.loadStateFlow.collectLatest { state ->
-                when(state.append) {
+                when (state.append) {
                     is LoadState.NotLoading -> {
-                        if(adapter.itemCount == 0) {
+                        if (adapter.itemCount == 0) {
                             binding.tvEmpty.text =
                                 this@WatchLaterFragment.getText(R.string.emptyList)
                             binding.tvEmpty.visibility = View.VISIBLE
                         } else {
                             binding.tvEmpty.visibility = View.GONE
+                            binding.rcWatchLater.isVisible = true
                             setLoadingState(false)
                         }
                     }
+
                     is LoadState.Loading -> {
                         binding.tvEmpty.visibility = View.GONE
                     }
+
                     else -> Unit
                 }
             }
@@ -169,18 +181,18 @@ class WatchLaterFragment : BaseFragment<FragmentWatchLaterBinding, WatchLaterVie
     }
 
     override fun setLoadingState(isLoading: Boolean) {
-        binding.rcWatchLater.isVisible = !isLoading
-        if(!isLoading) {
+        if (!isLoading) {
             Handler(Looper.getMainLooper()).postDelayed({
-                binding.lPBar.isVisible = isLoading
+                binding.lPBar.isVisible = false
             }, 500)
         } else {
-            binding.lPBar.isVisible = isLoading
+            binding.lPBar.isVisible = true
         }
     }
 
     @ProvidePresenter
-    fun provideWatchLaterPresenter() = CinematicApplication.appComponent.provideWatchLaterPresenter()
+    fun provideWatchLaterPresenter() =
+        CinematicApplication.appComponent.provideWatchLaterPresenter()
 
     private fun showSearchFilterDialog() {
         BottomFragment(presenter.getFilterItemsForDialogFragment()) {

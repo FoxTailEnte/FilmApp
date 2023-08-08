@@ -20,6 +20,7 @@ class WatchLaterPresenter @Inject constructor(
     private val pref: SharedPrefUseCase
 ) : BasePresenter<WatchLaterView>() {
 
+    var searchText: String = Constants.FilmInfo.EMPTY_TEXT
     private val mDisposable = CompositeDisposable()
     private val currentList = mutableListOf<String>()
     private var rcColorState: Boolean = true
@@ -40,7 +41,7 @@ class WatchLaterPresenter @Inject constructor(
 
     fun getLibraryList() {
         fireStore.getWatchLater(getUserPhone()) { filmList ->
-            if(filmList?.keys.isNullOrEmpty()) {
+            if (filmList?.keys.isNullOrEmpty()) {
                 parseLibraryListToResponse(filmList)
                 viewState.setPlaceHolderEmptyList()
             }
@@ -68,6 +69,7 @@ class WatchLaterPresenter @Inject constructor(
                     val years = SearchUtils.setYears(it.fullFilter)
                     yearsList.addAll(years)
                 }
+
                 Constants.Request.RATING_FILTER -> {
                     when (it.fullFilter) {
                         HomePresenter.FIVE_RATING -> prepareRatingList.add("5.0-9.9")
@@ -77,11 +79,12 @@ class WatchLaterPresenter @Inject constructor(
                         HomePresenter.NINE_RATING -> prepareRatingList.add("9.0-9.9")
                         else -> Unit
                     }
+                    val currentRatingList = SearchUtils.setRating(prepareRatingList.distinct())
+                    ratingList.clear()
+                    ratingList.addAll(currentRatingList)
                 }
             }
         }
-        val currentRating = SearchUtils.setRating(prepareRatingList)
-        ratingList.add(currentRating)
         viewState.scrollToPosition()
     }
 
@@ -90,13 +93,15 @@ class WatchLaterPresenter @Inject constructor(
     }
 
     fun saveMainPosition(position: MainRcViewAdapter.CallBack) {
-        when(position) {
+        when (position) {
             is MainRcViewAdapter.CallBack.NewPosition -> {
                 newPosition = position.position
             }
+
             is MainRcViewAdapter.CallBack.OldPosition -> {
                 oldPosition = position.position
             }
+
             else -> Unit
         }
     }
@@ -127,7 +132,7 @@ class WatchLaterPresenter @Inject constructor(
     }
 
     fun getWatchLaterFilms() {
-        if(currentList.isNotEmpty()) {
+        if (currentList.isNotEmpty()) {
             mDisposable.add(dataSource.getRandomFilm(setSearchFilterMap()).subscribe {
                 viewState.submitList(it)
                 viewState.setPlaceHolder()
@@ -146,6 +151,7 @@ class WatchLaterPresenter @Inject constructor(
     }
 
     fun clearOldFilters() {
+        filterList = listOf()
         genresList.clear()
         yearsList.clear()
         ratingList.clear()

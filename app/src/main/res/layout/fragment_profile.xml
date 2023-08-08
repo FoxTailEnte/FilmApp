@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:background="@color/main_background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/main_background"
+    android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
@@ -22,14 +21,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView"
-                android:layout_width="71dp"
-                android:layout_height="65dp"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/ivPhoto"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp"
-                app:cardCornerRadius="100dp"
+                android:src="@drawable/default_avatar"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -40,24 +39,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="@+id/cardView"
-                app:layout_constraintStart_toEndOf="@+id/cardView"
-                app:layout_constraintTop_toTopOf="@+id/cardView">
+                app:layout_constraintBottom_toBottomOf="@+id/ivPhoto"
+                app:layout_constraintStart_toEndOf="@+id/ivPhoto"
+                app:layout_constraintTop_toTopOf="@+id/ivPhoto">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Солдаткин Вадим"
+                    android:text=""
                     android:textColor="@color/base_text"
                     android:textSize="24sp"
                     tools:ignore="HardcodedText" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/textView14"
+                    android:id="@+id/tvPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="+7(988)519-95-37"
+                    android:text=""
                     android:textColor="@color/base_text"
                     android:textSize="16sp"
                     tools:ignore="HardcodedText" />
@@ -100,12 +99,12 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textView15"
-            android:paddingTop="10dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
+            android:paddingTop="10dp"
             android:text="@string/profile_version"
             android:textColor="@color/white"
             android:textSize="18sp" />

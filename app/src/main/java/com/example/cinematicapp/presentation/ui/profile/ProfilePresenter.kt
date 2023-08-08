@@ -12,13 +12,16 @@ class ProfilePresenter @Inject constructor(
     private val firebase: FireBaseDataUseCase
 ) : BasePresenter<ProfileView>() {
 
-    fun singOutUser(item: ProfileModel) {
-        when (item.name ) {
+    private var name: String? = null
+    private var phone: String = ""
+    private var uri: String? = null
+
+    fun clickListener(item: ProfileModel) {
+        when (item.name) {
             R.string.profile_information -> viewState.navigateToProfileInformation()
             R.string.profile_restore_pass -> viewState.navigateToNewPass()
             R.string.profile_notification -> viewState.navigateToNotifications()
-            R.string.profile_report -> Unit
-            R.string.profile_donation -> Unit
+            R.string.profile_report -> viewState.sendProblem()
             R.string.profile_logout -> {
                 pref.addSignInUserStatus(false)
                 viewState.signOutComplete()
@@ -26,9 +29,42 @@ class ProfilePresenter @Inject constructor(
         }
     }
 
-    fun getUserPhone(): String = pref.getUserPhone()
+    fun getUserPhone(): String {
+        phone = pref.getUserPhone()
+        viewState.setUserPhone(phone)
+        return phone
+    }
 
-    fun getUserName(phone: String, action: (String?) -> Unit) = firebase.getUserName(phone) {
-        action.invoke(it)
+    fun getUserName() {
+        if (name != null) {
+            setUserName()
+        }
+        firebase.getUserName(phone) {
+            if (name != it) name = it
+            setUserName()
+        }
+    }
+
+    fun getUserPhoto() {
+        if (uri != null) setUserPhoto(uri!!)
+        firebase.getUserPhoto(phone) {
+            if (it != null && uri != it) {
+                uri = it
+                setUserPhoto(it)
+            }
+        }
+    }
+
+    fun saveUserPhoto(uri: String) {
+        firebase.addUserPhoto(phone, uri)
+        setUserPhoto(uri)
+    }
+
+    private fun setUserName() {
+        viewState.setUserName(name ?: "")
+    }
+
+    private fun setUserPhoto(uri: String) {
+        viewState.setUserPhoto(uri)
     }
 }

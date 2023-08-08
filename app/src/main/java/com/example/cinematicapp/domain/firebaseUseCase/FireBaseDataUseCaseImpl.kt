@@ -19,6 +19,16 @@ class FireBaseDataUseCaseImpl @Inject constructor(
         firebase.addNewUserName(phone, name, secondName)
     }
 
+    override fun addUserPhoto(phone: String, uri: String) {
+        firebase.addUserPhoto(phone, uri)
+    }
+
+    override fun getUserPhoto(phone: String, action: (String?) -> Unit) {
+        firebase.getUserPhoto(phone) {
+            action.invoke(it)
+        }
+    }
+
     override fun getUserName(phone: String, action: (String?) -> Unit) =
         firebase.getUserName(phone) {
             action.invoke(it)

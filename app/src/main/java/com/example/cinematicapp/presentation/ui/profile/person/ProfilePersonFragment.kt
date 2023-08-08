@@ -5,39 +5,27 @@ import com.example.cinematicapp.CinematicApplication.Companion.appComponent
 import com.example.cinematicapp.R
 import com.example.cinematicapp.databinding.FragmentPersonInfoBinding
 import com.example.cinematicapp.presentation.base.BaseFragment
+import com.example.cinematicapp.repository.utils.Extensions.navigateBack
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 
-class ProfilePersonFragment : BaseFragment<FragmentPersonInfoBinding, ProfilePersonView, ProfilePersonPresenter>(), ProfilePersonView {
+class ProfilePersonFragment :
+    BaseFragment<FragmentPersonInfoBinding, ProfilePersonView, ProfilePersonPresenter>(),
+    ProfilePersonView {
 
     @InjectPresenter
     lateinit var presenter: ProfilePersonPresenter
 
-    private fun validateName(): Boolean = with(binding) {
-        if (edNameText.text.toString().trim().isEmpty()) {
-            edName.error = getString(R.string.error_validate_number)
-            false
-        } else {
-            edName.isErrorEnabled = false
-            true
-        }
-    }
-
-    private fun validateSecondName(): Boolean = with(binding) {
-        if (edSecondNameText.text.toString().trim().isEmpty()) {
-            edSecondName.error = getString(R.string.error_validate_number)
-            false
-        } else {
-            edSecondName.isErrorEnabled = false
-            true
-        }
-    }
-
-    private fun finalValidate() = with(binding) {
-        if (edSecondNameText.text?.trim()!!.isNotEmpty() && edSecondNameText.text?.trim()!!.isNotEmpty()) {
-                if (validateName() && validateSecondName()) {
-                    presenter.getUserPhone()
+    private fun validate() = with(binding) {
+        val validateName = presenter.validateText(edName, edNameText.text.toString())
+        val validateSecondName =
+            presenter.validateText(edSecondName, edSecondNameText.text.toString())
+        if (edSecondNameText.text?.trim()!!.isNotEmpty() && edSecondNameText.text?.trim()!!
+                .isNotEmpty()
+        ) {
+            if (validateName && validateSecondName) {
+                presenter.getUserPhone()
             }
         }
     }
@@ -49,9 +37,10 @@ class ProfilePersonFragment : BaseFragment<FragmentPersonInfoBinding, ProfilePer
 
     override fun setupListener() = with(binding) {
         btFinish.setOnClickListener {
-            validateName()
-            validateSecondName()
-            finalValidate()
+            validate()
+        }
+        btBackPress.setOnClickListener {
+            navigateBack()
         }
     }
 
@@ -62,10 +51,12 @@ class ProfilePersonFragment : BaseFragment<FragmentPersonInfoBinding, ProfilePer
     }
 
     override fun addNewUserSuccess() {
-        Toast.makeText(requireContext(), getString(R.string.profile_add_new_name_success), Toast.LENGTH_LONG).show()
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.profile_add_new_name_success),
+            Toast.LENGTH_LONG
+        ).show()
     }
 
-    override fun setLoadingState(isLoading: Boolean) {
-        TODO("Not yet implemented")
-    }
+    override fun setLoadingState(isLoading: Boolean) {}
 }

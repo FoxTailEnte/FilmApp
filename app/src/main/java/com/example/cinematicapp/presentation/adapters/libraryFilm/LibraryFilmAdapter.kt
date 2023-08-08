@@ -8,7 +8,7 @@ import com.example.cinematicapp.presentation.adapters.homeFilm.models.BaseFilmIn
 
 class LibraryFilmAdapter(
     private val callBack: (item: BaseFilmInfoResponse) -> Unit,
-) : PagingDataAdapter<BaseFilmInfoResponse ,LibraryFilmHolder>(LibraryFilmDiffUtil()) {
+) : PagingDataAdapter<BaseFilmInfoResponse, LibraryFilmHolder>(LibraryFilmDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = LibraryFilmHolder(
         ItemHomeFilmBinding.inflate(LayoutInflater.from(parent.context), parent, false)

@@ -24,10 +24,6 @@ fun profileListSubmit() = listOf(
         R.drawable.profile_report,
         1
     ), ProfileModel(
-        R.string.profile_donation,
-        R.drawable.profile_donation,
-        1
-    ), ProfileModel(
         R.string.profile_logout,
         R.drawable.profile_logout,
         1

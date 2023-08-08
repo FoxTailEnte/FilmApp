@@ -8,6 +8,7 @@ import com.google.firebase.ktx.Firebase
 class FireBaseDataImpl : FireBaseData {
     private var myDataBase = Firebase.firestore
 
+
     override fun addNewUser(userModel: UserModel, phone: String) {
         myDataBase.collection(Constants.FireBase.USERS).document(phone).set(userModel)
     }
@@ -24,20 +25,25 @@ class FireBaseDataImpl : FireBaseData {
             .update(Constants.FireBase.SECOND_NAME, secondName)
     }
 
+    override fun addUserPhoto(phone: String, uri: String) {
+        myDataBase.collection(Constants.FireBase.USERS).document(phone).update(Constants.FireBase.PHOTO, uri)
+    }
+
+    override fun getUserPhoto(phone: String, action: (String?) -> Unit) {
+        myDataBase.collection(Constants.FireBase.USERS).document(phone).get().addOnSuccessListener {
+            action.invoke(it.data?.get(Constants.FireBase.PHOTO).toString())
+        }
+    }
+
     override fun getUserName(phone: String, action: (String?) -> Unit) {
         var name = ""
-        var secondName: String
+        var secondName = ""
         myDataBase.collection(Constants.FireBase.USERS).document(phone)
-            .collection(Constants.FireBase.NAME)
             .get()
             .addOnSuccessListener {
-                name = it.toString()
-            }
-        myDataBase.collection(Constants.FireBase.USERS).document(phone)
-            .collection(Constants.FireBase.SECOND_NAME)
-            .get()
-            .addOnSuccessListener {
-                secondName = it.toString()
+                name = it.data?.get(Constants.FireBase.NAME).toString()
+                secondName = it.data?.get(Constants.FireBase.SECOND_NAME).toString()
+            }.addOnCompleteListener {
                 action.invoke("$name $secondName")
             }
     }

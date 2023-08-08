@@ -173,6 +173,10 @@
     <string name="emptyList">По выбранным фильтрам результатов не найдено</string>
     <string name="emptyListWatch">В этом разделе ещё нет фильмов</string>
     <string name="paging_error">"Проверьте интернет соединение"</string>
+    <string name="email">"FoxTailEnte@gmail.com"</string>
+    <string name="email_title">"Проблема в приложении"</string>
+    <string name="email_text">"Добрый день! Я сталкнулся со следующей проблемой: "</string>
+    <string name="email_error">"Приложения для отправки почты не найдено"</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>

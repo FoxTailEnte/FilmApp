@@ -20,6 +20,7 @@ class LibraryPresenter @Inject constructor(
     private val pref: SharedPrefUseCase
 ) : BasePresenter<LibraryView>() {
 
+    var searchText: String = Constants.FilmInfo.EMPTY_TEXT
     private val mDisposable = CompositeDisposable()
     private val currentList = mutableSetOf<String>()
     private var newPosition: Int = 0
@@ -39,7 +40,7 @@ class LibraryPresenter @Inject constructor(
     }
 
     fun getLibraryList() {
-        fireStore.getWatchLater(getUserPhone()) { filmList ->
+        fireStore.getLibrary(getUserPhone()) { filmList ->
             if (filmList?.keys.isNullOrEmpty()) {
                 parseLibraryListToResponse(filmList)
                 viewState.setPlaceHolderEmptyList()
@@ -53,7 +54,7 @@ class LibraryPresenter @Inject constructor(
 
     fun saveFullFilters(filterItems: List<CheckedItemModel>) {
         filterList = filterItems
-        val prepareRatingList = mutableListOf<String>()
+        val prepareRatingList = mutableSetOf<String>()
         filterItems.forEach {
             when (it.mainFilter) {
                 Constants.Request.GENRES_FILTER -> genresList.add(it.fullFilter.lowercase())
@@ -62,6 +63,7 @@ class LibraryPresenter @Inject constructor(
                     val years = SearchUtils.setYears(it.fullFilter)
                     yearsList.addAll(years)
                 }
+
                 Constants.Request.RATING_FILTER -> {
                     when (it.fullFilter) {
                         HomePresenter.FIVE_RATING -> prepareRatingList.add("5.0-9.9")
@@ -71,11 +73,12 @@ class LibraryPresenter @Inject constructor(
                         HomePresenter.NINE_RATING -> prepareRatingList.add("9.0-9.9")
                         else -> Unit
                     }
+                    val currentRatingList = SearchUtils.setRating(prepareRatingList.distinct())
+                    ratingList.clear()
+                    ratingList.addAll(currentRatingList)
                 }
             }
         }
-        val currentRating = SearchUtils.setRating(prepareRatingList)
-        ratingList.add(currentRating)
         viewState.scrollToPosition()
     }
 
@@ -109,10 +112,12 @@ class LibraryPresenter @Inject constructor(
     }
 
     fun getLibraryFilms() {
-        mDisposable.add(dataSource.getRandomFilm(setSearchFilterMap()).subscribe {
-            viewState.submitList(it)
-            viewState.setPlaceHolder()
-        })
+        if (currentList.isNotEmpty()) {
+            mDisposable.add(dataSource.getRandomFilm(setSearchFilterMap()).subscribe {
+                viewState.submitList(it)
+                viewState.setPlaceHolder()
+            })
+        }
     }
 
     fun getFilmsWithGenres(genres: List<String> = listOf()) {
@@ -126,6 +131,7 @@ class LibraryPresenter @Inject constructor(
     }
 
     fun clearOldFilters() {
+        filterList = listOf()
         genresList.clear()
         yearsList.clear()
         ratingList.clear()

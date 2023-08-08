@@ -12,6 +12,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="switch_background">#185C10</color>
+    <color name="searchText">#CEFFFFFF</color>
     <color name="bottom_text">#7D838E</color>
     <color name="base_text">#B4B4B4</color>
     <color name="profile_background">#373131</color>

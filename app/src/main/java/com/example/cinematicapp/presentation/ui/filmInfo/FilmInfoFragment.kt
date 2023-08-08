@@ -101,6 +101,7 @@ class FilmInfoFragment : BaseFragment<FragmentFilmInfoBinding, FilmInfoView, Fil
                 .into(ivPoster)
             setLoadingState(false)
         }
+        if (info.videos?.trailers.isNullOrEmpty()) ivYouTube.isVisible = false
         var currentGenresText = Constants.FilmInfo.EMPTY_TEXT
         info.genres.forEach {
             currentGenresText = currentGenresText + it.name + Constants.FilmInfo.COMMA
@@ -109,6 +110,7 @@ class FilmInfoFragment : BaseFragment<FragmentFilmInfoBinding, FilmInfoView, Fil
         val genresText = info.countries[0].name + Constants.FilmInfo.COMMA + currentGenresText
         val budgetText = info.budget.value + Constants.FilmInfo.SPACE_TEXT + info.budget.currency
         val timeText = presenter.convertTime(info.movieLength?.toInt())
+        tvRating.text = info.rating.kp.toString().take(3)
         tvTitle.text = info.name
         tvDate.text = info.year.toString()
         tvTime.text = timeText

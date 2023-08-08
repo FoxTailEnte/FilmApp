@@ -17,6 +17,7 @@ class HomePresenter @Inject constructor(
     private val dataSource: PassengerSource
 ) : BasePresenter<HomeView>() {
 
+    var searchText: String = Constants.FilmInfo.EMPTY_TEXT
     private val mDisposable = CompositeDisposable()
     private var newPosition: Int = 0
     private var oldPosition: Int = 0
@@ -59,6 +60,7 @@ class HomePresenter @Inject constructor(
                     val years = SearchUtils.setYears(it.fullFilter)
                     yearsList.addAll(years)
                 }
+
                 Constants.Request.RATING_FILTER -> {
                     when (it.fullFilter) {
                         FIVE_RATING -> prepareRatingList.add("5.0-9.9")
@@ -68,11 +70,12 @@ class HomePresenter @Inject constructor(
                         NINE_RATING -> prepareRatingList.add("9.0-9.9")
                         else -> Unit
                     }
+                    val currentRatingList = SearchUtils.setRating(prepareRatingList.distinct())
+                    ratingList.clear()
+                    ratingList.addAll(currentRatingList)
                 }
             }
         }
-        val currentRating = SearchUtils.setRating(prepareRatingList)
-        ratingList.add(currentRating)
     }
 
     fun saveMainRcState(state: Boolean) {
@@ -82,6 +85,7 @@ class HomePresenter @Inject constructor(
     }
 
     fun clearOldFilters() {
+        filterList = listOf()
         genresList.clear()
         yearsList.clear()
         ratingList.clear()

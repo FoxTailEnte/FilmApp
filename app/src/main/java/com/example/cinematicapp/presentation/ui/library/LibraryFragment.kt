@@ -68,9 +68,14 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setLoadingState(true)
         presenter.getLibraryList()
         presenter.initAdapters()
-        setLoadingState(true)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.edSearchText.setText(presenter.searchText)
     }
 
     override fun setupListener() = with(binding) {
@@ -80,6 +85,7 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
         edSearchText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 presenter.getFilmsWithText(text = listOf(edSearchText.text.toString()))
+                presenter.searchText = edSearchText.text.toString()
                 requireActivity().setKeyboardVisibility(false)
             }
             true
@@ -140,20 +146,23 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
     override fun setPlaceHolder() {
         lifecycleScope.launch {
             adapter.loadStateFlow.collectLatest { state ->
-                when(state.refresh) {
+                when (state.append) {
                     is LoadState.NotLoading -> {
-                        if(adapter.itemCount == 0) {
+                        if (adapter.itemCount == 0) {
                             binding.tvEmpty.text =
                                 this@LibraryFragment.getText(R.string.emptyList)
                             binding.tvEmpty.visibility = View.VISIBLE
                         } else {
                             binding.tvEmpty.visibility = View.GONE
+                            binding.rcLib.isVisible = true
                             setLoadingState(false)
                         }
                     }
+
                     is LoadState.Loading -> {
                         binding.tvEmpty.visibility = View.GONE
                     }
+
                     else -> Unit
                 }
             }
@@ -179,13 +188,12 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding, LibraryView, Librar
     }
 
     override fun setLoadingState(isLoading: Boolean) {
-        binding.rcLib.isVisible = !isLoading
-        if(!isLoading) {
+        if (!isLoading) {
             Handler(Looper.getMainLooper()).postDelayed({
-                binding.lPBar.isVisible = isLoading
+                binding.lPBar.isVisible = false
             }, 500)
         } else {
-            binding.lPBar.isVisible = isLoading
+            binding.lPBar.isVisible = true
         }
     }
 

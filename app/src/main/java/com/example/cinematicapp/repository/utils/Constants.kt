@@ -12,6 +12,7 @@ object Constants {
 
     object FireBase {
         const val USERS = "Users"
+        const val PHOTO = "Photo"
         const val PASS = "pass"
         const val NAME = "name"
         const val SECOND_NAME = "secondName"

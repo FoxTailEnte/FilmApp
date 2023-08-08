@@ -78,6 +78,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
         presenter.initAdapters()
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.edSearchText.setText(presenter.searchText)
+    }
+
     override fun setupListener() = with(binding) {
         ivSearchFilters.setOnClickListener {
             showSearchFilterDialog()
@@ -85,6 +90,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
         edSearchText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 presenter.getFilmsWithText(text = listOf(edSearchText.text.toString()))
+                presenter.searchText = edSearchText.text.toString()
                 requireActivity().setKeyboardVisibility(false)
             }
             true
@@ -112,7 +118,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
                 }, 200)
             }
         }
-        val filmLayoutManager =  GridLayoutManager(requireContext(), 3)
+        val filmLayoutManager = GridLayoutManager(requireContext(), 3)
         rcHome.layoutManager = filmLayoutManager
         rcHome.adapter = adapter.withLoadStateHeaderAndFooter(
             header = FilmsLoaderStateAdapter(),
@@ -141,17 +147,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeView, HomePresenter>(
     override fun setPlaceHolder() {
         lifecycleScope.launch {
             adapter.loadStateFlow.collectLatest { state ->
-                when(state.refresh) {
+                when (state.refresh) {
                     is LoadState.NotLoading -> {
-                        if(adapter.itemCount == 0) {
+                        if (adapter.itemCount == 0) {
                             binding.rcHome.isVisible = false
                             binding.tvEmpty.isVisible = true
                         }
                     }
+
                     is LoadState.Loading -> {
                         binding.rcHome.isVisible = true
                         binding.tvEmpty.isVisible = false
                     }
+
                     else -> Unit
                 }
             }
